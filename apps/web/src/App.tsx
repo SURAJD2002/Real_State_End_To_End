@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Navbar } from './components/Navbar';
-import { CADToolbar } from './components/CADToolbar';
-import { MapCanvas } from './components/MapCanvas';
+import { PlanwiseMap } from './components/map/PlanwiseMap';
+import { SiteLocationMetadata } from './components/map/types';
 import { FeasibilityHUD } from './components/FeasibilityHUD';
 import { HouseOptionsCarousel } from './components/HouseOptionsCarousel';
 import { FloorPlanViewer } from './components/FloorPlanViewer';
@@ -11,7 +11,6 @@ import { BOQTableModal } from './components/BOQTableModal';
 import { BuildLockModal } from './components/BuildLockModal';
 import { EngineerDashboard } from './components/EngineerDashboard';
 import { 
-  ToolMode, 
   WorkflowStep, 
   ProjectData, 
   FeasibilityResult, 
@@ -22,8 +21,7 @@ import { ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [project, setProject] = useState<ProjectData | null>(null);
-  const [activeStep, setActiveStep] = useState<WorkflowStep>('DESIGN');
-  const [toolMode, setToolMode] = useState<ToolMode>('SELECT');
+  const [activeStep, setActiveStep] = useState<WorkflowStep>('SITE');
   const [coordinates, setCoordinates] = useState<[number, number][]>([]);
   const [existingRoadWidth, setExistingRoadWidth] = useState<number>(12.0);
   const [proposedRoadWidth, setProposedRoadWidth] = useState<number>(18.0);
@@ -253,6 +251,89 @@ export const App: React.FC = () => {
 
   const selectedOption = houseOptions.find((o) => o.optionId === selectedOptionId) || houseOptions[0];
 
+  // 5. Handle Manual Site Geometry Save with Provenance (Section 8 & 26)
+  const handleSaveSiteGeometry = async (metadata: SiteLocationMetadata) => {
+    setIsSaving(true);
+    const projId = project?.id || 'proj-mumbai-default-01';
+    try {
+      const res = await fetch(`${apiBase}/projects/${projId}/geometries`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          version: project?.parcel?.version || 1,
+          coordinates,
+          existingRoadWidthM: existingRoadWidth,
+          proposedRoadWidthM: proposedRoadWidth,
+          tenureType: project?.parcel?.tenureType || 'PRIVATE_FREEHOLD',
+          cadastralSurveyNumber: project?.parcel?.cadastralNumber || 'CTS-1842-BANDRA',
+          geometryVersion: metadata.geometryVersion
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProject((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            parcel: prev.parcel
+              ? {
+                  ...prev.parcel,
+                  coordinates,
+                  version: data.version
+                }
+              : {
+                  coordinates,
+                  cadastralNumber: 'CTS-1842-BANDRA',
+                  tenureType: 'PRIVATE_FREEHOLD',
+                  existingRoadWidthM: existingRoadWidth,
+                  proposedRoadWidthM: proposedRoadWidth,
+                  version: data.version
+                }
+          };
+        });
+      }
+    } catch (err) {
+      console.warn('Save geometry failed', err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // 6. Handle Mapbox Location Selection (Section 6)
+  const handleSelectSiteLocation = (site: SiteLocationMetadata) => {
+    setProject((prev) => ({
+      id: prev?.id || 'proj-mumbai-default-01',
+      name: site.address.split(',')[0] || 'Selected Project Site',
+      description: `Site location reference: ${site.city}, ${site.state}`,
+      jurisdiction: 'MUMBAI_DCPR_2034',
+      status: prev?.status || 'DRAFT',
+      createdAt: prev?.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      parcel: {
+        coordinates:
+          prev?.parcel?.coordinates && prev.parcel.coordinates.length > 0
+            ? prev.parcel.coordinates
+            : [site.coordinates],
+        cadastralNumber: prev?.parcel?.cadastralNumber || 'CTS-SITE-REF',
+        tenureType: 'PRIVATE_FREEHOLD',
+        existingRoadWidthM: existingRoadWidth,
+        proposedRoadWidthM: proposedRoadWidth,
+        version: (prev?.parcel?.version || 1) + 1
+      },
+      latestFeasibility: feasibility,
+      activeRelease:
+        prev?.activeRelease ||
+        (activeReleaseId && handoffPackage
+          ? {
+              releaseId: activeReleaseId,
+              fingerprint: handoffPackage.releaseFingerprint,
+              lifecycleState: handoffPackage.lifecycleState,
+              handoffPackage
+            }
+          : null)
+    }));
+  };
+
   return (
     <div className="w-screen h-screen flex flex-col bg-[#07090e] overflow-hidden select-none">
       {/* Top Application Bar with 6-stage workflow tabs */}
@@ -269,30 +350,31 @@ export const App: React.FC = () => {
 
       {/* Main Workspace Body Organized by Workflow Step */}
       <div className="relative flex-1 w-full h-[calc(100vh-56px)] flex overflow-hidden">
-        {/* STEP 1: SITE (Full CAD Map Canvas with Road Controls) */}
+        {/* STEP 1: SITE (Full Mapbox GIS Workspace with Location Search, Parcel CAD, Layers & Measurements) */}
         {activeStep === 'SITE' && (
           <main className="relative flex-1 w-full h-full flex flex-col">
-            <CADToolbar
-              toolMode={toolMode}
-              onSelectTool={setToolMode}
+            <PlanwiseMap
+              coordinates={coordinates}
+              buildableCoordinates={feasibility?.buildableCoordinates}
+              selectedOption={selectedOption}
+              feasibility={feasibility}
               existingRoadWidth={existingRoadWidth}
               proposedRoadWidth={proposedRoadWidth}
               onChangeRoadWidths={(ext, prop) => {
                 setExistingRoadWidth(ext);
                 setProposedRoadWidth(prop);
               }}
-              onClear={() => {
+              onAddCoordinate={(coord) => setCoordinates((prev) => [...prev, coord])}
+              onUpdateCoordinates={setCoordinates}
+              onClearCoordinates={() => {
                 setCoordinates([]);
                 setFeasibility(null);
               }}
-            />
-
-            <MapCanvas
-              toolMode={toolMode}
-              coordinates={coordinates}
-              buildableCoordinates={feasibility?.buildableCoordinates}
-              onAddCoordinate={(coord) => setCoordinates((prev) => [...prev, coord])}
-              onUpdateCoordinates={setCoordinates}
+              onSaveSiteGeometry={handleSaveSiteGeometry}
+              onSelectSiteLocation={handleSelectSiteLocation}
+              onOpenFeasibility={() => setActiveStep('FEASIBILITY')}
+              onOpenDesign={() => setActiveStep('DESIGN')}
+              isSavingGeometry={isSaving}
             />
 
             {/* Bottom Step Guide Bar */}
@@ -308,31 +390,33 @@ export const App: React.FC = () => {
           </main>
         )}
 
-        {/* STEP 2: FEASIBILITY (Map with Buildable Envelope + Statutory Feasibility HUD) */}
+        {/* STEP 2: FEASIBILITY (Mapbox GIS with Buildable Envelope + Statutory Feasibility HUD) */}
         {activeStep === 'FEASIBILITY' && (
           <main className="relative flex-1 w-full h-full flex">
             {/* Left: Map Preview */}
             <div className="flex-1 h-full relative">
-              <CADToolbar
-                toolMode={toolMode}
-                onSelectTool={setToolMode}
+              <PlanwiseMap
+                coordinates={coordinates}
+                buildableCoordinates={feasibility?.buildableCoordinates}
+                selectedOption={selectedOption}
+                feasibility={feasibility}
                 existingRoadWidth={existingRoadWidth}
                 proposedRoadWidth={proposedRoadWidth}
                 onChangeRoadWidths={(ext, prop) => {
                   setExistingRoadWidth(ext);
                   setProposedRoadWidth(prop);
                 }}
-                onClear={() => {
+                onAddCoordinate={(coord) => setCoordinates((prev) => [...prev, coord])}
+                onUpdateCoordinates={setCoordinates}
+                onClearCoordinates={() => {
                   setCoordinates([]);
                   setFeasibility(null);
                 }}
-              />
-              <MapCanvas
-                toolMode={toolMode}
-                coordinates={coordinates}
-                buildableCoordinates={feasibility?.buildableCoordinates}
-                onAddCoordinate={(coord) => setCoordinates((prev) => [...prev, coord])}
-                onUpdateCoordinates={setCoordinates}
+                onSaveSiteGeometry={handleSaveSiteGeometry}
+                onSelectSiteLocation={handleSelectSiteLocation}
+                onOpenFeasibility={() => setActiveStep('FEASIBILITY')}
+                onOpenDesign={() => setActiveStep('DESIGN')}
+                isSavingGeometry={isSaving}
               />
             </div>
 
