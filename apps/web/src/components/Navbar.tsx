@@ -1,13 +1,27 @@
 import React from 'react';
-import { Building2, CheckCircle2, RefreshCw, Zap, MapPin, Sparkles, HardHat, Home } from 'lucide-react';
-import { ProjectData, AppViewMode } from '../types';
+import { 
+  Building2, 
+  CheckCircle2, 
+  RefreshCw, 
+  Zap, 
+  MapPin, 
+  Sparkles, 
+  HardHat, 
+  Home, 
+  Ruler, 
+  Calculator, 
+  FileSpreadsheet, 
+  Lock, 
+  ChevronRight
+} from 'lucide-react';
+import { ProjectData, WorkflowStep } from '../types';
 
 interface NavbarProps {
   project: ProjectData | null;
   isSaving: boolean;
   isCalculating: boolean;
-  viewMode: AppViewMode;
-  onChangeViewMode: (mode: AppViewMode) => void;
+  activeStep: WorkflowStep;
+  onChangeStep: (step: WorkflowStep) => void;
   hasActiveRelease: boolean;
   onRunFeasibility: () => void;
   onLoadGoldenDataset: () => void;
@@ -17,110 +31,128 @@ export const Navbar: React.FC<NavbarProps> = ({
   project,
   isSaving,
   isCalculating,
-  viewMode,
-  onChangeViewMode,
+  activeStep,
+  onChangeStep,
   hasActiveRelease,
   onRunFeasibility,
   onLoadGoldenDataset
 }) => {
+  const steps: { id: WorkflowStep; number: string; label: string; icon: React.ReactNode }[] = [
+    { id: 'SITE', number: '1', label: 'SITE', icon: <Ruler className="w-3.5 h-3.5" /> },
+    { id: 'FEASIBILITY', number: '2', label: 'FEASIBILITY', icon: <Calculator className="w-3.5 h-3.5" /> },
+    { id: 'DESIGN', number: '3', label: 'DESIGN', icon: <Home className="w-3.5 h-3.5" /> },
+    { id: 'COST', number: '4', label: 'COST', icon: <FileSpreadsheet className="w-3.5 h-3.5" /> },
+    { id: 'BUILD', number: '5', label: 'BUILD', icon: <Lock className="w-3.5 h-3.5" /> },
+    { id: 'ENGINEER', number: '6', label: 'ENGINEER', icon: <HardHat className="w-3.5 h-3.5" /> }
+  ];
+
   return (
-    <header className="h-14 px-4 bg-[#090d16]/95 backdrop-blur-md border-b border-white/10 flex items-center justify-between z-30 select-none">
-      {/* Brand & Project Context */}
-      <div className="flex items-center gap-4">
+    <header className="h-14 px-4 bg-[#07090e]/95 backdrop-blur-md border-b border-white/10 flex items-center justify-between z-30 select-none">
+      {/* Brand & Project Metadata */}
+      <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <Building2 className="w-5 h-5 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <Building2 className="w-4 h-4 text-white" />
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <span className="font-display font-bold text-sm tracking-wide text-white">
-                PLANWISE <span className="text-cyan-400 font-normal text-xs uppercase px-1.5 py-0.5 rounded bg-cyan-950/60 border border-cyan-800/40">Enterprise</span>
+                PLANWISE
+              </span>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-cyan-950/70 text-cyan-400 border border-cyan-800/40 uppercase">
+                Enterprise
               </span>
             </div>
           </div>
         </div>
 
-        <div className="h-5 w-px bg-white/10" />
+        <div className="h-4 w-px bg-white/10" />
 
-        {/* Project & Tenure Pill */}
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center gap-1.5 text-xs text-slate-300 font-medium">
-            <MapPin className="w-3.5 h-3.5 text-blue-400" />
-            <span>{project?.name || "Bandra East Transit Corridor"}</span>
+        {/* Project Name & Context */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 text-xs text-slate-200 font-medium">
+            <MapPin className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+            <span className="truncate max-w-[170px]" title={project?.name || "Bandra East Transit Corridor"}>
+              {project?.name || "Bandra East Transit Corridor"}
+            </span>
           </div>
 
-          <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/60 font-mono">
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-700/60">
             {project?.parcel?.cadastralNumber || "CTS-1842-BANDRA"}
           </span>
 
-          <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-800/40 font-mono">
-            DCPR 2034 (Mumbai)
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-950/70 text-emerald-400 border border-emerald-800/40">
+            DCPR 2034 Verified
           </span>
         </div>
       </div>
 
-      {/* View Mode Switcher (Customer Studio vs Engineer Dashboard) */}
-      <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-lg border border-white/10">
-        <button
-          onClick={() => onChangeViewMode('CUSTOMER_STUDIO')}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all ${
-            viewMode === 'CUSTOMER_STUDIO'
-              ? 'bg-blue-600 text-white shadow-sm'
-              : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          <Home className="w-3.5 h-3.5" />
-          <span>Customer Studio</span>
-        </button>
+      {/* Primary Workflow Navigation Tabs: SITE -> FEASIBILITY -> DESIGN -> COST -> BUILD -> ENGINEER */}
+      <nav className="flex items-center bg-slate-950/90 p-1 rounded-lg border border-white/10 shadow-inner">
+        {steps.map((s, index) => {
+          const isActive = activeStep === s.id;
+          const isEngineer = s.id === 'ENGINEER';
 
-        <button
-          onClick={() => onChangeViewMode('ENGINEER_DASHBOARD')}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all ${
-            viewMode === 'ENGINEER_DASHBOARD'
-              ? 'bg-amber-600 text-white shadow-sm'
-              : 'text-slate-400 hover:text-slate-200'
-          }`}
-        >
-          <HardHat className="w-3.5 h-3.5" />
-          <span>Engineer Dashboard</span>
-          {hasActiveRelease && (
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          )}
-        </button>
-      </div>
+          return (
+            <React.Fragment key={s.id}>
+              {index > 0 && <ChevronRight className="w-3 h-3 text-slate-600 mx-0.5" />}
+              <button
+                onClick={() => onChangeStep(s.id)}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-semibold transition-all relative ${
+                  isActive
+                    ? isEngineer
+                      ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
+                      : 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                }`}
+              >
+                <span className={`text-[10px] font-mono px-1 rounded ${isActive ? 'bg-black/30 text-white' : 'bg-white/5 text-slate-400'}`}>
+                  {s.number}
+                </span>
+                {s.icon}
+                <span className="font-display tracking-wider text-[11px]">{s.label}</span>
 
-      {/* Action Controls */}
+                {isEngineer && hasActiveRelease && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" title="Active Frozen Release" />
+                )}
+              </button>
+            </React.Fragment>
+          );
+        })}
+      </nav>
+
+      {/* Right Controls: Auto-Save, Benchmark Loader, Feasibility Trigger */}
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-900/60 px-2.5 py-1 rounded-md border border-white/5 mr-1">
+        <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-950 px-2.5 py-1 rounded-md border border-white/5">
           {isSaving ? (
             <>
               <RefreshCw className="w-3 h-3 text-amber-400 animate-spin" />
-              <span className="text-amber-400 font-mono">Syncing...</span>
+              <span className="text-amber-400 font-mono text-[11px]">Syncing...</span>
             </>
           ) : (
             <>
               <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-              <span className="text-slate-300 font-mono">Auto-Saved</span>
+              <span className="text-slate-300 font-mono text-[11px]">Auto-Saved (UTM 43N)</span>
             </>
           )}
         </div>
 
         <button
           onClick={onLoadGoldenDataset}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-750 text-slate-200 border border-slate-700/60 text-xs font-medium transition-all hover:border-slate-500 shadow-sm"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700/60 text-xs font-medium transition-all hover:border-slate-500 shadow-sm"
           title="Load canonical 10,000 sqm Mumbai Benchmark plot"
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-          <span>Load Golden Benchmark</span>
+          <span>Load Benchmark</span>
         </button>
 
         <button
           onClick={onRunFeasibility}
           disabled={isCalculating}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 transition-all active:scale-95 disabled:opacity-50"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition-all active:scale-95 disabled:opacity-50"
         >
           <Zap className={`w-3.5 h-3.5 text-white ${isCalculating ? 'animate-bounce' : ''}`} />
-          <span>{isCalculating ? "Executing DAG..." : "Calculate Feasibility"}</span>
+          <span>{isCalculating ? "Executing DAG..." : "Run Feasibility"}</span>
         </button>
       </div>
     </header>

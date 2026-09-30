@@ -6,7 +6,20 @@ export type ToolMode =
   | 'SETBACK_BUFFER'
   | 'DELETE';
 
-export type AppViewMode = 'CUSTOMER_STUDIO' | 'ENGINEER_DASHBOARD';
+export type WorkflowStep =
+  | 'SITE'
+  | 'FEASIBILITY'
+  | 'DESIGN'
+  | 'COST'
+  | 'BUILD'
+  | 'ENGINEER';
+
+export type CanvasViewMode =
+  | '2D_PLAN'
+  | 'SITE_MAP'
+  | '3D_AXONO'
+  | 'ELEVATION'
+  | 'SECTION';
 
 export interface RoomBounds {
   x: number;
@@ -25,6 +38,13 @@ export interface RoomElement {
   widthM: number;
   lengthM: number;
   bounds: RoomBounds;
+  orientation?: string;
+  daylight?: string;
+  ventilation?: string;
+  privacy?: string;
+  doorsCount?: number;
+  windowsCount?: number;
+  finishes?: string;
 }
 
 export interface ColumnElement {
@@ -66,6 +86,7 @@ export interface ParetoScores {
 export interface BOQLineItem {
   code: string;
   description: string;
+  category?: string;
   quantity: number;
   unit: string;
   unitRate: number;

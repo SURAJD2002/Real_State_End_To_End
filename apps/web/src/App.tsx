@@ -5,21 +5,24 @@ import { MapCanvas } from './components/MapCanvas';
 import { FeasibilityHUD } from './components/FeasibilityHUD';
 import { HouseOptionsCarousel } from './components/HouseOptionsCarousel';
 import { FloorPlanViewer } from './components/FloorPlanViewer';
+import { CostExperienceView } from './components/CostExperienceView';
+import { BuildReleaseView } from './components/BuildReleaseView';
 import { BOQTableModal } from './components/BOQTableModal';
 import { BuildLockModal } from './components/BuildLockModal';
 import { EngineerDashboard } from './components/EngineerDashboard';
 import { 
   ToolMode, 
-  AppViewMode, 
+  WorkflowStep, 
   ProjectData, 
   FeasibilityResult, 
   HouseOption, 
   HandoffPackage 
 } from './types';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [project, setProject] = useState<ProjectData | null>(null);
-  const [viewMode, setViewMode] = useState<AppViewMode>('CUSTOMER_STUDIO');
+  const [activeStep, setActiveStep] = useState<WorkflowStep>('DESIGN');
   const [toolMode, setToolMode] = useState<ToolMode>('SELECT');
   const [coordinates, setCoordinates] = useState<[number, number][]>([]);
   const [existingRoadWidth, setExistingRoadWidth] = useState<number>(12.0);
@@ -177,18 +180,33 @@ export const App: React.FC = () => {
     setIsCalculating(false);
   }, []);
 
-  // 5. Handle Build Confirmation & Immutable Lock
+  // 5. Handle Quality Tier Update in Cost View
+  const handleUpdateTier = async (tier: string) => {
+    const projId = project?.id || 'proj-mumbai-default-01';
+    try {
+      const res = await fetch(`${apiBase}/projects/${projId}/house-options?quality_tier=${tier}`);
+      if (res.ok) {
+        const opts = await res.json();
+        setHouseOptions(opts);
+      }
+    } catch (err) {
+      console.warn('Failed to update tier', err);
+    }
+  };
+
+  // 6. Handle Build Confirmation & Immutable Lock
   const handleConfirmBuild = async (qualityTier: string, acknowledgements: string[]) => {
-    if (!buildModalOption) return;
+    const targetOption = buildModalOption || houseOptions.find(o => o.optionId === selectedOptionId);
+    if (!targetOption) return;
 
     setIsLockingBuild(true);
     try {
-      const res = await fetch(`${apiBase}/design-versions/${buildModalOption.designVersionId}/build-request`, {
+      const res = await fetch(`${apiBase}/design-versions/${targetOption.designVersionId}/build-request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          designVersionId: buildModalOption.designVersionId,
-          optionId: buildModalOption.optionId,
+          designVersionId: targetOption.designVersionId,
+          optionId: targetOption.optionId,
           requestedQualityTier: qualityTier,
           customerAcknowledgements: acknowledgements
         })
@@ -200,8 +218,8 @@ export const App: React.FC = () => {
       setActiveReleaseId(data.releaseId);
       setHandoffPackage(data.package);
       setBuildModalOption(null);
-      // Auto-transition to Engineer Dashboard to inspect the newly locked release!
-      setViewMode('ENGINEER_DASHBOARD');
+      // Auto-transition to Step 6: ENGINEER
+      setActiveStep('ENGINEER');
     } catch (err) {
       alert(`Error locking build: ${err}`);
     } finally {
@@ -209,7 +227,7 @@ export const App: React.FC = () => {
     }
   };
 
-  // 6. Handle Gate Sign-Off in Engineer Dashboard
+  // 7. Handle Gate Sign-Off in Engineer Dashboard
   const handleApproveGate = async (gateId: string, decision: string, notes: string) => {
     if (!activeReleaseId) return;
 
@@ -236,25 +254,24 @@ export const App: React.FC = () => {
   const selectedOption = houseOptions.find((o) => o.optionId === selectedOptionId) || houseOptions[0];
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-[#080c14] overflow-hidden select-none">
-      {/* Top Application Bar */}
+    <div className="w-screen h-screen flex flex-col bg-[#07090e] overflow-hidden select-none">
+      {/* Top Application Bar with 6-stage workflow tabs */}
       <Navbar
         project={project}
         isSaving={isSaving}
         isCalculating={isCalculating}
-        viewMode={viewMode}
-        onChangeViewMode={setViewMode}
+        activeStep={activeStep}
+        onChangeStep={setActiveStep}
         hasActiveRelease={!!activeReleaseId}
         onRunFeasibility={handleRunFeasibility}
         onLoadGoldenDataset={handleLoadGoldenDataset}
       />
 
-      {/* Main Workspace Body */}
-      {viewMode === 'CUSTOMER_STUDIO' ? (
-        <main className="relative flex-1 w-full h-[calc(100vh-56px)] flex flex-col">
-          {/* Top Half: CAD Toolbar + MapCanvas + Feasibility HUD */}
-          <div className="relative w-full h-[54%] border-b border-white/10">
-            {/* CAD Toolbar */}
+      {/* Main Workspace Body Organized by Workflow Step */}
+      <div className="relative flex-1 w-full h-[calc(100vh-56px)] flex overflow-hidden">
+        {/* STEP 1: SITE (Full CAD Map Canvas with Road Controls) */}
+        {activeStep === 'SITE' && (
+          <main className="relative flex-1 w-full h-full flex flex-col">
             <CADToolbar
               toolMode={toolMode}
               onSelectTool={setToolMode}
@@ -270,7 +287,6 @@ export const App: React.FC = () => {
               }}
             />
 
-            {/* Map Canvas */}
             <MapCanvas
               toolMode={toolMode}
               coordinates={coordinates}
@@ -279,72 +295,168 @@ export const App: React.FC = () => {
               onUpdateCoordinates={setCoordinates}
             />
 
-            {/* Feasibility HUD */}
-            <FeasibilityHUD
-              feasibility={feasibility}
-              cadastralNumber={project?.parcel?.cadastralNumber || 'CTS-1842-BANDRA'}
-            />
-          </div>
+            {/* Bottom Step Guide Bar */}
+            <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
+              <button
+                onClick={() => setActiveStep('FEASIBILITY')}
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-display font-bold text-xs shadow-lg shadow-blue-500/30 flex items-center gap-1.5 transition-all"
+              >
+                <span>Proceed to Step 2: FEASIBILITY</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </main>
+        )}
 
-          {/* Bottom Half: House Options & Interactive Floor Plan Studio */}
-          <div className="w-full h-[46%] bg-[#080c14] p-4 flex gap-4 overflow-hidden">
-            {/* Left 45%: Generated House Options Carousel */}
-            <div className="w-[45%] h-full overflow-y-auto pr-1">
-              <HouseOptionsCarousel
-                options={houseOptions}
-                selectedOptionId={selectedOptionId}
-                onSelectOption={setSelectedOptionId}
-                onOpenBOQ={(opt) => setSelectedBOQOption(opt)}
-                onOpenBuildModal={(opt) => setBuildModalOption(opt)}
+        {/* STEP 2: FEASIBILITY (Map with Buildable Envelope + Statutory Feasibility HUD) */}
+        {activeStep === 'FEASIBILITY' && (
+          <main className="relative flex-1 w-full h-full flex">
+            {/* Left: Map Preview */}
+            <div className="flex-1 h-full relative">
+              <CADToolbar
+                toolMode={toolMode}
+                onSelectTool={setToolMode}
+                existingRoadWidth={existingRoadWidth}
+                proposedRoadWidth={proposedRoadWidth}
+                onChangeRoadWidths={(ext, prop) => {
+                  setExistingRoadWidth(ext);
+                  setProposedRoadWidth(prop);
+                }}
+                onClear={() => {
+                  setCoordinates([]);
+                  setFeasibility(null);
+                }}
+              />
+              <MapCanvas
+                toolMode={toolMode}
+                coordinates={coordinates}
+                buildableCoordinates={feasibility?.buildableCoordinates}
+                onAddCoordinate={(coord) => setCoordinates((prev) => [...prev, coord])}
+                onUpdateCoordinates={setCoordinates}
               />
             </div>
 
-            {/* Right 55%: Interactive 2D Floor Plan Viewer */}
-            <div className="w-[55%] h-full">
+            {/* Right: Feasibility Intelligence HUD */}
+            <div className="h-full p-4 pl-0">
+              <FeasibilityHUD
+                feasibility={feasibility}
+                cadastralNumber={project?.parcel?.cadastralNumber || 'CTS-1842-BANDRA'}
+              />
+            </div>
+
+            {/* Bottom Proceed Button */}
+            <div className="absolute bottom-4 left-4 z-20">
+              <button
+                onClick={() => setActiveStep('DESIGN')}
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-display font-bold text-xs shadow-lg shadow-blue-500/30 flex items-center gap-1.5 transition-all"
+              >
+                <span>Proceed to Step 3: DESIGN</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </main>
+        )}
+
+        {/* STEP 3: DESIGN (The Architectural Floor Plan Canvas is the Hero!) */}
+        {activeStep === 'DESIGN' && (
+          <main className="relative flex-1 w-full h-full flex p-4 gap-4 overflow-hidden">
+            {/* Left 320px: Compact House Options Sidebar */}
+            <HouseOptionsCarousel
+              options={houseOptions}
+              selectedOptionId={selectedOptionId}
+              onSelectOption={setSelectedOptionId}
+              onOpenBOQ={(opt) => setSelectedBOQOption(opt)}
+              onOpenBuildModal={(opt) => setBuildModalOption(opt)}
+            />
+
+            {/* Center: The Floor Plan Canvas Hero (Flex-1) */}
+            <div className="flex-1 h-full min-w-0">
               {selectedOption ? (
                 <FloorPlanViewer layout={selectedOption.layout} />
               ) : (
                 <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
-                  Awaiting House Option Generation
+                  Generating CP-SAT Pareto options...
                 </div>
               )}
             </div>
-          </div>
-        </main>
-      ) : (
-        /* Licensed Engineer & Contractor Verification Dashboard */
-        <main className="relative flex-1 w-full h-[calc(100vh-56px)]">
-          {handoffPackage ? (
-            <EngineerDashboard
-              handoffPackage={handoffPackage}
-              releaseId={activeReleaseId}
-              onBackToStudio={() => setViewMode('CUSTOMER_STUDIO')}
-              onApproveGate={handleApproveGate}
-            />
-          ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center text-center p-6 space-y-3">
-              <h3 className="font-display font-bold text-base text-white">No Frozen Release Selected</h3>
-              <p className="text-xs text-slate-400 max-w-md">
-                Select an architectural house option in the Customer Studio and click <strong className="text-emerald-400">REQUEST BUILD</strong> to generate an immutable release and review it here.
-              </p>
-              <button
-                onClick={() => setViewMode('CUSTOMER_STUDIO')}
-                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold"
-              >
-                Go to Customer Studio
-              </button>
-            </div>
-          )}
-        </main>
-      )}
+          </main>
+        )}
 
-      {/* Traceable BOQ Takeoff Modal */}
+        {/* STEP 4: COST (Model-Linked Traceable BOQ & QTO Experience) */}
+        {activeStep === 'COST' && (
+          <main className="relative flex-1 w-full h-full">
+            {selectedOption ? (
+              <CostExperienceView
+                selectedOption={selectedOption}
+                onUpdateTier={handleUpdateTier}
+                onRequestBuild={(opt) => {
+                  setBuildModalOption(opt);
+                  setActiveStep('BUILD');
+                }}
+              />
+            ) : (
+              <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
+                Select a design option to view its itemized Bill of Quantities.
+              </div>
+            )}
+          </main>
+        )}
+
+        {/* STEP 5: BUILD (Design Release & Immutable Lock Workflow) */}
+        {activeStep === 'BUILD' && (
+          <main className="relative flex-1 w-full h-full">
+            {selectedOption ? (
+              <BuildReleaseView
+                selectedOption={selectedOption}
+                activeRelease={handoffPackage}
+                activeReleaseId={activeReleaseId}
+                onLockBuild={handleConfirmBuild}
+                onGoToEngineerDashboard={() => setActiveStep('ENGINEER')}
+                isLocking={isLockingBuild}
+              />
+            ) : (
+              <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
+                Select a design option to prepare for professional build release.
+              </div>
+            )}
+          </main>
+        )}
+
+        {/* STEP 6: ENGINEER (Licensed Engineer & Contractor Dashboard) */}
+        {activeStep === 'ENGINEER' && (
+          <main className="relative flex-1 w-full h-full">
+            {handoffPackage ? (
+              <EngineerDashboard
+                handoffPackage={handoffPackage}
+                releaseId={activeReleaseId || 'REL-SAMPLE-2026'}
+                onBackToStudio={() => setActiveStep('DESIGN')}
+                onApproveGate={handleApproveGate}
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center text-center p-6 space-y-3">
+                <ShieldCheck className="w-12 h-12 text-slate-600" />
+                <h3 className="font-display font-bold text-base text-white">No Frozen Release in Review</h3>
+                <p className="text-xs text-slate-400 max-w-md leading-normal">
+                  In Step 5: BUILD, click <strong className="text-emerald-400">REQUEST BUILD</strong> to generate an immutable release package. It will automatically lock the design and populate the verification gates here.
+                </p>
+                <button
+                  onClick={() => setActiveStep('BUILD')}
+                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold"
+                >
+                  Go to Step 5: BUILD
+                </button>
+              </div>
+            )}
+          </main>
+        )}
+      </div>
+
+      {/* Global Modals (Traceable BOQ Modal & Build Request Modal) */}
       <BOQTableModal
         option={selectedBOQOption}
         onClose={() => setSelectedBOQOption(null)}
       />
 
-      {/* Build Request & Immutable Lock Modal */}
       <BuildLockModal
         option={buildModalOption}
         onClose={() => setBuildModalOption(null)}
