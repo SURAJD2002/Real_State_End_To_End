@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "ruleSetId": "MUMBAI_DCPR_2034",
+  "version": "2034.1.0",
+  "effectiveDate": "2026-01-01",
+  "jurisdiction": "Municipal Corporation of Greater Mumbai (MCGM)",
+  "statutoryReference": "Development Control and Promotion Regulations for Greater Mumbai, 2034 (Regulation 30, 33, 41)",
+  "zoningCategories": {
+    "R2_RESIDENTIAL": {
+      "name": "Residential Zone (R2)",
+      "baseFSI": 1.0,
+      "maxFSI": 3.0,
+      "roadWidthTiers": [
+        {
+          "minRoadWidthM": 0.0,
+          "maxRoadWidthM": 9.0,
+          "baseFSI": 1.0,
+          "maxPremiumFSI": 0.0,
+          "maxTDR": 0.0,
+          "maxPermissibleFSI": 1.0,
+          "maxBuildingHeightM": 16.0,
+          "frontSetbackM": 3.0
+        },
+        {
+          "minRoadWidthM": 9.0,
+          "maxRoadWidthM": 12.0,
+          "baseFSI": 1.0,
+          "maxPremiumFSI": 0.5,
+          "maxTDR": 0.5,
+          "maxPermissibleFSI": 2.0,
+          "maxBuildingHeightM": 32.0,
+          "frontSetbackM": 4.5
+        },
+        {
+          "minRoadWidthM": 12.0,
+          "maxRoadWidthM": 18.0,
+          "baseFSI": 1.0,
+          "maxPremiumFSI": 0.5,
+          "maxTDR": 0.75,
+          "maxPermissibleFSI": 2.25,
+          "maxBuildingHeightM": 50.0,
+          "frontSetbackM": 6.0
+        },
+        {
+          "minRoadWidthM": 18.0,
+          "maxRoadWidthM": 27.0,
+          "baseFSI": 1.0,
+          "maxPremiumFSI": 0.5,
+          "maxTDR": 1.0,
+          "maxPermissibleFSI": 2.5,
+          "maxBuildingHeightM": 70.0,
+          "frontSetbackM": 7.5
+        },
+        {
+          "minRoadWidthM": 27.0,
+          "maxRoadWidthM": 999.0,
+          "baseFSI": 1.0,
+          "maxPremiumFSI": 0.5,
+          "maxTDR": 1.25,
+          "maxPermissibleFSI": 2.75,
+          "maxBuildingHeightM": 120.0,
+          "frontSetbackM": 9.0
+        }
+      ]
+    }
+  },
+  "openSpaceReservations": [
+    {
+      "minPlotAreaSqm": 2000.0,
+      "maxPlotAreaSqm": 4000.0,
+      "requiredPublicOpenSpacePercent": 10.0
+    },
+    {
+      "minPlotAreaSqm": 4000.0,
+      "maxPlotAreaSqm": 10000.0,
+      "requiredPublicOpenSpacePercent": 15.0
+    },
+    {
+      "minPlotAreaSqm": 10000.0,
+      "maxPlotAreaSqm": 999999.0,
+      "requiredPublicOpenSpacePercent": 20.0
+    }
+  ],
+  "parkingStandards": {
+    "standardStallWidthM": 2.5,
+    "standardStallLengthM": 5.0,
+    "accessibleStallWidthM": 3.6,
+    "accessibleStallLengthM": 5.0,
+    "driveAisleWidthTwoWayM": 6.0,
+    "driveAisleWidthOneWayM": 3.5,
+    "residentialCarStallPerSqmCarpet": 0.0143
+  },
+  "financialBaseline": {
+    "currency": "INR",
+    "avgSaleRatePerSqmBUA": 185000.0,
+    "civilConstructionCostPerSqmBUA": 46000.0,
+    "statutoryPremiumRatePercentOfASR": 25.0,
+    "annualFinancingCostPercent": 11.5,
+    "projectDurationMonths": 36
+  }
+}

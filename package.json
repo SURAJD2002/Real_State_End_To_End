@@ -1,0 +1,29 @@
+{
+  "name": "real-estate-development-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Enterprise Land Feasibility and Real Estate Development Intelligence Platform",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "dev:all": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "npm run dev --workspace=apps/api-gateway",
+    "build": "npm run build --workspace=apps/web",
+    "docker:up": "docker compose -f infrastructure/docker/docker-compose.dev.yml up -d",
+    "docker:down": "docker compose -f infrastructure/docker/docker-compose.dev.yml down",
+    "docker:logs": "docker compose -f infrastructure/docker/docker-compose.dev.yml logs -f",
+    "worker:geometry": "python3 workers/geometry/service.py",
+    "worker:regulation": "python3 workers/regulation/service.py",
+    "worker:financial": "python3 workers/financial/service.py"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
