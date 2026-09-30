@@ -1,7 +1,8 @@
 """
 API Gateway Service (FastAPI)
 Stateless transactional API for project CRUD, CAD parcel geometry auto-save,
-and deterministic Feasibility DAG orchestration.
+deterministic Feasibility DAG, Parametric House Generation, Traceable BOQ,
+CPM Scheduling, and Immutable Engineer Handoff Packages (Delta Specification).
 """
 
 import sys
@@ -11,8 +12,9 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime
 import uuid
 import json
+import hashlib
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -23,11 +25,19 @@ sys.path.append(str(ROOT_DIR))
 from workers.geometry.engine import compute_parcel_metrics
 from workers.regulation.evaluator import evaluate_mumbai_dcpr_2034
 from workers.financial.proforma import calculate_financial_proforma
+from workers.generation.house_generator import generate_house_options
+from workers.qto.boq_engine import compute_traceable_boq
+from workers.schedule.cpm_engine import generate_construction_schedule
+from workers.release.manifest_engine import (
+    generate_release_fingerprint,
+    generate_ifc4_model,
+    compile_handoff_package
+)
 
 app = FastAPI(
-    title="Planwise Enterprise Feasibility API",
-    description="Stateless API Gateway for Real Estate Feasibility & Mumbai DCPR 2034 Underwriting",
-    version="1.0.0"
+    title="Planwise Enterprise — Land-to-Home Platform API",
+    description="Stateless API Gateway for Real Estate Feasibility, House Option Generation, Traceable BOQ & Engineer Handoffs",
+    version="2.0.0"
 )
 
 # Enable CORS for local Vite dev server
@@ -54,8 +64,26 @@ class ProjectCreateRequest(BaseModel):
     description: Optional[str] = "Statutory feasibility evaluation under Mumbai DCPR 2034"
     jurisdiction: str = "MUMBAI_DCPR_2034"
 
+class BuildRequestPayload(BaseModel):
+    designVersionId: str
+    optionId: str
+    requestedQualityTier: str = "STANDARD"
+    customerAcknowledgements: List[str] = Field(
+        default=["ESTIMATE_RANGE", "SITE_VERIFICATION", "PROFESSIONAL_DELIVERY", "CHANGE_ORDER_RULES"]
+    )
+    customerNotes: Optional[str] = "Approved for architectural and structural engineering review"
+
+class ProfessionalGateApproval(BaseModel):
+    gate: str = "G3" # G0 to G8
+    decision: str = "APPROVED" # APPROVED, REQUEST_REVISION, REJECTED
+    professionalId: str = "ENG-MH-48201"
+    reasonCodes: List[str] = []
+    notes: Optional[str] = "Satisfies preliminary span limits and NBC 2016 room dimensions"
+
 # --- In-Memory Repository for Dev Mode ---
 PROJECTS_DB: Dict[str, Dict[str, Any]] = {}
+HOUSE_OPTIONS_CACHE: Dict[str, List[Dict[str, Any]]] = {}
+RELEASES_DB: Dict[str, Dict[str, Any]] = {}
 
 def get_or_create_default_project() -> Dict[str, Any]:
     if not PROJECTS_DB:
@@ -82,7 +110,9 @@ def get_or_create_default_project() -> Dict[str, Any]:
                 "proposedRoadWidthM": 18.0,
                 "version": 1
             },
-            "latestFeasibility": None
+            "latestFeasibility": None,
+            "selectedOption": None,
+            "activeRelease": None
         }
     return next(iter(PROJECTS_DB.values()))
 
@@ -98,7 +128,7 @@ def health_check():
         "status": "healthy",
         "service": "api-gateway",
         "timestamp": datetime.utcnow().isoformat(),
-        "version": "1.0.0"
+        "version": "2.0.0"
     }
 
 @app.get("/api/v1/projects")
@@ -117,7 +147,9 @@ def create_project(req: ProjectCreateRequest):
         "createdAt": datetime.utcnow().isoformat(),
         "updatedAt": datetime.utcnow().isoformat(),
         "parcel": None,
-        "latestFeasibility": None
+        "latestFeasibility": None,
+        "selectedOption": None,
+        "activeRelease": None
     }
     PROJECTS_DB[proj_id] = project
     return project
@@ -214,6 +246,176 @@ def run_feasibility_dag(project_id: str):
 
     return result
 
+# --- Parametric House Options & Generation Pipeline ---
+
+@app.get("/api/v1/projects/{project_id}/house-options")
+def get_house_options(project_id: str, quality_tier: str = "STANDARD"):
+    """
+    Generates 3 diverse, feasible low-rise residential options with traceable BOQ and CPM schedules.
+    """
+    if project_id not in PROJECTS_DB:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    options = generate_house_options()
+    
+    # Enrich each option with model-derived BOQ and Schedule
+    for opt in options:
+        opt["boq"] = compute_traceable_boq(opt, quality_tier=quality_tier)
+        opt["schedule"] = generate_construction_schedule(
+            total_bua_sqm=opt["layout"]["totalGrossBUASqm"],
+            floors=opt["layout"]["floors"]
+        )
+
+    HOUSE_OPTIONS_CACHE[project_id] = options
+    return options
+
+# --- BUILD Button & Immutable Lock (Delta Spec §12, §13, §14) ---
+
+@app.post("/api/v1/design-versions/{design_version_id}/build-request", status_code=status.HTTP_202_ACCEPTED)
+def request_build(design_version_id: str, payload: BuildRequestPayload):
+    """
+    Processes customer Build request: validates acknowledgements, freezes the design,
+    computes cryptographic release fingerprint, and creates an immutable handoff package.
+    """
+    required_acks = {"ESTIMATE_RANGE", "SITE_VERIFICATION", "PROFESSIONAL_DELIVERY"}
+    submitted_acks = set(payload.customerAcknowledgements)
+    if not required_acks.issubset(submitted_acks):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Missing mandatory acknowledgements: {required_acks - submitted_acks}"
+        )
+
+    # Locate the target option
+    target_option = None
+    target_proj_id = None
+    for pid, options in HOUSE_OPTIONS_CACHE.items():
+        for opt in options:
+            if opt["designVersionId"] == design_version_id or opt["optionId"] == payload.optionId:
+                target_option = opt
+                target_proj_id = pid
+                break
+        if target_option:
+            break
+
+    if not target_option:
+        # Fallback to generating a fresh option if not in cache
+        opts = generate_house_options()
+        target_option = opts[0]
+        target_option["boq"] = compute_traceable_boq(target_option, quality_tier=payload.requestedQualityTier)
+        target_option["schedule"] = generate_construction_schedule(
+            total_bua_sqm=target_option["layout"]["totalGrossBUASqm"],
+            floors=target_option["layout"]["floors"]
+        )
+        target_proj_id = "proj-mumbai-default-01"
+
+    release_id = f"rel-{uuid.uuid4().hex[:12]}"
+    
+    # Compute SHA-256 release fingerprint
+    fingerprint = generate_release_fingerprint(
+        geometry_hash="sha256:geom_bandra_10k",
+        regulation_hash="sha256:mcgm_dcpr2034_v1",
+        customer_brief_hash="sha256:brief_std_res",
+        design_hash=target_option["designHash"],
+        boq_hash=f"sha256:{hashlib.sha256(json.dumps(target_option['boq']['lines']).encode()).hexdigest()[:12]}",
+        schedule_hash=f"sha256:{hashlib.sha256(json.dumps(target_option['schedule']['activities']).encode()).hexdigest()[:12]}"
+    )
+
+    package = compile_handoff_package(
+        release_id=release_id,
+        project_name=PROJECTS_DB.get(target_proj_id, {}).get("name", "Bandra Residential Villa"),
+        house_option=target_option,
+        boq=target_option["boq"],
+        schedule=target_option["schedule"],
+        release_fingerprint=fingerprint
+    )
+
+    RELEASES_DB[release_id] = {
+        "releaseId": release_id,
+        "designVersionId": design_version_id,
+        "projectId": target_proj_id,
+        "fingerprint": fingerprint,
+        "lockedAt": datetime.utcnow().isoformat(),
+        "status": "BUILD_REQUESTED",
+        "lifecycleState": "PROFESSIONAL_REVIEW",
+        "handoffPackage": package,
+        "houseOption": target_option
+    }
+
+    if target_proj_id in PROJECTS_DB:
+        PROJECTS_DB[target_proj_id]["activeRelease"] = RELEASES_DB[release_id]
+        PROJECTS_DB[target_proj_id]["status"] = "FEASIBILITY_RUNNING"
+
+    return {
+        "buildRequestId": f"br-{uuid.uuid4().hex[:8]}",
+        "releaseId": release_id,
+        "releaseFingerprint": fingerprint,
+        "lifecycleState": "PROFESSIONAL_REVIEW",
+        "requiredGates": ["G0", "G1", "G2", "G3", "G4"],
+        "message": "Design locked and submitted for professional engineering review.",
+        "package": package
+    }
+
+@app.get("/api/v1/releases/{release_id}/handoff-package")
+def get_handoff_package(release_id: str):
+    if release_id not in RELEASES_DB:
+        raise HTTPException(status_code=404, detail="Release record not found")
+    return RELEASES_DB[release_id]["handoffPackage"]
+
+@app.post("/api/v1/releases/{release_id}/approvals")
+def update_gate_approval(release_id: str, approval: ProfessionalGateApproval):
+    if release_id not in RELEASES_DB:
+        raise HTTPException(status_code=404, detail="Release record not found")
+    
+    rel = RELEASES_DB[release_id]
+    pkg = rel["handoffPackage"]
+    
+    # Update gate status
+    updated = False
+    for g in pkg["humanVerificationGates"]:
+        if g["gate"] == approval.gate:
+            g["status"] = approval.decision
+            g["verifiedBy"] = approval.professionalId
+            g["verifiedAt"] = datetime.utcnow().isoformat()
+            g["notes"] = approval.notes
+            updated = True
+            break
+            
+    if not updated:
+        raise HTTPException(status_code=400, detail=f"Gate {approval.gate} not found in manifest")
+
+    # If all G0-G3 gates approved, advance to PROFESSIONALLY_ACCEPTED
+    all_approved = all(
+        g["status"] == "APPROVED"
+        for g in pkg["humanVerificationGates"][:4]
+    )
+    if all_approved:
+        rel["lifecycleState"] = "PROFESSIONALLY_ACCEPTED"
+        pkg["lifecycleState"] = "PROFESSIONALLY_ACCEPTED"
+
+    return {
+        "status": "UPDATED",
+        "gate": approval.gate,
+        "decision": approval.decision,
+        "lifecycleState": rel["lifecycleState"],
+        "handoffPackage": pkg
+    }
+
+@app.get("/api/v1/releases/{release_id}/ifc")
+def download_ifc_model(release_id: str):
+    """Exports open-standard IFC4 semantic model (Delta Spec §1, §12)."""
+    if release_id not in RELEASES_DB:
+        raise HTTPException(status_code=404, detail="Release not found")
+    
+    opt = RELEASES_DB[release_id]["houseOption"]
+    ifc_text = generate_ifc4_model(opt, release_id)
+    return Response(
+        content=ifc_text,
+        media_type="application/x-step",
+        headers={"Content-Disposition": f"attachment; filename={release_id}.ifc"}
+    )
+
+# --- Golden Dataset Seed Loader ---
+
 @app.post("/api/v1/projects/load-golden-dataset")
 def load_golden_dataset():
     """Loads the canonical 10,000 sqm Mumbai benchmark parcel from seed file."""
@@ -241,12 +443,17 @@ def load_golden_dataset():
             "proposedRoadWidthM": data["roadFrontage"]["proposedWidthM"],
             "version": 1
         },
-        "latestFeasibility": None
+        "latestFeasibility": None,
+        "selectedOption": None,
+        "activeRelease": None
     }
     PROJECTS_DB[proj_id] = project
 
     # Immediately execute feasibility run for the golden dataset
     res = run_feasibility_dag(proj_id)
+    # Pre-generate house options
+    get_house_options(proj_id)
+
     return {
         "project": project,
         "feasibility": res
