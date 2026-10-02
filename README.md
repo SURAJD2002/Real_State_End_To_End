@@ -2,7 +2,19 @@
 
 An institutional-grade, end-to-end **Land-to-Home Development & Construction Platform** built according to the **Development-Ready Delta Specification** and the **Archonet Planwise Engineering Master Plan**.
 
-The platform provides a complete, deterministic bridge from raw land parcel digitization through statutory zoning compliance (**Mumbai MCGM DCPR 2034**), solver-backed residential floor-plan generation (**NBC 2016**), model-traceable Bill of Quantities (QTO/BOQ), Critical Path Method (CPM) construction scheduling, and an immutable professional engineer handoff workflow.
+The platform provides a complete, deterministic bridge across the six core project stages:
+$$\textbf{Land} \longrightarrow \textbf{Feasibility} \longrightarrow \textbf{Design} \longrightarrow \textbf{Cost} \longrightarrow \textbf{Build Review} \longrightarrow \textbf{Engineer Review}$$
+
+---
+
+### ⚠️ Implementation Scope & Engineering Boundaries
+
+- **Current Implementation:** **Phases 1 through 7** are complete, fully integrated, and backed by automated regression tests (101/101 PASS).
+- **Phase 8 (Execution Tracking & Field Telemetry) is NOT implemented.**
+- **Regulatory & Professional Boundary:**
+  - **Computational validation is NOT professional certification.**
+  - **Engineer Review does NOT automatically authorize construction.** Automated gate evaluations (G0 through G8) provide rule-based verification against statutory criteria (e.g., Mumbai MCGM DCPR 2034, NBC 2016, IS 456), but legal sign-off and municipal authorization strictly require review, stamping, and formal execution by a licensed professional engineer (Delta Spec §14).
+  - No features beyond Phase 7 are implemented or active.
 
 ---
 
@@ -96,6 +108,46 @@ The platform provides a complete, deterministic bridge from raw land parcel digi
   - `G7`: Milestone & QA Acceptance
   - `G8`: Completion Certificate & Final Handover
 - One-click downloads for **Full Manifest (JSON)** and **BIM Model (IFC4)**.
+
+---
+
+## 📂 Repository & Project Structure
+
+The codebase is organized into modular services, workers, schemas, and test suites:
+
+- **`apps/`**: Application frontend and gateway services:
+  - `apps/web/`: React 19 + Vite + TypeScript client containing the Customer Studio (CAD parcel digitizer, Feasibility HUD, House Options carousel, 2D Floor Plan viewer, Cost breakdown) and the Licensed Engineer Review Dashboard.
+  - `apps/api-gateway/`: FastAPI stateless backend routing geometry, regulation, design generation, QTO/BOQ calculation, release locking, and verification gate handoffs.
+- **`packages/`**: Reusable schemas, shared domain types, and statutory rule specifications:
+  - `packages/schemas/`: Pydantic V2 schemas for Canonical Building Models (CBM), QTO, BOQ, rate snapshots, customer briefs, room graphs, and release manifests.
+  - `packages/rules/`: Statutory regulation rule definitions (e.g., `mumbai_dcpr_2034_v1.json`, `bbmp_bengaluru_2026.json`) and golden benchmark fixtures.
+  - `packages/shared-types/`: Shared TypeScript domain models mirroring backend schemas.
+- **`workers/`**: Computational pipeline worker engines:
+  - `workers/geometry/`: Geodetic transformations (WGS84 $\leftrightarrow$ UTM Zone 43N) and boundary solid geometry compilation.
+  - `workers/regulation/`: Rule execution engine evaluating setbacks, ground coverage, permissible FSI, and road width requirements.
+  - `workers/generation/`: OR-Tools CP-SAT discrete constraint solver for residential floor plan generation and multi-objective Pareto ranking.
+  - `workers/qto/`: DAG-based measurement engine, CPWD DSR rate snapshotting, BOQ rollup, and dynamic change propagation.
+  - `workers/schedule/`: CPM precedence network calculating critical paths, activity float, and project duration.
+  - `workers/release/`: SHA-256 cryptographic manifest generator and IFC4 STEP physical file compiler.
+  - `workers/evidence/`: Document intake and provenance engine.
+- **`tests/`**: Comprehensive test suites (101 automated tests across 8 test modules):
+  - `test_phase7_engineer_review.py`: Gates G0–G8, professional handoff, manifest hashing, and IFC export.
+  - `test_real_plot_end_to_end.py`: Invariant verification for the authoritative 1,100 sq ft real plot.
+  - `test_canonical_building_model.py`: CBM structural validation.
+  - `test_m1_site_and_rules.py`: Geodetic coordinate transforms and DCPR 2034 rule evaluation.
+  - `test_m2_generator_and_solids.py`: House generation and solid model generation.
+  - `test_m3_qto_and_cost.py`: QTO measurements, BOQ, and CPM scheduling.
+  - `benchmarks/`: CP-SAT solver performance benchmarking suite.
+- **`database/migrations/`** (or `migrations/`): Relational schema definitions with PostGIS 3.4 spatial extensions:
+  - `02_canonical_building_model.sql`: Building model and spatial tables.
+  - `03_site_evidence_and_rule_engine.sql`: Evidence and regulatory schemas.
+  - `04_qto_boq_and_cost_engine.sql`: QTO, BOQ, and rate snapshot persistence.
+- **`infrastructure/`**: Deployment and environment infrastructure:
+  - `infrastructure/docker/`: Docker Compose configurations for PostgreSQL 16 + PostGIS 3.4 and Redis.
+- **`docs/`**: Engineering documentation, architecture blueprints, and milestone delivery reports:
+  - `docs/README.md`: Index of engineering specifications and master plans.
+  - `PHASE_7_ENGINEER_REVIEW_REPORT.md` / `PHASE_7_ENGINEER_REVIEW_REPORT.pdf`: Authoritative Phase 7 verification report.
+  - Milestone development reports, master plan blueprints, and gap analyses.
 
 ---
 
