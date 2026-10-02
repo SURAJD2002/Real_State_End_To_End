@@ -9,11 +9,11 @@ $$\textbf{Land} \longrightarrow \textbf{Feasibility} \longrightarrow \textbf{Des
 
 ### ⚠️ Implementation Scope & Engineering Boundaries
 
-- **Current Implementation:** **Phases 1 through 7** are complete, fully integrated, and backed by automated regression tests (101/101 PASS).
-- **Phase 8 (Execution Tracking & Field Telemetry) is NOT implemented.**
-- **Regulatory & Professional Boundary:**
-  - **Computational validation is NOT professional certification.**
-  - **Engineer Review does NOT automatically authorize construction.** Automated gate evaluations (G0 through G8) provide rule-based verification against statutory criteria (e.g., Mumbai MCGM DCPR 2034, NBC 2016, IS 456), but legal sign-off and municipal authorization strictly require review, stamping, and formal execution by a licensed professional engineer (Delta Spec §14).
+- **Current Implementation:** **Phase 7 COMPLETE** (Phases 1 through 7 are complete, fully integrated, and backed by automated regression tests: 101/101 PASS).
+- **Phase 8 NOT IMPLEMENTED** (Execution Tracking & Field Telemetry is not implemented; no Phase 8 code or features are present).
+- **Professional Verification Boundary:**
+  - **Computational validation $\neq$ professional certification** (Computational validation is NOT professional certification).
+  - **Engineer Review does NOT automatically authorize construction.** Specifically, **Gates G5 (Site Release) and G6 (Construction Kickoff) do NOT grant automatic construction authorization.** Automated evaluations verify rule-based statutory criteria (e.g., Mumbai MCGM DCPR 2034, NBC 2016, IS 456), but physical site release and construction kickoff strictly require attributable review, wet-ink / digital stamping, and statutory municipal permits signed by a licensed professional engineer (Delta Spec §14).
   - No features beyond Phase 7 are implemented or active.
 
 ---
