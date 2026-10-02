@@ -13,6 +13,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { FeasibilityResult } from '../types';
+import { RuleExplainabilityModal } from './RuleExplainabilityModal';
 
 interface FeasibilityHUDProps {
   feasibility: FeasibilityResult | null;
@@ -26,6 +27,7 @@ export const FeasibilityHUD: React.FC<FeasibilityHUDProps> = ({
   const [activeTab, setActiveTab] = useState<'STATUTORY' | 'FINANCIALS'>('STATUTORY');
   const [isWhyFSIShown, setIsWhyFSIShown] = useState<boolean>(false);
   const [isWhyDeductionShown, setIsWhyDeductionShown] = useState<boolean>(false);
+  const [isExplainModalOpen, setIsExplainModalOpen] = useState<boolean>(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   if (!feasibility) {
@@ -281,6 +283,15 @@ export const FeasibilityHUD: React.FC<FeasibilityHUDProps> = ({
             </>
           )}
 
+          {/* Statutory Explainability "Why?" Modal Trigger */}
+          <button
+            onClick={() => setIsExplainModalOpen(true)}
+            className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-blue-600/30 to-indigo-600/30 hover:from-blue-600/50 hover:to-indigo-600/50 border border-blue-500/40 text-blue-300 font-display font-semibold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
+          >
+            <HelpCircle className="w-3.5 h-3.5 text-blue-400" />
+            <span>Audit Calculation &amp; Explain &quot;Why?&quot;</span>
+          </button>
+
           {/* Statutory Verification Footnote */}
           <div className="p-2 rounded bg-slate-950/90 border border-white/5 flex items-start gap-1.5 text-[10px] text-slate-400 leading-normal">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
@@ -289,6 +300,14 @@ export const FeasibilityHUD: React.FC<FeasibilityHUDProps> = ({
             </span>
           </div>
         </div>
+      )}
+
+      {/* Full Explainability Audit Modal */}
+      {isExplainModalOpen && (
+        <RuleExplainabilityModal
+          feasibility={feasibility}
+          onClose={() => setIsExplainModalOpen(false)}
+        />
       )}
     </aside>
   );

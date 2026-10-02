@@ -9,7 +9,14 @@ import { CostExperienceView } from './components/CostExperienceView';
 import { BuildReleaseView } from './components/BuildReleaseView';
 import { BOQTableModal } from './components/BOQTableModal';
 import { BuildLockModal } from './components/BuildLockModal';
-import { EngineerDashboard } from './components/EngineerDashboard';
+import { SiteEvidencePanel } from './components/SiteEvidencePanel';
+import { LandIntakeView } from './components/LandIntakeView';
+import { FeasibilitySummaryView } from './components/FeasibilitySummaryView';
+import { DesignIntakeView, CustomerDesignRequirements } from './components/DesignIntakeView';
+import { DesignOptionsView } from './components/DesignOptionsView';
+import { CostSummaryView } from './components/CostSummaryView';
+import { BuildReviewView } from './components/BuildReviewView';
+import { EngineerReviewView } from './components/EngineerReviewView';
 import { 
   WorkflowStep, 
   ProjectData, 
@@ -22,12 +29,14 @@ import { ArrowRight, ShieldCheck } from 'lucide-react';
 export const App: React.FC = () => {
   const [project, setProject] = useState<ProjectData | null>(null);
   const [activeStep, setActiveStep] = useState<WorkflowStep>('SITE');
+  const [viewMode, setViewMode] = useState<'CUSTOMER' | 'TECHNICAL'>('CUSTOMER');
   const [coordinates, setCoordinates] = useState<[number, number][]>([]);
   const [existingRoadWidth, setExistingRoadWidth] = useState<number>(12.0);
   const [proposedRoadWidth, setProposedRoadWidth] = useState<number>(18.0);
   const [feasibility, setFeasibility] = useState<FeasibilityResult | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isCalculating, setIsCalculating] = useState<boolean>(false);
+  const [isEvidencePanelOpen, setIsEvidencePanelOpen] = useState<boolean>(true);
 
   // House Generation & Delivery State
   const [houseOptions, setHouseOptions] = useState<HouseOption[]>([]);
@@ -37,6 +46,11 @@ export const App: React.FC = () => {
   const [isLockingBuild, setIsLockingBuild] = useState<boolean>(false);
   const [activeReleaseId, setActiveReleaseId] = useState<string>('');
   const [handoffPackage, setHandoffPackage] = useState<HandoffPackage | null>(null);
+
+  // Customer Mode: Design Intake & Options Step State
+  const [designPhase, setDesignPhase] = useState<'INTAKE' | 'OPTIONS'>('INTAKE');
+  const [isGeneratingDesign, setIsGeneratingDesign] = useState<boolean>(false);
+  const [customerRequirements, setCustomerRequirements] = useState<CustomerDesignRequirements | null>(null);
 
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const apiBase = '/api/v1';
@@ -51,8 +65,8 @@ export const App: React.FC = () => {
           setProject(p);
           if (p.parcel && p.parcel.coordinates) {
             setCoordinates(p.parcel.coordinates);
-            setExistingRoadWidth(p.parcel.existingRoadWidthM || 12.0);
-            setProposedRoadWidth(p.parcel.proposedRoadWidthM || 18.0);
+            setExistingRoadWidth(p.parcel.existingRoadWidthM || 4.88);
+            setProposedRoadWidth(p.parcel.proposedRoadWidthM || 4.88);
           }
           if (p.latestFeasibility) {
             setFeasibility(p.latestFeasibility);
@@ -62,17 +76,17 @@ export const App: React.FC = () => {
       .catch((err) => {
         console.warn('API Gateway offline. Using fallback initial coordinates.', err);
         const defaultCoords: [number, number][] = [
-          [72.86850, 19.11280],
-          [72.86950, 19.11400],
-          [72.87100, 19.11330],
-          [72.87000, 19.11210],
-          [72.86850, 19.11280]
+          [72.82950, 19.05960],
+          [72.82958, 19.05960],
+          [72.82958, 19.05971],
+          [72.82950, 19.05971],
+          [72.82950, 19.05960]
         ];
         setCoordinates(defaultCoords);
       });
 
     // Fetch initial house options
-    fetch(`${apiBase}/projects/proj-mumbai-default-01/house-options`)
+    fetch(`${apiBase}/projects/proj-mumbai-real-1100/house-options`)
       .then((res) => res.json())
       .then((opts: HouseOption[]) => {
         if (opts && opts.length > 0) {
@@ -93,7 +107,7 @@ export const App: React.FC = () => {
     }
 
     debounceTimerRef.current = setTimeout(() => {
-      const projId = project?.id || 'proj-mumbai-default-01';
+      const projId = project?.id || 'proj-mumbai-real-1100';
       fetch(`${apiBase}/projects/${projId}/geometries`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -126,7 +140,7 @@ export const App: React.FC = () => {
     }
 
     setIsCalculating(true);
-    const projId = project?.id || 'proj-mumbai-default-01';
+    const projId = project?.id || 'proj-mumbai-real-1100';
 
     try {
       const res = await fetch(`${apiBase}/projects/${projId}/calculate-feasibility`, {
@@ -180,7 +194,7 @@ export const App: React.FC = () => {
 
   // 5. Handle Quality Tier Update in Cost View
   const handleUpdateTier = async (tier: string) => {
-    const projId = project?.id || 'proj-mumbai-default-01';
+    const projId = project?.id || 'proj-mumbai-real-1100';
     try {
       const res = await fetch(`${apiBase}/projects/${projId}/house-options?quality_tier=${tier}`);
       if (res.ok) {
@@ -216,8 +230,9 @@ export const App: React.FC = () => {
       setActiveReleaseId(data.releaseId);
       setHandoffPackage(data.package);
       setBuildModalOption(null);
-      // Auto-transition to Step 6: ENGINEER
-      setActiveStep('ENGINEER');
+      if (viewMode === 'TECHNICAL') {
+        setActiveStep('ENGINEER');
+      }
     } catch (err) {
       alert(`Error locking build: ${err}`);
     } finally {
@@ -225,36 +240,80 @@ export const App: React.FC = () => {
     }
   };
 
-  // 7. Handle Gate Sign-Off in Engineer Dashboard
-  const handleApproveGate = async (gateId: string, decision: string, notes: string) => {
-    if (!activeReleaseId) return;
+  // 6b. Generate Design Options from Customer Requirements
+  const handleGenerateDesignOptions = async (reqs: CustomerDesignRequirements): Promise<boolean> => {
+    setIsGeneratingDesign(true);
+    setCustomerRequirements(reqs);
+    const projId = project?.id || 'proj-mumbai-real-1100';
 
     try {
-      const res = await fetch(`${apiBase}/releases/${activeReleaseId}/approvals`, {
+      // Call M2 generation pipeline
+      const genRes = await fetch(`${apiBase}/sites/${projId}/design-options/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          gate: gateId,
-          decision: decision,
-          professionalId: 'ENG-MH-48201',
-          notes: notes
+          bedrooms: reqs.bedrooms,
+          bathrooms: reqs.bathrooms,
+          floors: reqs.floors,
+          parkingRequired: reqs.parkingCars > 0,
+          preferredStyle: reqs.preferredStyle,
+          budgetInr: reqs.budgetInr,
+          qualityTier: 'STANDARD'
         })
       });
-      if (res.ok) {
-        const data = await res.json();
-        setHandoffPackage(data.handoffPackage);
+
+      if (genRes.ok) {
+        const genData = await genRes.json();
+        const opts: HouseOption[] = genData.options || [];
+        if (opts.length > 0) {
+          setHouseOptions(opts);
+          setSelectedOptionId(opts[0].optionId);
+          setDesignPhase('OPTIONS');
+          setIsGeneratingDesign(false);
+          return true;
+        }
       }
+
+      // Fallback to project house-options
+      const optRes = await fetch(`${apiBase}/projects/${projId}/house-options`);
+      if (optRes.ok) {
+        const opts: HouseOption[] = await optRes.json();
+        if (opts.length > 0) {
+          setHouseOptions(opts);
+          setSelectedOptionId(opts[0].optionId);
+          setDesignPhase('OPTIONS');
+          setIsGeneratingDesign(false);
+          return true;
+        }
+      }
+
+      if (houseOptions.length > 0) {
+        setDesignPhase('OPTIONS');
+        setIsGeneratingDesign(false);
+        return true;
+      }
+
+      setIsGeneratingDesign(false);
+      return false;
     } catch (err) {
-      console.error('Error updating gate', err);
+      console.warn('Design generation API error', err);
+      if (houseOptions.length > 0) {
+        setDesignPhase('OPTIONS');
+        setIsGeneratingDesign(false);
+        return true;
+      }
+      setIsGeneratingDesign(false);
+      return false;
     }
   };
+
 
   const selectedOption = houseOptions.find((o) => o.optionId === selectedOptionId) || houseOptions[0];
 
   // 5. Handle Manual Site Geometry Save with Provenance (Section 8 & 26)
   const handleSaveSiteGeometry = async (metadata: SiteLocationMetadata) => {
     setIsSaving(true);
-    const projId = project?.id || 'proj-mumbai-default-01';
+    const projId = project?.id || 'proj-mumbai-real-1100';
     try {
       const res = await fetch(`${apiBase}/projects/${projId}/geometries`, {
         method: 'PUT',
@@ -302,7 +361,7 @@ export const App: React.FC = () => {
   // 6. Handle Mapbox Location Selection (Section 6)
   const handleSelectSiteLocation = (site: SiteLocationMetadata) => {
     setProject((prev) => ({
-      id: prev?.id || 'proj-mumbai-default-01',
+      id: prev?.id || 'proj-mumbai-real-1100',
       name: site.address.split(',')[0] || 'Selected Project Site',
       description: `Site location reference: ${site.city}, ${site.state}`,
       jurisdiction: 'MUMBAI_DCPR_2034',
@@ -334,6 +393,49 @@ export const App: React.FC = () => {
     }));
   };
 
+  const handleConfirmLandPlot = (landData: {
+    location: string;
+    city: string;
+    state: string;
+    country: string;
+    declaredAreaSqft: number;
+    unit: 'sqft' | 'sqm';
+    shape: 'regular' | 'irregular' | 'unknown';
+    roadWidthFt: number;
+    roadFacingSide: string;
+    coordinates?: [number, number][];
+  }) => {
+    if (landData.coordinates && landData.coordinates.length >= 3) {
+      setCoordinates(landData.coordinates);
+    }
+    const rwm = Math.round((landData.roadWidthFt * 0.3048) * 10) / 10;
+    setExistingRoadWidth(rwm);
+    setProposedRoadWidth(Math.max(rwm * 1.5, 12.0));
+
+    setProject((prev) => ({
+      id: prev?.id || 'proj-mumbai-real-1100',
+      name: landData.location,
+      description: `${landData.city}, ${landData.state}`,
+      jurisdiction: 'MUMBAI_DCPR_2034',
+      status: 'DRAFT',
+      createdAt: prev?.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      parcel: {
+        coordinates: landData.coordinates || coordinates,
+        cadastralNumber: prev?.parcel?.cadastralNumber || 'CTS-1842-BANDRA',
+        tenureType: 'PRIVATE_FREEHOLD',
+        existingRoadWidthM: rwm,
+        proposedRoadWidthM: Math.max(rwm * 1.5, 12.0),
+        version: (prev?.parcel?.version || 1) + 1
+      },
+      latestFeasibility: feasibility,
+      activeRelease: prev?.activeRelease || null
+    }));
+
+    handleRunFeasibility();
+    setActiveStep('FEASIBILITY');
+  };
+
   return (
     <div className="w-screen h-screen flex flex-col bg-[#07090e] overflow-hidden select-none">
       {/* Top Application Bar with 6-stage workflow tabs */}
@@ -346,192 +448,294 @@ export const App: React.FC = () => {
         hasActiveRelease={!!activeReleaseId}
         onRunFeasibility={handleRunFeasibility}
         onLoadGoldenDataset={handleLoadGoldenDataset}
+        viewMode={viewMode}
+        onToggleViewMode={setViewMode}
       />
 
       {/* Main Workspace Body Organized by Workflow Step */}
-      <div className="relative flex-1 w-full h-[calc(100vh-56px)] flex overflow-hidden">
-        {/* STEP 1: SITE (Full Mapbox GIS Workspace with Location Search, Parcel CAD, Layers & Measurements) */}
+      <div
+        className="relative flex-1 w-full h-[calc(100vh-56px)] flex overflow-hidden"
+        style={{ width: '100%', height: 'calc(100vh - 56px)', minHeight: 0 }}
+      >
+        {/* STEP 1: LAND (Simple Customer Intake by Default; Technical CAD Map in Technical Mode) */}
         {activeStep === 'SITE' && (
-          <main className="relative flex-1 w-full h-full flex flex-col">
-            <PlanwiseMap
-              coordinates={coordinates}
-              buildableCoordinates={feasibility?.buildableCoordinates}
-              selectedOption={selectedOption}
-              feasibility={feasibility}
-              existingRoadWidth={existingRoadWidth}
-              proposedRoadWidth={proposedRoadWidth}
-              onChangeRoadWidths={(ext, prop) => {
-                setExistingRoadWidth(ext);
-                setProposedRoadWidth(prop);
-              }}
-              onAddCoordinate={(coord) => setCoordinates((prev) => [...prev, coord])}
-              onUpdateCoordinates={setCoordinates}
-              onClearCoordinates={() => {
-                setCoordinates([]);
-                setFeasibility(null);
-              }}
-              onSaveSiteGeometry={handleSaveSiteGeometry}
-              onSelectSiteLocation={handleSelectSiteLocation}
-              onOpenFeasibility={() => setActiveStep('FEASIBILITY')}
-              onOpenDesign={() => setActiveStep('DESIGN')}
-              isSavingGeometry={isSaving}
-            />
-
-            {/* Bottom Step Guide Bar */}
-            <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
-              <button
-                onClick={() => setActiveStep('FEASIBILITY')}
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-display font-bold text-xs shadow-lg shadow-blue-500/30 flex items-center gap-1.5 transition-all"
-              >
-                <span>Proceed to Step 2: FEASIBILITY</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </main>
-        )}
-
-        {/* STEP 2: FEASIBILITY (Mapbox GIS with Buildable Envelope + Statutory Feasibility HUD) */}
-        {activeStep === 'FEASIBILITY' && (
-          <main className="relative flex-1 w-full h-full flex">
-            {/* Left: Map Preview */}
-            <div className="flex-1 h-full relative">
-              <PlanwiseMap
-                coordinates={coordinates}
-                buildableCoordinates={feasibility?.buildableCoordinates}
-                selectedOption={selectedOption}
-                feasibility={feasibility}
-                existingRoadWidth={existingRoadWidth}
-                proposedRoadWidth={proposedRoadWidth}
-                onChangeRoadWidths={(ext, prop) => {
-                  setExistingRoadWidth(ext);
-                  setProposedRoadWidth(prop);
-                }}
-                onAddCoordinate={(coord) => setCoordinates((prev) => [...prev, coord])}
-                onUpdateCoordinates={setCoordinates}
-                onClearCoordinates={() => {
-                  setCoordinates([]);
-                  setFeasibility(null);
-                }}
-                onSaveSiteGeometry={handleSaveSiteGeometry}
-                onSelectSiteLocation={handleSelectSiteLocation}
-                onOpenFeasibility={() => setActiveStep('FEASIBILITY')}
-                onOpenDesign={() => setActiveStep('DESIGN')}
-                isSavingGeometry={isSaving}
-              />
-            </div>
-
-            {/* Right: Feasibility Intelligence HUD */}
-            <div className="h-full p-4 pl-0">
-              <FeasibilityHUD
-                feasibility={feasibility}
-                cadastralNumber={project?.parcel?.cadastralNumber || 'CTS-1842-BANDRA'}
-              />
-            </div>
-
-            {/* Bottom Proceed Button */}
-            <div className="absolute bottom-4 left-4 z-20">
-              <button
-                onClick={() => setActiveStep('DESIGN')}
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-display font-bold text-xs shadow-lg shadow-blue-500/30 flex items-center gap-1.5 transition-all"
-              >
-                <span>Proceed to Step 3: DESIGN</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </main>
-        )}
-
-        {/* STEP 3: DESIGN (The Architectural Floor Plan Canvas is the Hero!) */}
-        {activeStep === 'DESIGN' && (
-          <main className="relative flex-1 w-full h-full flex p-4 gap-4 overflow-hidden">
-            {/* Left 320px: Compact House Options Sidebar */}
-            <HouseOptionsCarousel
-              options={houseOptions}
-              selectedOptionId={selectedOptionId}
-              onSelectOption={setSelectedOptionId}
-              onOpenBOQ={(opt) => setSelectedBOQOption(opt)}
-              onOpenBuildModal={(opt) => setBuildModalOption(opt)}
-            />
-
-            {/* Center: The Floor Plan Canvas Hero (Flex-1) */}
-            <div className="flex-1 h-full min-w-0">
-              {selectedOption ? (
-                <FloorPlanViewer layout={selectedOption.layout} />
-              ) : (
-                <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
-                  Generating CP-SAT Pareto options...
-                </div>
-              )}
-            </div>
-          </main>
-        )}
-
-        {/* STEP 4: COST (Model-Linked Traceable BOQ & QTO Experience) */}
-        {activeStep === 'COST' && (
-          <main className="relative flex-1 w-full h-full">
-            {selectedOption ? (
-              <CostExperienceView
-                selectedOption={selectedOption}
-                onUpdateTier={handleUpdateTier}
-                onRequestBuild={(opt) => {
-                  setBuildModalOption(opt);
-                  setActiveStep('BUILD');
-                }}
+          <main
+            className="relative flex-1 w-full h-full flex flex-col"
+            style={{ width: '100%', height: '100%', minHeight: 0 }}
+          >
+            {viewMode === 'CUSTOMER' ? (
+              <LandIntakeView
+                initialLocation={project?.name || 'Bandra West, Mumbai'}
+                initialCoordinates={coordinates}
+                onConfirmPlot={handleConfirmLandPlot}
+                onOpenTechnicalMap={() => setViewMode('TECHNICAL')}
               />
             ) : (
-              <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
-                Select a design option to view its itemized Bill of Quantities.
-              </div>
+              <>
+                <PlanwiseMap
+                  coordinates={coordinates}
+                  buildableCoordinates={feasibility?.buildableCoordinates}
+                  selectedOption={selectedOption}
+                  feasibility={feasibility}
+                  existingRoadWidth={existingRoadWidth}
+                  proposedRoadWidth={proposedRoadWidth}
+                  onChangeRoadWidths={(ext, prop) => {
+                    setExistingRoadWidth(ext);
+                    setProposedRoadWidth(prop);
+                  }}
+                  onAddCoordinate={(coord) => setCoordinates((prev) => [...prev, coord])}
+                  onUpdateCoordinates={setCoordinates}
+                  onClearCoordinates={() => {
+                    setCoordinates([]);
+                    setFeasibility(null);
+                  }}
+                  onSaveSiteGeometry={handleSaveSiteGeometry}
+                  onSelectSiteLocation={handleSelectSiteLocation}
+                  onOpenFeasibility={() => setActiveStep('FEASIBILITY')}
+                  onOpenDesign={() => setActiveStep('DESIGN')}
+                  isSavingGeometry={isSaving}
+                  isReleaseLocked={Boolean(activeReleaseId)}
+                  releaseId={activeReleaseId || undefined}
+                />
+
+                {/* Top-Right Floating Site Evidence & Truth Panel (§1, §2, §13) */}
+                <div className="absolute top-4 right-4 z-20 flex flex-col items-end gap-2">
+                  {!isEvidencePanelOpen && (
+                    <button
+                      onClick={() => setIsEvidencePanelOpen(true)}
+                      className="px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-white/10 text-white font-display font-semibold text-xs shadow-xl flex items-center gap-1.5 transition-all"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
+                      <span>Site Evidence &amp; Truth</span>
+                    </button>
+                  )}
+                  {isEvidencePanelOpen && (
+                    <SiteEvidencePanel
+                      siteId={project?.id || 'proj-mumbai-real-1100'}
+                      onClose={() => setIsEvidencePanelOpen(false)}
+                    />
+                  )}
+                </div>
+
+                {/* Bottom Step Guide Bar */}
+                <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
+                  <button
+                    onClick={() => setActiveStep('FEASIBILITY')}
+                    className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-display font-bold text-xs shadow-lg shadow-blue-500/30 flex items-center gap-1.5 transition-all"
+                  >
+                    <span>Proceed to Step 2: FEASIBILITY</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </>
             )}
           </main>
         )}
 
-        {/* STEP 5: BUILD (Design Release & Immutable Lock Workflow) */}
+        {/* STEP 2: FEASIBILITY */}
+        {activeStep === 'FEASIBILITY' && (
+          viewMode === 'CUSTOMER' ? (
+            <FeasibilitySummaryView
+              feasibility={feasibility}
+              project={project}
+              onProceedToDesign={() => setActiveStep('DESIGN')}
+              onBackToLand={() => setActiveStep('SITE')}
+              onOpenTechnicalView={() => setViewMode('TECHNICAL')}
+            />
+          ) : (
+            <main
+              className="relative flex-1 w-full h-full flex"
+              style={{ width: '100%', height: '100%', minHeight: 0 }}
+            >
+              {/* Left: Map Preview */}
+              <div
+                className="flex-1 h-full relative"
+                style={{ height: '100%', minHeight: 0 }}
+              >
+                <PlanwiseMap
+                  coordinates={coordinates}
+                  buildableCoordinates={feasibility?.buildableCoordinates}
+                  selectedOption={selectedOption}
+                  feasibility={feasibility}
+                  existingRoadWidth={existingRoadWidth}
+                  proposedRoadWidth={proposedRoadWidth}
+                  onChangeRoadWidths={(ext, prop) => {
+                    setExistingRoadWidth(ext);
+                    setProposedRoadWidth(prop);
+                  }}
+                  onAddCoordinate={(coord) => setCoordinates((prev) => [...prev, coord])}
+                  onUpdateCoordinates={setCoordinates}
+                  onClearCoordinates={() => {
+                    setCoordinates([]);
+                    setFeasibility(null);
+                  }}
+                  onSaveSiteGeometry={handleSaveSiteGeometry}
+                  onSelectSiteLocation={handleSelectSiteLocation}
+                  onOpenFeasibility={() => setActiveStep('FEASIBILITY')}
+                  onOpenDesign={() => setActiveStep('DESIGN')}
+                  isSavingGeometry={isSaving}
+                  isReleaseLocked={Boolean(activeReleaseId)}
+                  releaseId={activeReleaseId || undefined}
+                />
+              </div>
+
+              {/* Right: Feasibility Intelligence HUD */}
+              <div className="h-full p-4 pl-0">
+                <FeasibilityHUD
+                  feasibility={feasibility}
+                  cadastralNumber={project?.parcel?.cadastralNumber || 'CTS-1842-BANDRA'}
+                />
+              </div>
+
+              {/* Bottom Proceed Button */}
+              <div className="absolute bottom-4 left-4 z-20">
+                <button
+                  onClick={() => setActiveStep('DESIGN')}
+                  className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-display font-bold text-xs shadow-lg shadow-blue-500/30 flex items-center gap-1.5 transition-all"
+                >
+                  <span>Proceed to Step 3: DESIGN</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </main>
+          )
+        )}
+
+        {/* STEP 3: DESIGN */}
+        {activeStep === 'DESIGN' && (
+          viewMode === 'CUSTOMER' ? (
+            designPhase === 'INTAKE' ? (
+              <DesignIntakeView
+                initialRequirements={customerRequirements || undefined}
+                isGenerating={isGeneratingDesign}
+                onGenerateOptions={handleGenerateDesignOptions}
+                onBackToFeasibility={() => setActiveStep('FEASIBILITY')}
+              />
+            ) : (
+              <DesignOptionsView
+                options={houseOptions}
+                selectedOptionId={selectedOptionId}
+                onSelectOption={setSelectedOptionId}
+                onChooseOption={(opt) => {
+                  setSelectedOptionId(opt.optionId);
+                  setActiveStep('COST');
+                }}
+                onChangeRequirements={() => setDesignPhase('INTAKE')}
+                onOpenTechnicalView={() => setViewMode('TECHNICAL')}
+              />
+            )
+          ) : (
+            <main className="relative flex-1 w-full h-full flex p-4 gap-4 overflow-hidden">
+              {/* Left 320px: Compact House Options Sidebar */}
+              <HouseOptionsCarousel
+                options={houseOptions}
+                selectedOptionId={selectedOptionId}
+                onSelectOption={setSelectedOptionId}
+                onOpenBOQ={(opt) => setSelectedBOQOption(opt)}
+                onOpenBuildModal={(opt) => setBuildModalOption(opt)}
+              />
+
+              {/* Center: The Floor Plan Canvas Hero (Flex-1) */}
+              <div className="flex-1 h-full min-w-0">
+                {selectedOption ? (
+                  <FloorPlanViewer 
+                    layout={selectedOption.layout} 
+                    buildingModel={selectedOption.buildingModel}
+                    designVersionId={selectedOption.designVersionId}
+                  />
+                ) : (
+                  <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
+                    Generating CP-SAT Pareto options...
+                  </div>
+                )}
+              </div>
+            </main>
+          )
+        )}
+
+        {/* STEP 4: COST */}
+        {activeStep === 'COST' && (
+          selectedOption ? (
+            viewMode === 'CUSTOMER' ? (
+              <CostSummaryView
+                selectedOption={selectedOption}
+                onUpdateTier={handleUpdateTier}
+                onProceedToBuild={() => setActiveStep('BUILD')}
+                onBackToDesign={() => setActiveStep('DESIGN')}
+                onOpenTechnicalView={() => setViewMode('TECHNICAL')}
+              />
+            ) : (
+              <main className="relative flex-1 w-full h-full">
+                <CostExperienceView
+                  selectedOption={selectedOption}
+                  onUpdateTier={handleUpdateTier}
+                  onRequestBuild={(opt) => {
+                    setBuildModalOption(opt);
+                    setActiveStep('BUILD');
+                  }}
+                />
+              </main>
+            )
+          ) : (
+            <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
+              Select a design option to view its estimated construction cost.
+            </div>
+          )
+        )}
+
+        {/* STEP 5: BUILD */}
         {activeStep === 'BUILD' && (
-          <main className="relative flex-1 w-full h-full">
-            {selectedOption ? (
-              <BuildReleaseView
+          selectedOption ? (
+            viewMode === 'CUSTOMER' ? (
+              <BuildReviewView
+                project={project}
                 selectedOption={selectedOption}
                 activeRelease={handoffPackage}
                 activeReleaseId={activeReleaseId}
-                onLockBuild={handleConfirmBuild}
+                onRequestBuildReview={async (tier, acks) => {
+                  await handleConfirmBuild(tier, acks);
+                }}
                 onGoToEngineerDashboard={() => setActiveStep('ENGINEER')}
-                isLocking={isLockingBuild}
+                onBackToCost={() => setActiveStep('COST')}
+                onRecalculateCost={() => setActiveStep('COST')}
+                onOpenTechnicalView={() => setViewMode('TECHNICAL')}
+                isSubmitting={isLockingBuild}
               />
             ) : (
-              <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
-                Select a design option to prepare for professional build release.
-              </div>
-            )}
-          </main>
+              <main className="relative flex-1 w-full h-full">
+                <BuildReleaseView
+                  selectedOption={selectedOption}
+                  activeRelease={handoffPackage}
+                  activeReleaseId={activeReleaseId}
+                  onLockBuild={handleConfirmBuild}
+                  onGoToEngineerDashboard={() => setActiveStep('ENGINEER')}
+                  isLocking={isLockingBuild}
+                />
+              </main>
+            )
+          ) : (
+            <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
+              Select a design option to prepare for project review.
+            </div>
+          )
         )}
 
-        {/* STEP 6: ENGINEER (Licensed Engineer & Contractor Dashboard) */}
+        {/* STEP 6: ENGINEER (Professional Review & Verification Layer) */}
         {activeStep === 'ENGINEER' && (
-          <main className="relative flex-1 w-full h-full">
-            {handoffPackage ? (
-              <EngineerDashboard
-                handoffPackage={handoffPackage}
-                releaseId={activeReleaseId || 'REL-SAMPLE-2026'}
-                onBackToStudio={() => setActiveStep('DESIGN')}
-                onApproveGate={handleApproveGate}
-              />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center text-center p-6 space-y-3">
-                <ShieldCheck className="w-12 h-12 text-slate-600" />
-                <h3 className="font-display font-bold text-base text-white">No Frozen Release in Review</h3>
-                <p className="text-xs text-slate-400 max-w-md leading-normal">
-                  In Step 5: BUILD, click <strong className="text-emerald-400">REQUEST BUILD</strong> to generate an immutable release package. It will automatically lock the design and populate the verification gates here.
-                </p>
-                <button
-                  onClick={() => setActiveStep('BUILD')}
-                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold"
-                >
-                  Go to Step 5: BUILD
-                </button>
-              </div>
-            )}
-          </main>
+          selectedOption ? (
+            <EngineerReviewView
+              project={project}
+              selectedOption={selectedOption}
+              activeRelease={handoffPackage}
+              activeReleaseId={activeReleaseId || 'REL-SAMPLE-2026'}
+              onBackToBuild={() => setActiveStep('BUILD')}
+              onBackToDesign={() => setActiveStep('DESIGN')}
+            />
+          ) : (
+            <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
+              Select a design option to open professional review.
+            </div>
+          )
         )}
       </div>
 

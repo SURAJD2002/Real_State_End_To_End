@@ -383,3 +383,60 @@ button {
   50% { transform: none; animation-timing-function: cubic-bezier(0,0,0.2,1); }
 }
 .animate-bounce { animation: bounce 1.2s infinite; }
+
+/* Planwise Mapbox Layout System & Height Rules (Fixes blank map canvas) */
+.h-\[calc\(100vh-56px\)\] {
+  height: calc(100vh - 56px) !important;
+  min-height: calc(100vh - 56px) !important;
+}
+
+.planwise-map-workspace {
+  position: relative !important;
+  width: 100% !important;
+  height: calc(100vh - 56px) !important;
+  min-height: calc(100vh - 56px) !important;
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.planwise-map-container {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 400px !important;
+  overflow: hidden !important;
+}
+
+.mapboxgl-map {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
+  font: inherit !important;
+  overflow: hidden !important;
+}
+
+.mapboxgl-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+.mapboxgl-canvas-container {
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+
+/* CAD Precision & Crosshair Utilities */
+.cursor-crosshair { cursor: crosshair !important; }
+.cursor-grab { cursor: grab !important; }
+.cursor-grabbing { cursor: grabbing !important; }

@@ -1,0 +1,94 @@
+{
+  "rulePackId": "BBMP-RES-2026-01",
+  "jurisdiction": "BBMP",
+  "authority": "Bruhat Bengaluru Mahanagara Palike",
+  "name": "BBMP Bengaluru Building Bye-Laws 2026 — Low-Rise Residential",
+  "version": "1.0.0",
+  "effectiveFrom": "2026-01-01",
+  "applicableTypologies": ["RESIDENTIAL_LOW_RISE", "RESIDENTIAL_VILLA"],
+  "applicableZoning": ["RESIDENTIAL_MAIN", "RESIDENTIAL_MIXED"],
+  "rules": [
+    {
+      "ruleId": "BBMP-RW-01",
+      "name": "Master Plan Road Widening Surrender",
+      "category": "ROAD_WIDENING",
+      "priority": 1,
+      "description": "Relinquishment of land free of cost for proposed Master Plan road widening.",
+      "citation": "KTCP Act 1961 Section 14B & BBMP Bye-Law 4.1",
+      "severity": "MANDATORY",
+      "parameters": {
+        "formula": "(proposedRoadWidthM - existingRoadWidthM) / 2.0 along frontage"
+      }
+    },
+    {
+      "ruleId": "BBMP-SETBACK-01",
+      "name": "Plot-Area & Depth Based Directional Setbacks",
+      "category": "SETBACK",
+      "priority": 2,
+      "description": "Directional setback requirements graduated by plot area and road width.",
+      "citation": "BBMP Building Bye-Laws Schedule II Table 3",
+      "severity": "MANDATORY",
+      "parameters": {
+        "tiers": [
+          { "maxPlotAreaSqm": 120.0, "frontSetbackM": 1.5, "rearSetbackM": 1.0, "sideSetbackM": 0.0 },
+          { "maxPlotAreaSqm": 240.0, "frontSetbackM": 2.0, "rearSetbackM": 1.5, "sideSetbackM": 1.0 },
+          { "maxPlotAreaSqm": 500.0, "frontSetbackM": 3.0, "rearSetbackM": 2.0, "sideSetbackM": 1.5 },
+          { "maxPlotAreaSqm": 1000.0, "frontSetbackM": 4.5, "rearSetbackM": 3.0, "sideSetbackM": 2.5 },
+          { "maxPlotAreaSqm": 999999.0, "frontSetbackM": 6.0, "rearSetbackM": 4.0, "sideSetbackM": 3.0 }
+        ]
+      }
+    },
+    {
+      "ruleId": "BBMP-FAR-01",
+      "name": "Floor Area Ratio (FAR) / Premium FAR Allowance",
+      "category": "FAR",
+      "priority": 3,
+      "description": "Base FAR and purchasable Premium FAR based on road width.",
+      "citation": "Revised Master Plan 2015 / 2031 & BBMP Bye-Law 6.2",
+      "severity": "MANDATORY",
+      "parameters": {
+        "roadTiers": [
+          { "maxRoadWidthM": 9.0, "baseFAR": 1.50, "premiumFAR": 0.0, "maxHeightM": 11.5 },
+          { "maxRoadWidthM": 12.0, "baseFAR": 1.75, "premiumFAR": 0.40, "maxHeightM": 15.0 },
+          { "maxRoadWidthM": 15.0, "baseFAR": 2.00, "premiumFAR": 0.50, "maxHeightM": 24.0 },
+          { "maxRoadWidthM": 999.0, "baseFAR": 2.25, "premiumFAR": 0.60, "maxHeightM": 30.0 }
+        ]
+      }
+    },
+    {
+      "ruleId": "BBMP-COVERAGE-01",
+      "name": "Maximum Permissible Ground Coverage",
+      "category": "GROUND_COVERAGE",
+      "priority": 4,
+      "description": "Graduated plot coverage maximums to ensure percolation and open light.",
+      "citation": "BBMP Bye-Law 5.2 Table 2",
+      "severity": "MANDATORY",
+      "parameters": {
+        "tiers": [
+          { "maxPlotAreaSqm": 120.0, "coveragePercent": 75.0 },
+          { "maxPlotAreaSqm": 240.0, "coveragePercent": 65.0 },
+          { "maxPlotAreaSqm": 500.0, "coveragePercent": 60.0 },
+          { "maxPlotAreaSqm": 999999.0, "coveragePercent": 50.0 }
+        ]
+      }
+    },
+    {
+      "ruleId": "BBMP-PARKING-01",
+      "name": "Residential Off-Street Parking Standards",
+      "category": "PARKING",
+      "priority": 5,
+      "description": "Mandatory parking provision for residential units.",
+      "citation": "BBMP Bye-Law 15.1 Table 8",
+      "severity": "MANDATORY",
+      "parameters": {
+        "unitsPerStall": 1.0,
+        "carpetSqmPerStall": 80.0,
+        "minimumStalls": 1
+      }
+    }
+  ],
+  "metadata": {
+    "jurisdictionShort": "BBMP",
+    "compiler": "planwise-statutory-engine-v1"
+  }
+}

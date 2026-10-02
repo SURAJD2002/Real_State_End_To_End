@@ -1,0 +1,111 @@
+{
+  "rulePackId": "MUMBAI-DCPR-2034-V1",
+  "jurisdiction": "MCGM",
+  "authority": "Municipal Corporation of Greater Mumbai",
+  "name": "Mumbai DCPR 2034 — Comprehensive Residential & Mixed-Use Rule Pack",
+  "version": "1.0.0",
+  "effectiveFrom": "2026-01-01",
+  "applicableTypologies": ["RESIDENTIAL_LOW_RISE", "RESIDENTIAL_VILLA", "COMMERCIAL_RETAIL"],
+  "applicableZoning": ["R2_RESIDENTIAL", "R1_RESIDENTIAL"],
+  "rules": [
+    {
+      "ruleId": "MCGM-RW-01",
+      "name": "Statutory Road Widening Line Deduction",
+      "category": "ROAD_WIDENING",
+      "priority": 1,
+      "description": "Deducts half the delta between proposed development plan road width and existing width along the road frontage boundary.",
+      "citation": "DCPR 2034 Regulation 14 & Municipal Corporation Act Section 297",
+      "severity": "MANDATORY",
+      "parameters": {
+        "formula": "(proposedRoadWidthM - existingRoadWidthM) / 2.0 along frontage edges"
+      }
+    },
+    {
+      "ruleId": "MCGM-AMENITY-01",
+      "name": "Public Amenity Reservation / Layout Open Space",
+      "category": "OPEN_SPACE",
+      "priority": 2,
+      "description": "Statutory open space reservation on large parcels.",
+      "citation": "DCPR 2034 Regulation 27 Table 8",
+      "severity": "MANDATORY",
+      "parameters": {
+        "tiers": [
+          { "minPlotAreaSqm": 0.0, "maxPlotAreaSqm": 2000.0, "reservationPercent": 0.0 },
+          { "minPlotAreaSqm": 2000.0, "maxPlotAreaSqm": 4000.0, "reservationPercent": 5.0 },
+          { "minPlotAreaSqm": 4000.0, "maxPlotAreaSqm": 10000.0, "reservationPercent": 10.0 },
+          { "minPlotAreaSqm": 10000.0, "maxPlotAreaSqm": 999999.0, "reservationPercent": 15.0 }
+        ]
+      }
+    },
+    {
+      "ruleId": "MCGM-SETBACK-01",
+      "name": "Marginal Open Space / Front, Rear & Side Setbacks",
+      "category": "SETBACK",
+      "priority": 3,
+      "description": "Mandatory marginal open spaces around building envelopes based on road width and building height.",
+      "citation": "DCPR 2034 Regulation 41 & Regulation 43 Table 18",
+      "severity": "MANDATORY",
+      "parameters": {
+        "frontSetbacks": [
+          { "maxRoadWidthM": 9.0, "frontSetbackM": 3.0 },
+          { "maxRoadWidthM": 12.0, "frontSetbackM": 4.5 },
+          { "maxRoadWidthM": 18.0, "frontSetbackM": 6.0 },
+          { "maxRoadWidthM": 27.0, "frontSetbackM": 7.5 },
+          { "maxRoadWidthM": 999.0, "frontSetbackM": 9.0 }
+        ],
+        "rearSetbackM": 3.0,
+        "sideSetbackM": 1.5
+      }
+    },
+    {
+      "ruleId": "MCGM-FSI-01",
+      "name": "Permissible Floor Space Index (Base + Premium + TDR)",
+      "category": "FSI",
+      "priority": 4,
+      "description": "Computes composite permissible FSI based on effective access road width.",
+      "citation": "DCPR 2034 Regulation 30 & 33 Table 12",
+      "severity": "MANDATORY",
+      "parameters": {
+        "baseFSI": 1.0,
+        "roadTiers": [
+          { "maxRoadWidthM": 9.0, "premiumFSI": 0.0, "tdrFSI": 0.0, "totalFSI": 1.0, "maxHeightM": 16.0 },
+          { "maxRoadWidthM": 12.0, "premiumFSI": 0.5, "tdrFSI": 0.5, "totalFSI": 2.0, "maxHeightM": 32.0 },
+          { "maxRoadWidthM": 18.0, "premiumFSI": 0.5, "tdrFSI": 0.75, "totalFSI": 2.25, "maxHeightM": 50.0 },
+          { "maxRoadWidthM": 27.0, "premiumFSI": 0.5, "tdrFSI": 1.0, "totalFSI": 2.5, "maxHeightM": 70.0 },
+          { "maxRoadWidthM": 999.0, "premiumFSI": 0.5, "tdrFSI": 1.25, "totalFSI": 2.75, "maxHeightM": 120.0 }
+        ]
+      }
+    },
+    {
+      "ruleId": "MCGM-COVERAGE-01",
+      "name": "Maximum Ground Coverage Limitation",
+      "category": "GROUND_COVERAGE",
+      "priority": 5,
+      "description": "Limits maximum building footprint coverage on net developable plot.",
+      "citation": "DCPR 2034 Regulation 31",
+      "severity": "MANDATORY",
+      "parameters": {
+        "maxGroundCoveragePercent": 50.0
+      }
+    },
+    {
+      "ruleId": "MCGM-PARKING-01",
+      "name": "Mandatory Off-Street Parking Standards",
+      "category": "PARKING",
+      "priority": 6,
+      "description": "Calculates vehicular parking quota per net residential carpet area.",
+      "citation": "DCPR 2034 Regulation 44 Table 21",
+      "severity": "MANDATORY",
+      "parameters": {
+        "carpetSqmPerStall": 70.0,
+        "accessibleStallPercent": 4.0,
+        "minimumStalls": 2
+      }
+    }
+  ],
+  "metadata": {
+    "jurisdictionShort": "MCGM",
+    "compiler": "planwise-statutory-engine-v1",
+    "legalDisclaimer": "Preliminary computational check. Final building approval requires Municipal Corporation scrutiny."
+  }
+}

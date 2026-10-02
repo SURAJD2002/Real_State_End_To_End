@@ -38,14 +38,34 @@ def generate_release_fingerprint(
     return hashlib.sha256(manifest_string.strip().encode()).hexdigest()
 
 
-def generate_ifc4_model(house_option: Dict[str, Any], release_id: str) -> str:
+def generate_ifc4_model(house_option_or_model: Any, release_id: str) -> str:
     """
     Generates an open-standard IFC4 STEP physical file representation
-    describing identity, spaces, walls, and structural elements (Delta Spec §1, §12).
+    derived directly from the Canonical Building Model (§1, §33).
+    Maps:
+      Level   -> IFCBUILDINGSTOREY
+      Space   -> IFCSPACE
+      Wall    -> IFCWALL
+      Door    -> IFCDOOR
+      Window  -> IFCWINDOW
+      Column  -> IFCCOLUMN
+      Slab    -> IFCSLAB
+      Material-> IFCMATERIAL
     """
-    layout = house_option["layout"]
-    rooms = layout["rooms"]
-    bua = layout["totalGrossBUASqm"]
+    from packages.schemas.building_model import CanonicalBuildingModel, ElementType, OpeningType
+    from workers.generation.model_compiler import compile_canonical_building_model
+
+    # Resolve CanonicalBuildingModel instance
+    if isinstance(house_option_or_model, CanonicalBuildingModel):
+        model = house_option_or_model
+    elif isinstance(house_option_or_model, dict) and "buildingModel" in house_option_or_model and isinstance(house_option_or_model["buildingModel"], CanonicalBuildingModel):
+        model = house_option_or_model["buildingModel"]
+    elif isinstance(house_option_or_model, dict) and "buildingModel" in house_option_or_model and isinstance(house_option_or_model["buildingModel"], dict):
+        model = CanonicalBuildingModel(**house_option_or_model["buildingModel"])
+    else:
+        # Fallback compile from house option layout
+        layout = house_option_or_model.get("layout", house_option_or_model) if isinstance(house_option_or_model, dict) else {}
+        model = compile_canonical_building_model(layout, design_version_id=release_id)
 
     timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -53,16 +73,16 @@ def generate_ifc4_model(house_option: Dict[str, Any], release_id: str) -> str:
         "ISO-10303-21;",
         "HEADER;",
         f"FILE_DESCRIPTION(('ViewDefinition [CoordinationView]'),'2;1');",
-        f"FILE_NAME('{release_id}.ifc','{timestamp}',('Planwise Enterprise Platform'),('Archonet'),'IFC4 Generator v1.0','Planwise Model Engine','Licensed Engineer Review');",
+        f"FILE_NAME('{release_id}.ifc','{timestamp}',('Planwise Enterprise Platform'),('Archonet'),'Planwise IFC4 Canonical Mapper v2.0','Canonical Building Model Engine','Preliminary Automated Rule Check');",
         "FILE_SCHEMA(('IFC4'));",
         "ENDSEC;",
         "DATA;",
-        "#1=IFCPROJECT('0Yv7W8H49A_u7oG1hK2L',#2,'Planwise Low-Rise Residential Model',$,$,$,$,(#3),#4);",
+        "#1=IFCPROJECT('0Yv7W8H49A_u7oG1hK2L',#2,'Planwise Canonical Building Model',$,$,$,$,(#3),#4);",
         "#2=IFCOWNERHISTORY(#5,#6,$,.ADDED.,$,$,$,$);",
         "#5=IFCPERSONANDORGANIZATION(#7,#8,$);",
-        "#7=IFCPERSON($,'Architect','Planwise AI',$,$,$,$,$);",
-        "#8=IFCORGANIZATION($,'Archonet Planwise Inc.',$,$,$);",
-        "#6=IFCAPPLICATION(#8,'1.0','Planwise Enterprise','PlanwiseApp');",
+        "#7=IFCPERSON($,'Architect','Planwise Model Engine',$,$,$,$,$);",
+        "#8=IFCORGANIZATION($,'Planwise Technologies Inc.',$,$,$);",
+        "#6=IFCAPPLICATION(#8,'2.0','Planwise Enterprise','PlanwisePlatform');",
         "#3=IFCGEOMETRICREPRESENTATIONCONTEXT($,'Model',3,1.E-05,#9,#10);",
         "#9=IFCAXIS2PLACEMENT3D(#11,#12,#13);",
         "#11=IFCCARTESIANPOINT((0.,0.,0.));",
@@ -74,16 +94,77 @@ def generate_ifc4_model(house_option: Dict[str, Any], release_id: str) -> str:
         "#15=IFCSIUNIT(*,.AREAUNIT.,$,.SQUARE_METRE.);",
         "#16=IFCSIUNIT(*,.VOLUMEUNIT.,$,.CUBIC_METRE.);",
         f"#20=IFCSITE('1Lz9A0H32B_v8oG1hK3M',#2,'Site Parcel',$,$,#9,$,$,.ELEMENT.,(19,6,43),(72,52,47),0.,$,$);",
-        f"#30=IFCBUILDING('2Mz0B1H43C_w9oG1hK4N',#2,'{layout['label']}',$,$,#9,$,$,.ELEMENT.,$,$,$);"
+        f"#30=IFCBUILDING('2Mz0B1H43C_w9oG1hK4N',#2,'{model.name}',$,$,#9,$,$,.ELEMENT.,$,$,$);"
     ]
 
     entity_id = 40
-    for r in rooms:
-        b = r["bounds"]
+
+    # 1. Building Storeys
+    storey_ref_map = {}
+    for lvl in model.levels:
+        storey_ref_map[lvl.levelId] = entity_id
         ifc_lines.append(
-            f"#{entity_id}=IFCSPACE('{entity_id}Xz_{r['id']}',#2,'{r['name']}','{r['zone']}',$,#9,$,$,.ELEMENT.,.INTERNAL.,$);"
+            f"#{entity_id}=IFCBUILDINGSTOREY('LVL_{lvl.levelId}',#2,'{lvl.name}',$,$,#9,$,$,.ELEMENT.,{float(lvl.elevationM)});"
         )
         entity_id += 1
+
+    # 2. Materials
+    material_ref_map = {}
+    for mat in model.materials:
+        material_ref_map[mat.materialId] = entity_id
+        ifc_lines.append(
+            f"#{entity_id}=IFCMATERIAL('{mat.name}','{mat.category}','{mat.grade}');"
+        )
+        entity_id += 1
+
+    # 3. Spaces
+    for s in model.spaces:
+        st_ref = storey_ref_map.get(s.levelId, 40)
+        zone_val = s.zone.value if hasattr(s.zone, "value") else str(s.zone)
+        ifc_lines.append(
+            f"#{entity_id}=IFCSPACE('{s.spaceId}',#2,'{s.name}','{zone_val}',$,#9,$,'{s.spaceType}',.ELEMENT.,.INTERNAL.,$);"
+        )
+        entity_id += 1
+
+    # 4. Walls
+    wall_ref_map = {}
+    for elem in model.elements:
+        if elem.elementType == ElementType.WALL:
+            wall_ref_map[elem.elementId] = entity_id
+            th = (elem.geometry.thicknessM if elem.geometry else 0.20) or 0.20
+            w_type = elem.wallType.value if elem.wallType else "STANDARD"
+            ifc_lines.append(
+                f"#{entity_id}=IFCWALL('{elem.elementId}',#2,'{elem.name}','{w_type}',$,#9,$,$);"
+            )
+            entity_id += 1
+
+    # 5. Openings (Doors & Windows hosted by walls)
+    for op in model.openings:
+        if op.openingType == OpeningType.DOOR:
+            ifc_lines.append(
+                f"#{entity_id}=IFCDOOR('{op.openingId}',#2,'Door {op.openingId}','Hosted by {op.hostWallId}',$,#9,$,{float(op.heightM)},{float(op.widthM)},.DOOR.,.NOTDEFINED.,$);"
+            )
+        elif op.openingType == OpeningType.WINDOW:
+            ifc_lines.append(
+                f"#{entity_id}=IFCWINDOW('{op.openingId}',#2,'Window {op.openingId}','Hosted by {op.hostWallId}',$,#9,$,{float(op.heightM)},{float(op.widthM)},.WINDOW.,.NOTDEFINED.,$);"
+            )
+        entity_id += 1
+
+    # 6. Columns
+    for elem in model.elements:
+        if elem.elementType == ElementType.COLUMN:
+            ifc_lines.append(
+                f"#{entity_id}=IFCCOLUMN('{elem.elementId}',#2,'{elem.name}','RCC Column',$,#9,$,$);"
+            )
+            entity_id += 1
+
+    # 7. Slabs
+    for elem in model.elements:
+        if elem.elementType == ElementType.SLAB:
+            ifc_lines.append(
+                f"#{entity_id}=IFCSLAB('{elem.elementId}',#2,'{elem.name}','Suspended Floor Slab',$,#9,$,.FLOOR.);"
+            )
+            entity_id += 1
 
     ifc_lines.extend([
         "ENDSEC;",

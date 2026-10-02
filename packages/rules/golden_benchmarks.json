@@ -1,0 +1,317 @@
+[
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-01",
+    "name": "Small Urban Residential Infill (150 sqm on 6m Road)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "R2_RESIDENTIAL",
+    "typology": "RESIDENTIAL_LOW_RISE",
+    "existingRoadWidthM": 6.0,
+    "proposedRoadWidthM": 6.0,
+    "coordinatesWGS84": [
+      [72.83400, 18.92200],
+      [72.83410, 18.92200],
+      [72.83410, 18.92215],
+      [72.83400, 18.92215],
+      [72.83400, 18.92200]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 150.0,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 1.0,
+      "expectedFrontSetbackM": 3.0,
+      "expectedMaxHeightM": 16.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-02",
+    "name": "Standard 2BHK Suburban Plot (300 sqm on 9m Road)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "R2_RESIDENTIAL",
+    "typology": "RESIDENTIAL_LOW_RISE",
+    "existingRoadWidthM": 9.0,
+    "proposedRoadWidthM": 9.0,
+    "coordinatesWGS84": [
+      [72.83400, 18.92300],
+      [72.83415, 18.92300],
+      [72.83415, 18.92320],
+      [72.83400, 18.92320],
+      [72.83400, 18.92300]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 300.0,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 2.0,
+      "expectedFrontSetbackM": 4.5,
+      "expectedMaxHeightM": 32.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-03",
+    "name": "Medium Residential Plot with Widening (600 sqm, 12m to 18m)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "R2_RESIDENTIAL",
+    "typology": "RESIDENTIAL_VILLA",
+    "existingRoadWidthM": 12.0,
+    "proposedRoadWidthM": 18.0,
+    "coordinatesWGS84": [
+      [72.83500, 18.92400],
+      [72.83520, 18.92400],
+      [72.83520, 18.92430],
+      [72.83500, 18.92430],
+      [72.83500, 18.92400]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 600.0,
+      "expectedRoadWideningSqm": 60.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 2.5,
+      "expectedFrontSetbackM": 7.5,
+      "expectedMaxHeightM": 70.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-04",
+    "name": "Corner Plot with Dual Road Frontage (800 sqm, 12m Road)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "R2_RESIDENTIAL",
+    "typology": "RESIDENTIAL_VILLA",
+    "existingRoadWidthM": 12.0,
+    "proposedRoadWidthM": 12.0,
+    "coordinatesWGS84": [
+      [72.83600, 18.92500],
+      [72.83625, 18.92500],
+      [72.83625, 18.92532],
+      [72.83600, 18.92532],
+      [72.83600, 18.92500]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 800.0,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 2.25,
+      "expectedFrontSetbackM": 6.0,
+      "expectedMaxHeightM": 50.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-05",
+    "name": "Irregular Trapezoidal Parcel (1,200 sqm, 15m Road)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "R2_RESIDENTIAL",
+    "typology": "RESIDENTIAL_LOW_RISE",
+    "existingRoadWidthM": 15.0,
+    "proposedRoadWidthM": 15.0,
+    "coordinatesWGS84": [
+      [72.83700, 18.92600],
+      [72.83735, 18.92605],
+      [72.83730, 18.92640],
+      [72.83695, 18.92635],
+      [72.83700, 18.92600]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 1200.0,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 2.25,
+      "expectedFrontSetbackM": 6.0,
+      "expectedMaxHeightM": 50.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-06",
+    "name": "Deep Narrow Urban Plot (450 sqm, 10m Road)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "R2_RESIDENTIAL",
+    "typology": "RESIDENTIAL_LOW_RISE",
+    "existingRoadWidthM": 10.0,
+    "proposedRoadWidthM": 10.0,
+    "coordinatesWGS84": [
+      [72.83800, 18.92700],
+      [72.83810, 18.92700],
+      [72.83810, 18.92745],
+      [72.83800, 18.92745],
+      [72.83800, 18.92700]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 450.0,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 2.0,
+      "expectedFrontSetbackM": 4.5,
+      "expectedMaxHeightM": 32.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-07",
+    "name": "Commercial Arterial Avenue Plot (1,800 sqm, 24m Road)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "COMMERCIAL",
+    "typology": "COMMERCIAL_RETAIL",
+    "existingRoadWidthM": 24.0,
+    "proposedRoadWidthM": 24.0,
+    "coordinatesWGS84": [
+      [72.83900, 18.92800],
+      [72.83940, 18.92800],
+      [72.83940, 18.92845],
+      [72.83900, 18.92845],
+      [72.83900, 18.92800]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 1800.0,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 2.5,
+      "expectedFrontSetbackM": 7.5,
+      "expectedMaxHeightM": 70.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-08",
+    "name": "Large Urban Layout Parcel (4,500 sqm, 18m Road with 10% Amenity)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "R2_RESIDENTIAL",
+    "typology": "RESIDENTIAL_LOW_RISE",
+    "existingRoadWidthM": 18.0,
+    "proposedRoadWidthM": 18.0,
+    "coordinatesWGS84": [
+      [72.84000, 18.92900],
+      [72.84065, 18.92900],
+      [72.84065, 18.92970],
+      [72.84000, 18.92970],
+      [72.84000, 18.92900]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 4500.0,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedAmenityReservationPercent": 10.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 2.5,
+      "expectedFrontSetbackM": 7.5,
+      "expectedMaxHeightM": 70.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-09",
+    "name": "Mega Township Benchmark Parcel (10,000 sqm on 18m Road with 15% Amenity)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "R2_RESIDENTIAL",
+    "typology": "RESIDENTIAL_LOW_RISE",
+    "existingRoadWidthM": 12.0,
+    "proposedRoadWidthM": 18.0,
+    "coordinatesWGS84": [
+      [72.86850, 19.11280],
+      [72.86950, 19.11400],
+      [72.87100, 19.11330],
+      [72.87000, 19.11210],
+      [72.86850, 19.11280]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 10000.0,
+      "expectedRoadWideningSqm": 500.0,
+      "expectedAmenityReservationPercent": 15.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 2.5,
+      "expectedFrontSetbackM": 7.5,
+      "expectedMaxHeightM": 70.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-MUMBAI-10",
+    "name": "Hillside Tapered Parcel (2,200 sqm on 12m Road with 5% Amenity)",
+    "rulePackId": "MUMBAI-DCPR-2034-V1",
+    "jurisdiction": "MCGM",
+    "landUse": "R2_RESIDENTIAL",
+    "typology": "RESIDENTIAL_VILLA",
+    "existingRoadWidthM": 12.0,
+    "proposedRoadWidthM": 12.0,
+    "coordinatesWGS84": [
+      [72.84200, 18.93100],
+      [72.84250, 18.93110],
+      [72.84240, 18.93155],
+      [72.84190, 18.93145],
+      [72.84200, 18.93100]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 2200.0,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedAmenityReservationPercent": 5.0,
+      "expectedBaseFSI": 1.0,
+      "expectedTotalFSI": 2.25,
+      "expectedFrontSetbackM": 6.0,
+      "expectedMaxHeightM": 50.0,
+      "expectedMaxCoveragePercent": 50.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-BBMP-11",
+    "name": "BBMP Bengaluru Standard 30x40 Site (111.48 sqm on 9m Road)",
+    "rulePackId": "BBMP-RES-2026-01",
+    "jurisdiction": "BBMP",
+    "landUse": "RESIDENTIAL_MAIN",
+    "typology": "RESIDENTIAL_LOW_RISE",
+    "existingRoadWidthM": 9.0,
+    "proposedRoadWidthM": 9.0,
+    "coordinatesWGS84": [
+      [77.59450, 12.97150],
+      [77.59458, 12.97150],
+      [77.59458, 12.97161],
+      [77.59450, 12.97161],
+      [77.59450, 12.97150]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 111.48,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedBaseFSI": 1.50,
+      "expectedTotalFSI": 1.50,
+      "expectedFrontSetbackM": 1.5,
+      "expectedMaxHeightM": 11.5,
+      "expectedMaxCoveragePercent": 75.0
+    }
+  },
+  {
+    "benchmarkId": "GOLDEN-BBMP-12",
+    "name": "BBMP Bengaluru Executive 60x40 Corner Site (222.96 sqm on 12m Road)",
+    "rulePackId": "BBMP-RES-2026-01",
+    "jurisdiction": "BBMP",
+    "landUse": "RESIDENTIAL_MAIN",
+    "typology": "RESIDENTIAL_VILLA",
+    "existingRoadWidthM": 12.0,
+    "proposedRoadWidthM": 12.0,
+    "coordinatesWGS84": [
+      [77.595000, 12.972000],
+      [77.595168, 12.972000],
+      [77.595168, 12.972110],
+      [77.595000, 12.972110],
+      [77.595000, 12.972000]
+    ],
+    "expectedMetrics": {
+      "approxGrossAreaSqm": 222.96,
+      "expectedRoadWideningSqm": 0.0,
+      "expectedBaseFSI": 1.75,
+      "expectedTotalFSI": 2.15,
+      "expectedFrontSetbackM": 2.0,
+      "expectedMaxHeightM": 15.0,
+      "expectedMaxCoveragePercent": 65.0
+    }
+  }
+]
