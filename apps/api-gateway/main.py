@@ -14,13 +14,25 @@ import uuid
 import json
 import hashlib
 
-from fastapi import FastAPI, HTTPException, status, Response
+from fastapi import FastAPI, HTTPException, status, Response, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-# Add project root to sys.path to import worker modules
+# Add project root and local dir to sys.path
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(ROOT_DIR))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import ledger_repository as ledger_repo
+from ledger_repository import (
+    DatabaseLedgerError,
+    ReleaseImmutabilityError,
+    PersistentReleasesStore,
+    PersistentBuildRequestsStore,
+    PersistentEngineerReviewsStore,
+    PersistentReviewsByReleaseStore
+)
 
 from workers.geometry.engine import compute_parcel_metrics
 from workers.regulation.evaluator import evaluate_mumbai_dcpr_2034
@@ -103,6 +115,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.exception_handler(DatabaseLedgerError)
+def handle_database_ledger_error(request: Request, exc: DatabaseLedgerError):
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    error_type = "DATABASE_UNAVAILABLE"
+    if isinstance(exc, ReleaseImmutabilityError):
+        status_code = status.HTTP_409_CONFLICT
+        error_type = "RELEASE_IMMUTABLE"
+    return JSONResponse(
+        status_code=status_code,
+        content={"detail": str(exc), "error": error_type}
+    )
+
 # --- Pydantic Data Contracts ---
 
 class GeometryAutoSavePayload(BaseModel):
@@ -166,13 +190,13 @@ class StatutoryFeasibilityEvaluatePayload(BaseModel):
     existingRoadWidthM: Optional[float] = None
     proposedRoadWidthM: Optional[float] = None
 
-# --- In-Memory Repository for Dev Mode ---
+# --- Persistent Review & Release Ledger (PostgreSQL) ---
 PROJECTS_DB: Dict[str, Dict[str, Any]] = {}
 HOUSE_OPTIONS_CACHE: Dict[str, List[Dict[str, Any]]] = {}
-RELEASES_DB: Dict[str, Dict[str, Any]] = {}
-BUILD_REQUESTS_MAP: Dict[str, str] = {}
-ENGINEER_REVIEWS_DB: Dict[str, EngineerReview] = {}
-ENGINEER_REVIEWS_BY_RELEASE: Dict[str, str] = {}
+RELEASES_DB = PersistentReleasesStore()
+BUILD_REQUESTS_MAP = PersistentBuildRequestsStore()
+ENGINEER_REVIEWS_DB = PersistentEngineerReviewsStore()
+ENGINEER_REVIEWS_BY_RELEASE = PersistentReviewsByReleaseStore()
 SITE_EVIDENCE_DB: Dict[str, List[Dict[str, Any]]] = {}
 SITE_REF_FRAMES_DB: Dict[str, Dict[str, Any]] = {}
 FEASIBILITY_EXPLAINABILITY_DB: Dict[str, Dict[str, Any]] = {}
@@ -531,6 +555,7 @@ def request_build(design_version_id: str, payload: BuildRequestPayload):
     build_request_id = f"br-{uuid.uuid4().hex[:8]}"
     BUILD_REQUESTS_MAP[build_request_id] = release_id
     RELEASES_DB[release_id]["buildRequestId"] = build_request_id
+    RELEASES_DB.save(RELEASES_DB[release_id])
 
     return {
         "buildRequestId": build_request_id,
@@ -578,6 +603,8 @@ def update_gate_approval(release_id: str, approval: ProfessionalGateApproval):
     if all_approved:
         rel["lifecycleState"] = "PROFESSIONALLY_ACCEPTED"
         pkg["lifecycleState"] = "PROFESSIONALLY_ACCEPTED"
+
+    RELEASES_DB.save(rel)
 
     return {
         "status": "UPDATED",
@@ -643,9 +670,9 @@ def create_or_get_engineer_review(build_request_id: str):
 
     # Check for existing review
     if release_id in ENGINEER_REVIEWS_BY_RELEASE:
-        existing_rev_id = ENGINEER_REVIEWS_BY_RELEASE[release_id]
-        if existing_rev_id in ENGINEER_REVIEWS_DB:
-            return ENGINEER_REVIEWS_DB[existing_rev_id].dict()
+        existing_rev_id = ENGINEER_REVIEWS_BY_RELEASE.get(release_id)
+        if existing_rev_id and existing_rev_id in ENGINEER_REVIEWS_DB:
+            return ENGINEER_REVIEWS_DB[existing_rev_id].model_dump()
 
     rel = RELEASES_DB[release_id]
     opt = rel.get("houseOption", {})
@@ -740,6 +767,7 @@ def verify_review_gate(review_id: str, gate_code: str, payload: GateVerification
     target_gate.reviewedAt = datetime.now(timezone.utc).isoformat()
     target_gate.notes = payload.notes
     review.updatedAt = datetime.now(timezone.utc).isoformat()
+    ENGINEER_REVIEWS_DB.save(review)
 
     return {
         "status": "UPDATED",
@@ -774,6 +802,7 @@ def create_review_issue(review_id: str, payload: CreateIssuePayload):
 
     review.issues.append(issue)
     review.updatedAt = datetime.now(timezone.utc).isoformat()
+    ENGINEER_REVIEWS_DB.save(review)
     return issue.model_dump()
 
 
@@ -809,6 +838,7 @@ def record_review_decision(review_id: str, payload: ReviewDecisionPayload):
     )
     review.decisions.append(decision)
     review.updatedAt = datetime.now(timezone.utc).isoformat()
+    ENGINEER_REVIEWS_DB.save(review)
 
     return review.model_dump()
 
@@ -867,6 +897,7 @@ def request_review_changes(review_id: str, payload: RequestChangesPayload):
         reason=payload.reason
     )
     review.decisions.append(decision)
+    ENGINEER_REVIEWS_DB.save(review)
 
     return review.model_dump()
 

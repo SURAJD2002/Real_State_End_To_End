@@ -1,0 +1,80 @@
+{
+  "project": {
+    "id": "proj-mumbai-real-1100",
+    "name": "Bandra West Residential Development",
+    "description": "Authoritative 1,100 sq ft Real Plot Pilot (27.5 ft × 40.0 ft)",
+    "location": "Bandra West, Mumbai, Maharashtra, India",
+    "cadastralNumber": "CTS-1842-BANDRA",
+    "tenureType": "PRIVATE_FREEHOLD",
+    "jurisdiction": "MUMBAI_DCPR_2034",
+    "rulePackId": "MUMBAI-DCPR-2034-V1"
+  },
+  "site": {
+    "declaredPlotAreaSqFt": 1100.0,
+    "declaredPlotAreaSqm": 102.193,
+    "shape": "RECTANGULAR",
+    "roadWidthM": 12.0,
+    "proposedRoadWidthM": 18.0,
+    "roadFacingSide": "SOUTH",
+    "dimensions": {
+      "frontWidthFt": 27.5,
+      "backWidthFt": 27.5,
+      "leftLengthFt": 40.0,
+      "rightLengthFt": 40.0
+    },
+    "dimensionsM": {
+      "frontWidthM": 8.382,
+      "backWidthM": 8.382,
+      "leftLengthM": 12.192,
+      "rightLengthM": 12.192
+    },
+    "coordinatesWGS84": [
+      [72.82950, 19.05960],
+      [72.82958, 19.05960],
+      [72.82958, 19.05971],
+      [72.82950, 19.05971],
+      [72.82950, 19.05960]
+    ],
+    "referenceFrame": {
+      "originLatitude": 19.0596,
+      "originLongitude": 72.8295,
+      "originElevationM": 12.0,
+      "trueNorthBearingDeg": 0.0,
+      "ellipsoid": "WGS84",
+      "coordinateSystem": "SECS_ENU"
+    }
+  },
+  "siteEvidence": [
+    {
+      "id": "EV-SURV-MH-2026-8812",
+      "evidenceType": "PARCEL_BOUNDARY",
+      "sourceType": "LICENSED_SURVEYOR",
+      "sourceDocumentId": "DOC-SURV-2026-09-BANDRA-1842",
+      "provider": "Maharashtra State Council of Registered Surveyors (Lic: SURV-MH-4421)",
+      "accuracyM": 0.05,
+      "confidenceLevel": "HIGH",
+      "verificationStatus": "VERIFIED",
+      "verifiedBy": "Ar. Sanjay Deshmukh (COA: CA/2012/58912)",
+      "notes": "Physical corner boundary markers verified on site in SECS frame."
+    }
+  ],
+  "customerRequirements": {
+    "buildingUse": "RESIDENTIAL",
+    "floors": 2,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "parkingSpaces": 1,
+    "parkingType": "SURFACE",
+    "budgetInr": 7500000.0,
+    "targetTimelineMonths": 10,
+    "architecturalStyle": "CONTEMPORARY",
+    "vastuOrientation": "EAST_FACING",
+    "qualityTier": "PREMIUM"
+  },
+  "rateSnapshotId": "INDIA-MUMBAI-2026-Q4-V1",
+  "disclaimers": {
+    "computationalValidationNotice": "Computational rule checks and geometric validations are automated baseline verifications and do not constitute statutory professional certification.",
+    "preliminaryCostNotice": "Cost waterfall is a preliminary model-linked estimate based on IS 1200 takeoff and Q4 2026 Mumbai regional rate snapshot. Subject to final structural engineering review and contractor procurement bids.",
+    "engineerReviewNotice": "Gates G5 (Build Authorization) and G6 (Contractor Handoff) remain locked until all prerequisite technical verification gates (G0–G4) are reviewed and signed by a licensed professional engineer."
+  }
+}

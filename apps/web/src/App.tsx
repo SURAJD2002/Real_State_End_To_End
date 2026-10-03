@@ -437,7 +437,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-[#07090e] overflow-hidden select-none">
+    <div className="w-screen h-screen flex flex-col bg-[#0b0d11] overflow-hidden select-none">
       {/* Top Application Bar with 6-stage workflow tabs */}
       <Navbar
         project={project}
@@ -730,6 +730,7 @@ export const App: React.FC = () => {
               activeReleaseId={activeReleaseId || 'REL-SAMPLE-2026'}
               onBackToBuild={() => setActiveStep('BUILD')}
               onBackToDesign={() => setActiveStep('DESIGN')}
+              viewMode={viewMode}
             />
           ) : (
             <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">

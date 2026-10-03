@@ -1,0 +1,29 @@
+{
+  "projectId": "proj-mumbai-real-1100",
+  "releaseId": "rel-pilot-20261002-aedf9830",
+  "designVersionId": "DV-OPT-B-9be0a983",
+  "rateSnapshotId": "INDIA-MUMBAI-2026-Q4-V1",
+  "qualityTier": "PREMIUM",
+  "waterfall": {
+    "grossHardCost": 1166718.0,
+    "directMaterialCost": 744306.69,
+    "directLabourCost": 364954.7,
+    "directEquipmentCost": 57456.61,
+    "materialWastageCost": 29772.27,
+    "overheadAndPrelims": 93337.44,
+    "contingency": 58335.9,
+    "statutoryTaxes": 0.0,
+    "totalConstructionCost": 1318391.34,
+    "costPerSqFtBUA": 1247.79,
+    "costPerSqmBUA": 13431.04,
+    "costPerCarpetSqFt": 1434.9,
+    "costPerCarpetSqm": 15445.07,
+    "areaBasis": {
+      "grossBUASqm": 98.16,
+      "grossBUASqFt": 1056.58,
+      "carpetAreaSqm": 85.36,
+      "carpetAreaSqFt": 918.81
+    }
+  },
+  "disclaimer": "Cost waterfall is a preliminary model-linked estimate based on IS 1200 takeoff and Q4 2026 Mumbai regional rate snapshot. Preliminary cost estimate is not a contractor quotation. Subject to final structural engineering review and contractor procurement bids."
+}

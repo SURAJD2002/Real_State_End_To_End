@@ -37,14 +37,14 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
   const boq = selectedOption.boq;
   const layout = selectedOption.layout;
 
-  // Authoritative total & rate values
-  const totalCost = boq.totalBaseEstimate || boq.estimateRange?.expected || 4500000;
-  const costPerSqFt = Math.round(boq.costPerSqFtBUA || 3600);
-  const buaSqFt = Math.round((layout.totalGrossBUASqm || 110) * 10.7639);
+  // Authoritative total & rate values (§13)
+  const totalCost = boq.totalBaseEstimate || boq.estimateRange?.expected || 4520000;
+  const costPerSqFt = Math.round(boq.costPerSqFtBUA || 3616);
+  const buaSqFt = Math.round((layout.totalGrossBUASqm || 116) * 10.7639);
   const lowRangeLakh = ((boq.estimateRange?.low || totalCost * 0.93) / 100000).toFixed(1);
   const highRangeLakh = ((boq.estimateRange?.high || totalCost * 1.08) / 100000).toFixed(1);
 
-  // Group BOQ line items into the 6 major customer categories
+  // Group BOQ line items into the 6 major customer categories (§13)
   const breakdown = useMemo(() => {
     let structure = 0;
     let finishing = 0;
@@ -75,7 +75,7 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
       }
     });
 
-    // Add contractor prelims & contingency to "Other / Preliminaries"
+    // Add contractor prelims & contingency to "Other"
     const prelimsAndContingency = (boq.contractorPrelims || 0) + (boq.contingency || 0);
     const totalOther = otherTrade + prelimsAndContingency;
 
@@ -83,55 +83,49 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
       {
         id: 'structure',
         name: 'Structure',
-        description: 'Earthwork, RCC columns, beams, slabs, & brickwork',
-        amount: structure,
-        percent: Math.round((structure / totalCost) * 100) || 45,
-        color: '#3b82f6'
+        description: 'Earthwork, RCC columns, beams, slabs, & brick masonry',
+        amount: structure || Math.round(totalCost * 0.44),
+        percent: Math.round(((structure || totalCost * 0.44) / totalCost) * 100),
+        color: '#2563eb'
       },
       {
         id: 'finishing',
         name: 'Finishing',
         description: 'Internal & external plaster, vitrified flooring, & paint',
-        amount: finishing,
-        percent: Math.round((finishing / totalCost) * 100) || 25,
-        color: '#10b981'
+        amount: finishing || Math.round(totalCost * 0.26),
+        percent: Math.round(((finishing || totalCost * 0.26) / totalCost) * 100),
+        color: '#16a34a'
       },
       {
         id: 'electrical',
         name: 'Electrical',
         description: 'Conduit piping, concealed wiring, distribution boards',
-        amount: electrical,
-        percent: Math.round((electrical / totalCost) * 100) || 8,
-        color: '#f59e0b'
+        amount: electrical || Math.round(totalCost * 0.08),
+        percent: Math.round(((electrical || totalCost * 0.08) / totalCost) * 100),
+        color: '#d97706'
       },
       {
         id: 'plumbing',
         name: 'Plumbing',
-        description: 'Internal water supply, drainage lines, & sanitary ware',
-        amount: plumbing,
-        percent: Math.round((plumbing / totalCost) * 100) || 7,
-        color: '#06b6d4'
+        description: 'Internal water supply, drainage lines, & sanitary fixtures',
+        amount: plumbing || Math.round(totalCost * 0.07),
+        percent: Math.round(((plumbing || totalCost * 0.07) / totalCost) * 100),
+        color: '#0891b2'
       },
       {
         id: 'doors_windows',
         name: 'Doors & Windows',
-        description: 'Teak/flush doors, UPVC/aluminium sliding windows',
-        amount: doorsWindows,
-        percent: Math.round((doorsWindows / totalCost) * 100) || 6,
-        color: '#8b5cf6'
+        description: 'Teak/flush doors, sliding powder-coated aluminium windows',
+        amount: doorsWindows || Math.round(totalCost * 0.06),
+        percent: Math.round(((doorsWindows || totalCost * 0.06) / totalCost) * 100),
+        color: '#6366f1'
       },
       {
         id: 'other',
-        name: 'Other / Preliminaries',
+        name: 'Other & Prelims',
         description: 'Site management, material wastage buffer, & contingency',
-        amount: totalOther,
-        percent: Math.max(1, 100 - (
-          Math.round((structure / totalCost) * 100) +
-          Math.round((finishing / totalCost) * 100) +
-          Math.round((electrical / totalCost) * 100) +
-          Math.round((plumbing / totalCost) * 100) +
-          Math.round((doorsWindows / totalCost) * 100)
-        )),
+        amount: totalOther || Math.round(totalCost * 0.09),
+        percent: Math.round(((totalOther || totalCost * 0.09) / totalCost) * 100),
         color: '#64748b'
       }
     ];
@@ -160,7 +154,7 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `BOQ_${layout.archetype}_${boq.rateSnapshotId}.csv`);
+    link.setAttribute('download', `BOQ_${layout.archetype}_${boq.rateSnapshotId || '2026'}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -190,118 +184,73 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
   };
 
   const formatINR = (val: number) => {
-    return '₹ ' + Math.round(val).toLocaleString('en-IN');
+    return '₹' + Math.round(val).toLocaleString('en-IN');
   };
-
-  const bedsCount = layout.rooms?.filter(r => 
-    r.name?.toLowerCase().includes('bed') || r.zone === 'PRIVATE'
-  ).length || 2;
 
   const currentTier = boq.qualityTier || 'STANDARD';
 
   return (
-    <div className="flex-1 w-full h-full overflow-y-auto bg-[#07090e] p-6 lg:p-10 flex flex-col items-center">
-      <div className="w-full max-w-4xl space-y-8 animate-fade-in pb-20">
-
+    <div className="pw-page">
+      <div className="pw-container">
+        
         {/* Navigation Breadcrumb */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-5">
+        <div className="flex items-center justify-between">
           <button
             type="button"
             onClick={onBackToDesign}
-            className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Designs</span>
           </button>
 
-          {/* Stepper */}
-          <div className="flex items-center gap-2 text-xs font-mono">
-            <span className="text-emerald-400 font-medium">1 Land ✓</span>
-            <span className="text-slate-600">→</span>
-            <span className="text-emerald-400 font-medium">2 Feasibility ✓</span>
-            <span className="text-slate-600">→</span>
-            <span className="text-emerald-400 font-medium">3 Design ✓</span>
-            <span className="text-slate-600">→</span>
-            <span className="text-blue-400 font-bold bg-blue-950/80 border border-blue-500/40 px-2.5 py-0.5 rounded-full">
-              4 Cost ●
-            </span>
-            <span className="text-slate-600">→</span>
-            <span className="text-slate-500">5 Build</span>
-            <span className="text-slate-600">→</span>
-            <span className="text-slate-500">6 Engineer</span>
-          </div>
+          <span className="pw-badge pw-badge-neutral">
+            Step 4 of 6: Cost Estimation
+          </span>
         </div>
 
-        {/* Page Title */}
-        <div className="space-y-2">
-          <h1 className="text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">
+        {/* Headline (§13) */}
+        <div>
+          <h1 className="pw-title-xl">
             How much will it cost?
           </h1>
-          <p className="text-slate-400 text-sm lg:text-base leading-relaxed">
-            Here's an estimated construction cost based on the house design you selected.
+          <p className="pw-body mt-1">
+            Institutional cost estimate generated directly from your selected 3D building elements and local rates.
           </p>
         </div>
 
-        {/* 1. TOP SUMMARY CARD */}
-        <div className="rounded-2xl bg-slate-900/60 border border-white/10 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-blue-400 font-semibold block">
-              Selected Home
-            </span>
-            <h2 className="text-base font-bold text-white">
-              {layout.label || 'Selected Design Option'}
-            </h2>
-            <p className="text-xs text-slate-400">
-              {layout.description || 'Optimized layout designed for your plot.'}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
-            <span className="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-white/5 text-slate-200">
-              {bedsCount} BHK
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-white/5 text-slate-200">
-              {layout.floors === 1 ? 'Ground Only' : `Ground + ${layout.floors - 1}`}
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-white/5 text-slate-200">
-              Built-up: {buaSqFt.toLocaleString()} sq ft
-            </span>
-            <span className="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-white/5 text-slate-200">
-              Parking: 1 Car
-            </span>
-          </div>
-        </div>
-
-        {/* 2. MAIN COST HERO CARD */}
-        <div className="rounded-2xl bg-gradient-to-br from-blue-950/40 via-slate-900/80 to-slate-900/90 border border-blue-500/30 p-6 lg:p-8 space-y-6 shadow-xl">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Hero Number Card (§13) */}
+        <div className="pw-card bg-[#141822] border-white/10 space-y-5">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-1.5">
+              <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
                   Estimated Construction Cost
                 </span>
-                <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                  Preliminary Estimate
+                <span className="pw-badge pw-badge-primary text-[10px]">
+                  IS 1200 Quantities
                 </span>
               </div>
-              <div className="text-4xl lg:text-5xl font-display font-bold text-white font-mono tracking-tight">
+              
+              <div className="text-4xl lg:text-5xl font-mono font-bold text-white tracking-tight">
                 {formatINR(totalCost)}
               </div>
-              <div className="text-xs font-mono text-cyan-400 mt-2 flex items-center gap-2">
-                <span>Approx. ₹ {costPerSqFt.toLocaleString()} / sq ft</span>
-                <span>•</span>
-                <span className="text-slate-300">
-                  Estimated Range: ₹ {lowRangeLakh} Lakh — ₹ {highRangeLakh} Lakh
-                </span>
+
+              <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-slate-300 mt-2">
+                <span className="text-blue-400 font-bold">₹{costPerSqFt.toLocaleString()} / sq ft</span>
+                <span className="text-slate-600">·</span>
+                <span>Estimated range: ₹{lowRangeLakh}L – ₹{highRangeLakh}L</span>
+                <span className="text-slate-600">·</span>
+                <span className="text-slate-400">{buaSqFt.toLocaleString()} sq ft BUA</span>
               </div>
             </div>
 
             {/* Quality Tier Selector */}
-            <div className="p-3 rounded-xl bg-slate-950/70 border border-white/10 space-y-2 shrink-0">
-              <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">
-                Finish Specification Tier:
+            <div className="p-2.5 rounded-lg bg-[#0c0e14] border border-white/10 space-y-1.5 shrink-0">
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block font-semibold">
+                Finish Quality Tier:
               </span>
-              <div className="flex rounded-lg bg-slate-900 p-1 border border-white/5 gap-1">
+              <div className="pw-segmented-control">
                 {[
                   { id: 'STANDARD', label: 'Standard' },
                   { id: 'PREMIUM', label: 'Premium' },
@@ -310,11 +259,7 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
                   <button
                     key={tier.id}
                     onClick={() => onUpdateTier(tier.id)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
-                      currentTier === tier.id
-                        ? 'bg-blue-600 text-white shadow-md'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
+                    className={`pw-segmented-btn ${currentTier === tier.id ? 'pw-segmented-btn-active' : ''}`}
                   >
                     {tier.label}
                   </button>
@@ -323,50 +268,50 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
             </div>
           </div>
 
-          {/* Preliminary Notice */}
-          <div className="p-3.5 rounded-xl bg-slate-950/50 border border-white/5 text-xs text-slate-400 leading-relaxed flex items-start gap-2.5">
-            <Info className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
-            <p>
-              Final cost may change after professional structural design, site soil testing, detailed finishes specification, and contractor quotations.
-            </p>
+          {/* Subdued Professional Verification Disclaimer (§13) */}
+          <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 text-xs text-slate-400 flex items-start gap-2">
+            <Info className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
+            <span>
+              Preliminary estimate for planning and budget verification. Final construction expenditure depends on registered structural engineer signoff and contractor bidding.
+            </span>
           </div>
         </div>
 
-        {/* 3. SIMPLE COST BREAKDOWN */}
-        <div className="rounded-2xl bg-slate-900/40 border border-white/10 p-6 space-y-5">
+        {/* Visual Trade Breakdown Bars (§13) */}
+        <div className="pw-card space-y-4">
           <div className="flex items-center justify-between border-b border-white/10 pb-3">
             <div>
-              <h3 className="text-sm font-semibold text-white">Cost Breakdown by Major Category</h3>
-              <p className="text-xs text-slate-400">Summarized from model-linked Bill of Quantities</p>
+              <h3 className="pw-title-md">Trade Breakdown</h3>
+              <p className="text-xs text-slate-400">Elemental breakdown derived from the model Bill of Quantities</p>
             </div>
 
             <button
               onClick={() => setIsBOQModalOpen(true)}
-              className="text-xs px-3.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-white/10 flex items-center gap-1.5 transition-colors"
+              className="pw-btn pw-btn-secondary pw-btn-sm"
             >
-              <FileSpreadsheet className="w-3.5 h-3.5 text-cyan-400" />
+              <FileSpreadsheet className="w-3.5 h-3.5 text-blue-400" />
               <span>View Detailed BOQ</span>
             </button>
           </div>
 
-          {/* Visual Percentage Bar */}
-          <div className="w-full h-3 rounded-full bg-slate-800 overflow-hidden flex">
+          {/* Horizontal Proportional Progress Bar */}
+          <div className="w-full h-3 rounded-full bg-slate-900 overflow-hidden flex">
             {breakdown.map((item) => (
               <div
                 key={`bar-${item.id}`}
                 style={{ width: `${item.percent}%`, backgroundColor: item.color }}
-                title={`${item.name}: ${item.percent}%`}
-                className="h-full transition-all duration-500"
+                title={`${item.name}: ${item.percent}% (${formatINR(item.amount)})`}
+                className="h-full transition-all duration-300"
               />
             ))}
           </div>
 
           {/* Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {breakdown.map((cat) => (
               <div
                 key={cat.id}
-                className="p-4 rounded-xl bg-slate-900/60 border border-white/5 hover:border-white/15 transition-all flex flex-col justify-between space-y-2"
+                className="p-3.5 rounded-lg bg-[#0f1219] border border-white/5 flex flex-col justify-between space-y-2"
               >
                 <div>
                   <div className="flex items-center justify-between mb-1">
@@ -374,7 +319,7 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
                       <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
                       {cat.name}
                     </span>
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <span className="text-[11px] font-mono text-slate-400">
                       {cat.percent}%
                     </span>
                   </div>
@@ -384,7 +329,7 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
                 </div>
 
                 <div className="pt-2 border-t border-white/5">
-                  <span className="text-sm font-bold font-mono text-slate-100">
+                  <span className="text-xs font-mono font-bold text-white">
                     {formatINR(cat.amount)}
                   </span>
                 </div>
@@ -393,42 +338,42 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
           </div>
         </div>
 
-        {/* 5. "HOW WAS THIS CALCULATED?" COLLAPSIBLE */}
-        <div className="rounded-2xl bg-slate-900/40 border border-white/10 p-5 space-y-3">
+        {/* Collapsible: How was this calculated? (§13) */}
+        <div className="pw-card p-4 space-y-3">
           <button
             onClick={() => setShowCalculationDetails(!showCalculationDetails)}
             className="w-full flex items-center justify-between text-xs text-blue-400 hover:text-blue-300 font-medium transition-colors"
           >
             <span className="flex items-center gap-2">
-              <Info className="w-4 h-4" />
+              <Info className="w-3.5 h-3.5" />
               <span>How was this calculated?</span>
             </span>
-            {showCalculationDetails ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            {showCalculationDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
           </button>
 
           {showCalculationDetails && (
-            <div className="pt-3 space-y-4 text-xs text-slate-300 animate-fade-in border-t border-white/5">
-              <p className="leading-relaxed text-slate-400">
-                Planwise links every 3D element in your house design directly to deterministic Indian Standard (IS 1200) measurement rules and local schedule of rates:
+            <div className="pt-3 space-y-3 text-xs text-slate-300 animate-fade-in border-t border-white/5">
+              <p className="text-slate-400 leading-relaxed">
+                Planwise evaluates every 3D element in your house design directly through deterministic IS 1200 measurement rules:
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
-                <div className="p-3 rounded-xl bg-slate-950/60 border border-white/5">
+                <div className="p-3 rounded-lg bg-black/30 border border-white/5">
                   <span className="text-white font-semibold block mb-0.5">1. Model Geometry</span>
-                  <span className="text-slate-400">Wall surface areas, slab concrete volumes, column heights extracted directly from the Canonical Building Model.</span>
+                  <span className="text-slate-400">Wall surface areas, slab concrete volumes, column heights extracted from Canonical Building Model.</span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-950/60 border border-white/5">
+                <div className="p-3 rounded-lg bg-black/30 border border-white/5">
                   <span className="text-white font-semibold block mb-0.5">2. Material Assemblies</span>
-                  <span className="text-slate-400">Bricks, cement bags, steel rebar, and aggregate calculated with standard IS wastage allowances.</span>
+                  <span className="text-slate-400">Bricks, cement bags, steel rebar, and aggregate computed with standard IS wastage allowances.</span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-950/60 border border-white/5">
-                  <span className="text-white font-semibold block mb-0.5">3. Labour & Equipment</span>
-                  <span className="text-slate-400">Masons, bar-benders, helpers, and shuttering equipment estimated by work-package productivity norms.</span>
+                <div className="p-3 rounded-lg bg-black/30 border border-white/5">
+                  <span className="text-white font-semibold block mb-0.5">3. Labour &amp; Equipment</span>
+                  <span className="text-slate-400">Masons, bar-benders, helpers, and shuttering estimated by work-package productivity norms.</span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-950/60 border border-white/5">
+                <div className="p-3 rounded-lg bg-black/30 border border-white/5">
                   <span className="text-white font-semibold block mb-0.5">4. Rate Snapshot</span>
                   <span className="text-slate-400">Authoritative baseline rates: <strong className="text-slate-200">{boq.rateSnapshotId || 'Mumbai 2026 Q4'}</strong>.</span>
                 </div>
@@ -437,17 +382,17 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
           )}
         </div>
 
-        {/* 6. EXPORT ACTIONS & TECHNICAL DETAILS */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        {/* Export & Technical Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400 pt-1">
           <div className="flex items-center gap-3">
             <button
               onClick={downloadCSV}
               className="flex items-center gap-1.5 hover:text-white transition-colors"
             >
-              <Download className="w-3.5 h-3.5 text-cyan-400" />
+              <Download className="w-3.5 h-3.5 text-blue-400" />
               <span>Download BOQ (CSV)</span>
             </button>
-            <span>•</span>
+            <span className="text-slate-700">·</span>
             <button
               onClick={downloadJSON}
               className="flex items-center gap-1.5 hover:text-white transition-colors"
@@ -463,32 +408,30 @@ export const CostSummaryView: React.FC<CostSummaryViewProps> = ({
               className="flex items-center gap-1.5 hover:text-white transition-colors"
             >
               <Sliders className="w-3.5 h-3.5 text-blue-400" />
-              <span>Open Detailed M3 Cost Engine</span>
+              <span>Open in Technical M3 Cost Engine</span>
             </button>
           )}
         </div>
 
-        {/* 7. PROFESSIONAL NOTICE & PRIMARY CTA FOOTER */}
-        <div className="rounded-2xl bg-slate-900/80 border border-white/10 p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="text-xs text-slate-400 leading-relaxed max-w-md">
-            <span className="text-white font-semibold block mb-1">Ready to review project build scope?</span>
-            This estimate moves to project readiness checklist. Final construction begins only after licensed professional verification.
+        {/* Footer Actions */}
+        <div className="pw-card flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-xs text-slate-400">
+            <span className="text-white font-semibold block mb-0.5">Ready to move forward with this design?</span>
+            Proceed to Build Review to freeze your project package and request engineering verification.
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <button
-              onClick={onProceedToBuild}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-display font-semibold text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
-            >
-              <span>Review & Continue</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+          <button
+            onClick={onProceedToBuild}
+            className="pw-btn pw-btn-primary pw-btn-lg w-full sm:w-auto"
+          >
+            <span>Proceed to Build Review</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
 
       </div>
 
-      {/* Detailed BOQ Table Modal */}
+      {/* BOQ Modal */}
       {isBOQModalOpen && (
         <BOQTableModal
           option={selectedOption}

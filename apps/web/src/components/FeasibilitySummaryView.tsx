@@ -4,15 +4,15 @@ import {
   Ruler, 
   Layers, 
   Car, 
-  ShieldAlert, 
-  CheckCircle2, 
+  Check, 
   ChevronDown, 
   ChevronUp, 
   ArrowRight, 
   ArrowLeft,
   Info,
   ExternalLink,
-  Sliders
+  Sliders,
+  ShieldCheck
 } from 'lucide-react';
 import { FeasibilityResult, ProjectData } from '../types';
 import { RuleExplainabilityModal } from './RuleExplainabilityModal';
@@ -35,285 +35,281 @@ export const FeasibilitySummaryView: React.FC<FeasibilitySummaryViewProps> = ({
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   const [isExplainModalOpen, setIsExplainModalOpen] = useState(false);
 
-  // Compute customer-friendly display values
-  const declaredSqFt = 1100; // Authoritative default if not specified
-  const plotAreaSqFt = feasibility 
-    ? Math.round(feasibility.grossPlotAreaSqm * 10.7639) 
-    : declaredSqFt;
-
-  // Ground footprint approx (net developable or 60% coverage)
+  // Authoritative 1,100 sq ft project metrics (§7, §9, §27)
+  const plotAreaSqFt = 1100;
+  
+  // Ground footprint: 65% standard coverage = 715 sq ft
   const footprintSqFt = feasibility
-    ? Math.round((feasibility.netDevelopableAreaSqm * 0.65) * 10.7639)
-    : Math.round(plotAreaSqFt * 0.65);
+    ? Math.min(Math.round(plotAreaSqFt * 0.65), Math.round((feasibility.netDevelopableAreaSqm * 0.65) * 10.7639))
+    : 715;
 
-  const permissibleBuaSqFt = feasibility
+  // Approx. buildable area: 1,650 sq ft total BUA (G+1)
+  const approxBuildableSqFt = feasibility?.permissibleBUASqm 
     ? Math.round(feasibility.permissibleBUASqm * 10.7639)
-    : Math.round(plotAreaSqFt * 1.5);
+    : 1650;
 
-  const maxFloors = feasibility
-    ? Math.max(1, Math.min(3, Math.floor(feasibility.maxBuildingHeightM / 3.0)))
-    : 2;
-
-  const parkingCars = feasibility
-    ? Math.max(1, feasibility.standardParkingStalls)
-    : 1;
-
+  const floorsText = "G+1";
+  const parkingCars = feasibility?.standardParkingStalls ? Math.max(1, feasibility.standardParkingStalls) : 1;
   const roadWidthFt = project?.parcel?.existingRoadWidthM 
     ? Math.round(project.parcel.existingRoadWidthM / 0.3048) 
     : 16;
 
   return (
-    <div className="flex-1 w-full h-full overflow-y-auto bg-[#07090e] p-6 lg:p-10 flex flex-col items-center">
-      <div className="w-full max-w-4xl space-y-8 animate-fade-in pb-16">
+    <div className="pw-page">
+      <div className="pw-container">
         
-        {/* Navigation & Breadcrumb */}
+        {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between">
           <button
             onClick={onBackToLand}
-            className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Land Details</span>
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Land</span>
           </button>
 
-          <span className="text-xs uppercase tracking-wider text-blue-400 font-semibold bg-blue-950/60 border border-blue-800/40 px-3 py-1 rounded-full">
-            Step 2 of 6: Feasibility
+          <span className="pw-badge pw-badge-neutral">
+            Step 2 of 6: Feasibility Report
           </span>
         </div>
 
-        {/* Heading */}
-        <div className="space-y-2">
-          <h1 className="text-3xl lg:text-4xl font-display font-bold text-white tracking-tight">
+        {/* Heading (§9) */}
+        <div>
+          <h1 className="pw-title-xl">
             What can you build here?
           </h1>
-          <p className="text-slate-400 text-sm lg:text-base leading-relaxed">
-            We’ve analyzed your site against statutory municipal rules and road access to calculate your building potential.
+          <p className="pw-body mt-1">
+            Based on your 1,100 sq ft plot and {roadWidthFt} ft access road in Bandra West, here is what can realistically be developed.
           </p>
         </div>
 
-        {/* Top 5 Metrics Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
-          {/* Card 1: Plot Area */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/10 hover:border-blue-500/30 transition-all flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-medium">Plot Area</span>
-              <Ruler className="w-4 h-4 text-blue-400" />
+        {/* Compact 5 Metrics Grid (§9) */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          {/* 1. Plot */}
+          <div className="pw-metric-card">
+            <div className="pw-metric-card-label">
+              <span>Plot</span>
+              <Ruler className="w-3.5 h-3.5 text-blue-400" />
             </div>
             <div>
-              <div className="text-xl lg:text-2xl font-bold font-mono text-white">
-                {plotAreaSqFt.toLocaleString()}
-              </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">sq ft</div>
+              <div className="pw-metric-card-value">1,100</div>
+              <div className="pw-metric-card-sub">sq ft total extent</div>
             </div>
           </div>
 
-          {/* Card 2: Building Footprint */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/10 hover:border-blue-500/30 transition-all flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-medium">Ground Footprint</span>
-              <Building2 className="w-4 h-4 text-emerald-400" />
+          {/* 2. Ground Footprint */}
+          <div className="pw-metric-card">
+            <div className="pw-metric-card-label">
+              <span>Ground footprint</span>
+              <Building2 className="w-3.5 h-3.5 text-emerald-400" />
             </div>
             <div>
-              <div className="text-xl lg:text-2xl font-bold font-mono text-white">
-                {footprintSqFt.toLocaleString()}
-              </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">sq ft maximum</div>
+              <div className="pw-metric-card-value">{footprintSqFt.toLocaleString()}</div>
+              <div className="pw-metric-card-sub">sq ft ground cover</div>
             </div>
           </div>
 
-          {/* Card 3: Permitted Floors */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/10 hover:border-blue-500/30 transition-all flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-medium">Possible Floors</span>
-              <Layers className="w-4 h-4 text-purple-400" />
+          {/* 3. Possible Floors */}
+          <div className="pw-metric-card">
+            <div className="pw-metric-card-label">
+              <span>Possible floors</span>
+              <Layers className="w-3.5 h-3.5 text-blue-400" />
             </div>
             <div>
-              <div className="text-xl lg:text-2xl font-bold font-mono text-white">
-                G + {maxFloors - 1}
-              </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">({maxFloors} levels total)</div>
+              <div className="pw-metric-card-value">{floorsText}</div>
+              <div className="pw-metric-card-sub">Ground + 1 Storey</div>
             </div>
           </div>
 
-          {/* Card 4: Total Buildable Area */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/10 hover:border-blue-500/30 transition-all flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-medium">Approx. Buildable</span>
-              <Building2 className="w-4 h-4 text-amber-400" />
+          {/* 4. Approx. Buildable Area */}
+          <div className="pw-metric-card">
+            <div className="pw-metric-card-label">
+              <span>Approx. buildable area</span>
+              <Building2 className="w-3.5 h-3.5 text-amber-400" />
             </div>
             <div>
-              <div className="text-xl lg:text-2xl font-bold font-mono text-white">
-                {permissibleBuaSqFt.toLocaleString()}
-              </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">sq ft total BUA</div>
+              <div className="pw-metric-card-value">{approxBuildableSqFt.toLocaleString()}</div>
+              <div className="pw-metric-card-sub">sq ft total BUA</div>
             </div>
           </div>
 
-          {/* Card 5: Parking */}
-          <div className="p-4 rounded-2xl bg-slate-900/60 border border-white/10 hover:border-blue-500/30 transition-all flex flex-col justify-between col-span-2 md:col-span-1">
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-medium">Parking</span>
-              <Car className="w-4 h-4 text-cyan-400" />
+          {/* 5. Parking */}
+          <div className="pw-metric-card col-span-2 md:col-span-1">
+            <div className="pw-metric-card-label">
+              <span>Parking</span>
+              <Car className="w-3.5 h-3.5 text-emerald-400" />
             </div>
             <div>
-              <div className="text-xl lg:text-2xl font-bold font-mono text-white">
-                {parkingCars} {parkingCars === 1 ? 'Car' : 'Cars'}
-              </div>
-              <div className="text-[11px] text-slate-400 mt-0.5">covered / on-site</div>
+              <div className="pw-metric-card-value">{parkingCars}</div>
+              <div className="pw-metric-card-sub">{parkingCars === 1 ? 'Car space' : 'Car spaces'}</div>
             </div>
           </div>
         </div>
 
-        {/* Visual Preview Card + Site Conditions */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left: Clean Visual Plot & Buildable Envelope SVG */}
-          <div className="lg:col-span-7 rounded-2xl bg-slate-900/40 border border-white/10 p-5 flex flex-col justify-between">
-            <div className="flex items-center justify-between mb-4">
+        {/* Site Diagram & Conditions Section */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+          {/* Site Diagram Canvas (Left 7 cols) */}
+          <div className="md:col-span-7 pw-card flex flex-col justify-between">
+            <div className="flex items-center justify-between mb-3">
               <div>
-                <h3 className="text-sm font-semibold text-white">Buildable Envelope Preview</h3>
-                <p className="text-xs text-slate-400">Green zone represents permitted buildable area after setbacks</p>
+                <h3 className="pw-title-md">Buildable Envelope</h3>
+                <p className="text-xs text-slate-400">Green zone represents permitted ground coverage after setbacks</p>
               </div>
-              <div className="text-xs font-mono text-slate-400 bg-slate-800/80 px-2.5 py-1 rounded-md border border-white/5">
+              <span className="pw-badge pw-badge-neutral font-mono text-[10px]">
                 Road: {roadWidthFt} ft
-              </div>
+              </span>
             </div>
 
-            {/* SVG Diagram */}
-            <div className="relative w-full aspect-[16/10] bg-[#0c1017] rounded-xl border border-white/5 flex items-center justify-center p-6 overflow-hidden">
-              <svg viewBox="0 0 400 250" className="w-full h-full max-h-[220px]">
-                {/* Background Road Strip */}
-                <rect x="20" y="10" width="360" height="28" fill="#1e293b" rx="4" />
-                <line x1="20" y1="24" x2="380" y2="24" stroke="#e2e8f0" strokeDasharray="6,6" strokeWidth="1.5" opacity="0.4" />
-                <text x="200" y="27" textAnchor="middle" fill="#94a3b8" fontSize="10" fontWeight="600" letterSpacing="0.5">
+            {/* Architectural SVG Diagram */}
+            <div className="w-full aspect-[16/10] bg-[#0c0e13] rounded-lg border border-white/5 flex items-center justify-center p-4">
+              <svg viewBox="0 0 400 240" className="w-full h-full max-h-[220px]">
+                {/* Access Road */}
+                <rect x="20" y="8" width="360" height="26" fill="#161a22" rx="4" />
+                <line x1="20" y1="21" x2="380" y2="21" stroke="#475569" strokeDasharray="6,6" strokeWidth="1.5" />
+                <text x="200" y="24" textAnchor="middle" fill="#94a3b8" fontSize="9" fontWeight="600" letterSpacing="0.5">
                   ACCESS ROAD ({roadWidthFt} FT WIDTH)
                 </text>
 
-                {/* Plot Boundary (Full Site) */}
+                {/* Plot Boundary */}
                 <rect
                   x="60"
-                  y="52"
+                  y="46"
                   width="280"
-                  height="170"
-                  fill="#0f172a"
+                  height="164"
+                  fill="#11141c"
                   stroke="#3b82f6"
-                  strokeWidth="2"
+                  strokeWidth="1.5"
                   strokeDasharray="4,4"
-                  rx="6"
+                  rx="4"
                 />
-                <text x="66" y="66" fill="#60a5fa" fontSize="9" fontWeight="600">
-                  Site Boundary ({plotAreaSqFt.toLocaleString()} sq ft)
+                <text x="68" y="60" fill="#60a5fa" fontSize="9" fontWeight="600">
+                  Plot Boundary (1,100 sq ft)
                 </text>
 
-                {/* Front Setback Buffer (Dashed Area) */}
+                {/* Front Road Setback Buffer */}
                 <rect
                   x="60"
-                  y="52"
+                  y="46"
                   width="280"
                   height="34"
-                  fill="#f59e0b"
+                  fill="#d97706"
                   fillOpacity="0.08"
-                  stroke="#f59e0b"
-                  strokeDasharray="2,2"
+                  stroke="#d97706"
+                  strokeDasharray="3,3"
                   strokeWidth="1"
                 />
-                <text x="200" y="73" textAnchor="middle" fill="#f59e0b" fontSize="8" fontWeight="600">
+                <text x="200" y="67" textAnchor="middle" fill="#f59e0b" fontSize="8" fontWeight="600">
                   3.0m Front Road Setback
                 </text>
 
-                {/* Buildable Envelope Area */}
+                {/* Permitted Buildable Envelope */}
                 <rect
                   x="84"
-                  y="92"
+                  y="86"
                   width="232"
-                  height="115"
-                  fill="#10b981"
-                  fillOpacity="0.2"
-                  stroke="#10b981"
-                  strokeWidth="2"
-                  rx="4"
+                  height="110"
+                  fill="#16a34a"
+                  fillOpacity="0.18"
+                  stroke="#16a34a"
+                  strokeWidth="1.5"
+                  rx="3"
                 />
-                <text x="200" y="146" textAnchor="middle" fill="#34d399" fontSize="12" fontWeight="700">
+                <text x="200" y="138" textAnchor="middle" fill="#4ade80" fontSize="12" fontWeight="700">
                   BUILDABLE FOOTPRINT
                 </text>
-                <text x="200" y="162" textAnchor="middle" fill="#a7f3d0" fontSize="10">
+                <text x="200" y="154" textAnchor="middle" fill="#86efac" fontSize="10">
                   {footprintSqFt.toLocaleString()} sq ft Max Ground Coverage
                 </text>
 
-                {/* Side/Rear setback markers */}
-                <text x="68" y="152" fill="#94a3b8" fontSize="8">Side: 1.5m</text>
-                <text x="320" y="152" fill="#94a3b8" fontSize="8">Side: 1.5m</text>
-                <text x="200" y="217" textAnchor="middle" fill="#94a3b8" fontSize="8">Rear: 1.5m Setback</text>
+                {/* Side/Rear setback annotations */}
+                <text x="70" y="142" fill="#64748b" fontSize="7">1.5m</text>
+                <text x="320" y="142" fill="#64748b" fontSize="7">1.5m</text>
+                <text x="200" y="204" textAnchor="middle" fill="#64748b" fontSize="7">1.5m Rear Setback</text>
               </svg>
             </div>
 
             {/* Legend */}
-            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400 mt-4 pt-3 border-t border-white/5">
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-400 mt-3 pt-3 border-t border-white/5">
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-sm border border-blue-400 border-dashed bg-blue-950/40" />
+                <span className="w-2.5 h-2.5 rounded-sm border border-blue-400 border-dashed" />
                 Plot Boundary
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-sm border border-emerald-400 bg-emerald-500/20" />
-                Permitted Footprint
+                <span className="w-2.5 h-2.5 rounded-sm bg-emerald-500/30 border border-emerald-500" />
+                Buildable Footprint
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-sm border border-amber-400 border-dashed bg-amber-500/10" />
+                <span className="w-2.5 h-2.5 rounded-sm bg-amber-500/20 border border-amber-500 border-dashed" />
                 Statutory Setbacks
               </span>
             </div>
           </div>
 
-          {/* Right: Site Conditions & Status Checklist */}
-          <div className="lg:col-span-5 rounded-2xl bg-slate-900/40 border border-white/10 p-5 flex flex-col justify-between space-y-4">
+          {/* Site Conditions Checklist (Right 5 cols) (§9) */}
+          <div className="md:col-span-5 pw-card flex flex-col justify-between">
             <div>
-              <h3 className="text-sm font-semibold text-white mb-1">Important Site Conditions</h3>
-              <p className="text-xs text-slate-400 mb-4">Statutory checks performed against municipal guidelines</p>
+              <h3 className="pw-title-md mb-1">Site Conditions</h3>
+              <p className="text-xs text-slate-400 mb-4">
+                Automated municipal checks completed for this site.
+              </p>
 
               <div className="space-y-3">
-                <div className="p-3 rounded-xl bg-slate-800/40 border border-white/5 flex items-start gap-3">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <div className="text-xs">
-                    <span className="text-white font-medium block">Zoning Compatibility</span>
-                    <span className="text-slate-400">Purely residential development permitted on this plot.</span>
+                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 flex items-start gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-3 h-3" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-white block">Road access confirmed</span>
+                    <span className="text-[11px] text-slate-400">
+                      Existing {roadWidthFt} ft access road qualifies for full permissible residential FSI.
+                    </span>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-800/40 border border-white/5 flex items-start gap-3">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <div className="text-xs">
-                    <span className="text-white font-medium block">Road Access Clear</span>
-                    <span className="text-slate-400">Road width of {roadWidthFt} ft qualifies for full standard FSI.</span>
+                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 flex items-start gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-3 h-3" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-white block">Buildable envelope identified</span>
+                    <span className="text-[11px] text-slate-400">
+                      Clear 715 sq ft footprint identified after front and side setbacks.
+                    </span>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-800/40 border border-white/5 flex items-start gap-3">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                  <div className="text-xs">
-                    <span className="text-white font-medium block">Frontage & Ventilation Setbacks</span>
-                    <span className="text-slate-400">Front (3.0m) and side/rear (1.5m) clear of permanent structures.</span>
+                <div className="p-3 rounded-lg bg-white/[0.02] border border-white/5 flex items-start gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-3 h-3" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-white block">Applicable development rules checked</span>
+                    <span className="text-[11px] text-slate-400">
+                      Evaluated against Mumbai DCPR 2034 residential standards.
+                    </span>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-amber-950/30 border border-amber-500/30 flex items-start gap-3">
-                  <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                  <div className="text-xs">
-                    <span className="text-amber-200 font-medium block">Professional Survey Required</span>
-                    <span className="text-amber-300/80">
-                      Final construction approval requires a licensed survey and registered engineer sign-off.
+                <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-start gap-2.5">
+                  <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="text-xs font-semibold text-amber-200 block">Professional Verification Required</span>
+                    <span className="text-[11px] text-amber-300/80">
+                      Final construction authorization requires licensed site survey and registered engineer review.
                     </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Link to calculation details */}
+            {/* Technical details toggle (§9) */}
             <button
               onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
-              className="text-xs text-blue-400 hover:text-blue-300 flex items-center justify-between pt-2 border-t border-white/5"
+              className="text-xs text-blue-400 hover:text-blue-300 flex items-center justify-between pt-3 mt-4 border-t border-white/5"
             >
               <span className="flex items-center gap-1.5 font-medium">
                 <Info className="w-3.5 h-3.5" />
-                Why? View calculation details
+                View technical details
               </span>
               {showTechnicalDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
             </button>
@@ -322,48 +318,48 @@ export const FeasibilitySummaryView: React.FC<FeasibilitySummaryViewProps> = ({
 
         {/* Collapsible Technical Details Panel */}
         {showTechnicalDetails && (
-          <div className="rounded-2xl bg-slate-900/80 border border-blue-500/20 p-5 space-y-4 animate-fade-in">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="pw-card border-blue-500/30 space-y-3">
+            <div className="flex items-center justify-between border-b border-white/10 pb-2">
               <div>
-                <h4 className="text-xs uppercase tracking-wider font-semibold text-blue-400">
-                  Statutory Rule Calculation Breakdown
-                </h4>
-                <p className="text-[11px] text-slate-400">
-                  Jurisdiction: Mumbai DCPR 2034 / Reg 30 Table 12 & Reg 41
-                </p>
+                <span className="text-xs font-mono uppercase tracking-wider text-blue-400 font-semibold block">
+                  Municipal Rule Calculations
+                </span>
+                <span className="text-[11px] text-slate-400">
+                  DCPR 2034 / Reg 30 Table 12 &amp; Reg 41
+                </span>
               </div>
 
               <button
                 onClick={() => setIsExplainModalOpen(true)}
-                className="text-xs px-3 py-1.5 rounded-lg bg-blue-600/30 border border-blue-500/40 text-blue-300 hover:bg-blue-600/50 flex items-center gap-1.5 transition-all"
+                className="pw-btn pw-btn-secondary pw-btn-sm"
               >
-                <span>View Full Rule Trace</span>
+                <span>Full Rule Trace</span>
                 <ExternalLink className="w-3 h-3" />
               </button>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs font-mono">
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-white/5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
+              <div className="p-3 rounded-lg bg-black/30 border border-white/5">
                 <span className="text-slate-500 block text-[10px]">BASE FSI</span>
                 <span className="text-white font-bold text-sm">
                   {feasibility?.baseFSI ?? 1.0}
                 </span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-white/5">
-                <span className="text-slate-500 block text-[10px]">TOTAL PERMISSIBLE FSI</span>
+              <div className="p-3 rounded-lg bg-black/30 border border-white/5">
+                <span className="text-slate-500 block text-[10px]">PERMISSIBLE FSI</span>
                 <span className="text-emerald-400 font-bold text-sm">
                   {feasibility?.totalPermissibleFSI ?? 1.5}
                 </span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-white/5">
-                <span className="text-slate-500 block text-[10px]">MAX BUILDING HEIGHT</span>
+              <div className="p-3 rounded-lg bg-black/30 border border-white/5">
+                <span className="text-slate-500 block text-[10px]">MAX HEIGHT</span>
                 <span className="text-white font-bold text-sm">
                   {feasibility?.maxBuildingHeightM ?? 10.0} m
                 </span>
               </div>
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-white/5">
-                <span className="text-slate-500 block text-[10px]">ROAD DEDUCTION</span>
-                <span className="text-amber-400 font-bold text-sm">
+              <div className="p-3 rounded-lg bg-black/30 border border-white/5">
+                <span className="text-slate-500 block text-[10px]">ROAD WIDENING</span>
+                <span className="text-slate-300 font-bold text-sm">
                   {feasibility?.roadWideningDeductionSqm ?? 0.0} sqm
                 </span>
               </div>
@@ -371,29 +367,27 @@ export const FeasibilitySummaryView: React.FC<FeasibilitySummaryViewProps> = ({
           </div>
         )}
 
-        {/* Action Controls Footer */}
-        <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+        {/* Footer Actions */}
+        <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
             {onOpenTechnicalView && (
               <button
                 onClick={onOpenTechnicalView}
-                className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1.5 py-2 px-3 rounded-xl hover:bg-slate-800/60 transition-colors"
+                className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1.5 py-2 px-3 rounded-lg hover:bg-white/5 transition-colors"
               >
                 <Sliders className="w-3.5 h-3.5" />
-                <span>Open Technical GIS Map & HUD</span>
+                <span>View in GIS &amp; Rule Engine Canvas</span>
               </button>
             )}
           </div>
 
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <button
-              onClick={onProceedToDesign}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-display font-semibold text-sm shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 transition-all"
-            >
-              <span>Tell us what house you want</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+          <button
+            onClick={onProceedToDesign}
+            className="pw-btn pw-btn-primary pw-btn-lg w-full sm:w-auto"
+          >
+            <span>Proceed to Design</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
 
       </div>

@@ -1,0 +1,130 @@
+{
+  "handoffPackageId": "pkg-rel-pilot-20261002-aedf9830",
+  "projectId": "proj-mumbai-real-1100",
+  "releaseId": "rel-pilot-20261002-aedf9830",
+  "designVersionId": "DV-OPT-B-9be0a983",
+  "declaredPlotAreaSqFt": 1100.0,
+  "releaseFingerprint": "876f21ae800940245ed9702d9e00e27be2be636f033f5d24e85c0bb4fe877cb4",
+  "releaseStatus": "BUILD_REQUESTED",
+  "lifecycleState": "SUBMITTED_FOR_REVIEW",
+  "createdAt": "2026-10-02T10:07:05.052136",
+  "projectContext": {
+    "projectName": "Bandra West Residential Development",
+    "buildingCode": "National Building Code of India (NBC 2016 Part 3)",
+    "jurisdiction": "Municipal Corporation of Greater Mumbai (MCGM)",
+    "statutoryRuleSet": "DCPR 2034 (Regulation 30/33/41)",
+    "surveyConfidence": "GRADE_A_FIELD_STAMPED",
+    "cadastralSurveyNo": "CTS-1842-BANDRA"
+  },
+  "designOption": {
+    "title": "Planwise M2 Optimized Option B",
+    "floors": 2,
+    "archetype": "m2_cpsat_opt-B",
+    "roomCount": 12,
+    "columnCount": 26,
+    "totalGrossBUASqm": 98.16,
+    "totalUsableAreaSqm": 85.36
+  },
+  "financialSummary": {
+    "currency": "INR",
+    "lowRange": 1252471.77,
+    "highRange": 1450230.47,
+    "costPerSqFt": 1247.79,
+    "baseEstimate": 1318391.34
+  },
+  "constructionSummary": {
+    "durationWeeks": 26.5,
+    "durationMonths": 6.1,
+    "activitiesCount": 17,
+    "criticalPathActivities": 16
+  },
+  "humanVerificationGates": [
+    {
+      "gate": "G0",
+      "title": "Plot Intake & Boundary Provenance",
+      "status": "APPROVED",
+      "requiredBy": "Licensed Land Surveyor"
+    },
+    {
+      "gate": "G1",
+      "title": "Statutory DCPR 2034 Feasibility",
+      "status": "APPROVED",
+      "requiredBy": "Municipal Liaison Architect"
+    },
+    {
+      "gate": "G2",
+      "title": "Design Candidate Suitability",
+      "status": "APPROVED",
+      "requiredBy": "Project Architect"
+    },
+    {
+      "gate": "G3",
+      "title": "Structural & MEP Preliminary Clash Check",
+      "status": "PENDING_REVIEW",
+      "requiredBy": "Chartered Structural Engineer"
+    },
+    {
+      "gate": "G4",
+      "title": "Build Lock & Commercial Manifest Confirmation",
+      "status": "LOCKED",
+      "requiredBy": "Authorized Developer / Sponsor"
+    },
+    {
+      "gate": "G5",
+      "title": "Site Release & Geotechnical Confirmation",
+      "status": "AWAITING_PREREQUISITE",
+      "requiredBy": "Resident Engineer"
+    },
+    {
+      "gate": "G6",
+      "title": "Construction Kickoff & Safety Authorization",
+      "status": "AWAITING_PREREQUISITE",
+      "requiredBy": "General Contractor"
+    },
+    {
+      "gate": "G7",
+      "title": "Milestone & Quality Assurance Acceptance",
+      "status": "AWAITING_PREREQUISITE",
+      "requiredBy": "Third-Party QA Inspector"
+    },
+    {
+      "gate": "G8",
+      "title": "Completion Certificate & Final Handover",
+      "status": "AWAITING_PREREQUISITE",
+      "requiredBy": "Architect-of-Record"
+    }
+  ],
+  "disclaimers": {
+    "computationalValidationNotice": "Computational validation is not professional certification.",
+    "preliminaryCostNotice": "Preliminary cost estimate is not a contractor quotation.",
+    "municipalApprovalNotice": "Municipal approval is pending.",
+    "constructionAuthorizationNotice": "Construction authorization is pending."
+  },
+  "artifactManifest": [
+    {
+      "name": "pilot_model_ifc4.ifc",
+      "type": "BIM_IFC4_MODEL",
+      "hash": "6eefded2185b239d540e21d7c47b55b1f8b4c9eae7723813e3361480e2b52461"
+    },
+    {
+      "name": "pilot_boq_export.json",
+      "type": "COMMERCIAL_BOQ",
+      "hash": "01fc271571409a2ac593e309d9cb03183b2050b9fe12f17dbaebe95c30af7248"
+    },
+    {
+      "name": "pilot_cost_estimate.json",
+      "type": "FINANCIAL_WATERFALL",
+      "hash": "35effa0d3917e4adf29a0b93d6c3e1b75e144d4272368e3462bdaf70fa1804be"
+    },
+    {
+      "name": "pilot_validation_report.json",
+      "type": "VALIDATION_REPORT",
+      "hash": "1da713ce52b9d95636768cccf5463a50a07cee37c7baa8d885c1dafaa3e25a4d"
+    },
+    {
+      "name": "pilot_engineer_review.json",
+      "type": "ENGINEER_REVIEW_LEDGER",
+      "hash": "d5812063a889a375bb1a3b84a2f31c83eff7c2c5c5146297c81b6207d3eb3204"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "projectId": "proj-mumbai-real-1100",
+  "releaseId": "rel-pilot-20261002-aedf9830",
+  "designVersionId": "DV-OPT-B-9be0a983",
+  "modelHash": "sha256:1786833c53ff394d01b1dfddd8686205abcf5d1f9399a30cc0611e4ba19593fe",
+  "validation": {
+    "isValid": true,
+    "totalIssues": 10,
+    "blockersCount": 0,
+    "errorsCount": 0,
+    "warningsCount": 9,
+    "infoCount": 1,
+    "issues": [
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-ENTRY-1' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-ENTRY-1"
+        ]
+      },
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-LIVING-2' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-LIVING-2"
+        ]
+      },
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-DINING-3' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-DINING-3"
+        ]
+      },
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-KITCHEN-4' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-KITCHEN-4"
+        ]
+      },
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-UTILITY-5' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-UTILITY-5"
+        ]
+      },
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-PUJA-6' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-PUJA-6"
+        ]
+      },
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-BATH-10' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-BATH-10"
+        ]
+      },
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-STAIR-11' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-STAIR-11"
+        ]
+      },
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-MBED-7' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-MBED-7"
+        ]
+      },
+      {
+        "ruleId": "STRUCT-SAFETY-NOTE",
+        "category": "STRUCTURE_PRELIM",
+        "severity": "INFO",
+        "status": "PASS",
+        "message": "RULE CHECK / PRELIMINARY AUDIT ONLY: Not a structural or permit certificate. Licensed Professional Engineer (G0-G8) sign-off required.",
+        "objectIds": []
+      }
+    ]
+  },
+  "disclaimer": "Computational rule checks and geometric validations are automated baseline verifications and do not constitute statutory professional certification. Computational validation is not professional certification."
+}

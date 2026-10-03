@@ -1,0 +1,130 @@
+{
+  "handoffPackageId": "pkg-rel-pilot-20261003-afd2eb28",
+  "projectId": "proj-mumbai-real-1100",
+  "releaseId": "rel-pilot-20261003-afd2eb28",
+  "designVersionId": "DV-OPT-B-4da40d4e",
+  "declaredPlotAreaSqFt": 1100.0,
+  "releaseFingerprint": "9e170b39900c2bee8a3f21393ee29760234644642e5766b50079879315089df9",
+  "releaseStatus": "BUILD_REQUESTED",
+  "lifecycleState": "PROFESSIONAL_REVIEW",
+  "createdAt": "2026-10-03T01:15:37.396467",
+  "projectContext": {
+    "projectName": "Bandra West Residential Development",
+    "jurisdiction": "Municipal Corporation of Greater Mumbai (MCGM)",
+    "statutoryRuleSet": "DCPR 2034 (Regulation 30/33/41)",
+    "buildingCode": "National Building Code of India (NBC 2016 Part 3)",
+    "cadastralSurveyNo": "CTS-1842-BANDRA",
+    "surveyConfidence": "GRADE_A_FIELD_STAMPED"
+  },
+  "designOption": {
+    "archetype": "m2_cpsat_opt-B",
+    "title": "Planwise M2 Optimized Option B",
+    "totalGrossBUASqm": 98.16,
+    "totalUsableAreaSqm": 85.36,
+    "floors": 2,
+    "roomCount": 12,
+    "columnCount": 26
+  },
+  "financialSummary": {
+    "currency": "INR",
+    "baseEstimate": 1318391.34,
+    "lowRange": 1252471.77,
+    "highRange": 1450230.47,
+    "costPerSqFt": 1247.79
+  },
+  "constructionSummary": {
+    "durationWeeks": 26.5,
+    "durationMonths": 6.1,
+    "activitiesCount": 17,
+    "criticalPathActivities": 16
+  },
+  "humanVerificationGates": [
+    {
+      "gate": "G0",
+      "title": "Plot Intake & Boundary Provenance",
+      "status": "APPROVED",
+      "requiredBy": "Licensed Land Surveyor"
+    },
+    {
+      "gate": "G1",
+      "title": "Statutory DCPR 2034 Feasibility",
+      "status": "APPROVED",
+      "requiredBy": "Municipal Liaison Architect"
+    },
+    {
+      "gate": "G2",
+      "title": "Design Candidate Suitability",
+      "status": "APPROVED",
+      "requiredBy": "Project Architect"
+    },
+    {
+      "gate": "G3",
+      "title": "Structural & MEP Preliminary Clash Check",
+      "status": "PENDING_REVIEW",
+      "requiredBy": "Chartered Structural Engineer"
+    },
+    {
+      "gate": "G4",
+      "title": "Build Lock & Commercial Manifest Confirmation",
+      "status": "LOCKED",
+      "requiredBy": "Authorized Developer / Sponsor"
+    },
+    {
+      "gate": "G5",
+      "title": "Site Release & Geotechnical Confirmation",
+      "status": "AWAITING_PREREQUISITE",
+      "requiredBy": "Resident Engineer"
+    },
+    {
+      "gate": "G6",
+      "title": "Construction Kickoff & Safety Authorization",
+      "status": "AWAITING_PREREQUISITE",
+      "requiredBy": "General Contractor"
+    },
+    {
+      "gate": "G7",
+      "title": "Milestone & Quality Assurance Acceptance",
+      "status": "AWAITING_PREREQUISITE",
+      "requiredBy": "Third-Party QA Inspector"
+    },
+    {
+      "gate": "G8",
+      "title": "Completion Certificate & Final Handover",
+      "status": "AWAITING_PREREQUISITE",
+      "requiredBy": "Architect-of-Record"
+    }
+  ],
+  "disclaimers": {
+    "computationalValidationNotice": "Computational validation is not professional certification.",
+    "preliminaryCostNotice": "Preliminary cost estimate is not a contractor quotation.",
+    "municipalApprovalNotice": "Municipal approval is pending.",
+    "constructionAuthorizationNotice": "Construction authorization is pending."
+  },
+  "artifactManifest": [
+    {
+      "name": "2D_Architectural_Floor_Plans.json",
+      "type": "MODEL_GEOMETRY",
+      "hash": "e5ac1224e58dd729e6de55ba42392d507bc0700c8db692a3d4444ff6a55ad4b2"
+    },
+    {
+      "name": "Traceable_Bill_Of_Quantities.csv",
+      "type": "COMMERCIAL_BOQ",
+      "hash": "72d96bc9b5a516463070b5a7600276108e8839a52547105b93f198217dcbee79"
+    },
+    {
+      "name": "Construction_CPM_Precedence_Schedule.json",
+      "type": "TIMELINE",
+      "hash": "d34f201dda8907a081dce3ad43404fff3bb9d46cfa33226a6185c7c4b94faedf"
+    },
+    {
+      "name": "BIM_IFC4_Coordinated_Model.ifc",
+      "type": "BIM_EXCHANGE",
+      "hash": "14c7431de07068d4b10aa51615e195686429f986bd248d2d8f811d83a0981b1a"
+    },
+    {
+      "name": "Statutory_Compliance_Report_DCPR2034.pdf",
+      "type": "REGULATORY_PROOF",
+      "hash": "d2db1c63322bdfeb83032ad7cdd4c48ee83f8082c3400f0019fda52adcf4affb"
+    }
+  ]
+}

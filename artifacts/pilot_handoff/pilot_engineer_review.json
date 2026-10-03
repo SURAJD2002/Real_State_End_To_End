@@ -1,0 +1,97 @@
+{
+  "id": "rev-pilot-10739137b8",
+  "projectId": "proj-mumbai-real-1100",
+  "buildRequestId": "br-pilot-66361734",
+  "releaseId": "rel-pilot-20261002-aedf9830",
+  "designVersionId": "DV-OPT-B-9be0a983",
+  "reviewerId": "ENG-MH-48201",
+  "status": "IN_REVIEW",
+  "createdAt": "2026-10-02T15:37:05.093637+05:30",
+  "updatedAt": "2026-10-02T15:37:05.133595+05:30",
+  "inputManifestHash": "876f21ae800940245ed9702d9e00e27be2be636f033f5d24e85c0bb4fe877cb4",
+  "designVersionHash": "1786833c53ff394d01b1dfddd8686205abcf5d1f9399a30cc0611e4ba19593fe",
+  "declaredPlotAreaSqFt": 1100.0,
+  "gates": [
+    {
+      "id": "gate-19777f69",
+      "engineerReviewId": "rev-pilot-10739137b8",
+      "gateCode": "G0",
+      "title": "Site & Boundary Verification",
+      "status": "VERIFIED",
+      "reviewedBy": "SURV-MH-4421",
+      "reviewedAt": "2026-10-02T15:37:05.105809+05:30",
+      "notes": "Physical 27.5 ft x 40.0 ft boundary stones and 1,100 sq ft plot area verified by licensed surveyor."
+    },
+    {
+      "id": "gate-a3c0b63c",
+      "engineerReviewId": "rev-pilot-10739137b8",
+      "gateCode": "G1",
+      "title": "Regulatory & Feasibility Review",
+      "status": "VERIFIED",
+      "reviewedBy": "ENG-MH-48201",
+      "reviewedAt": "2026-10-02T15:37:05.105809+05:30",
+      "notes": "Mumbai DCPR 2034 FSI 2.0, 3m front road widening setback, and 12m height limit verified."
+    },
+    {
+      "id": "gate-cb238df5",
+      "engineerReviewId": "rev-pilot-10739137b8",
+      "gateCode": "G2",
+      "title": "Structural Review",
+      "status": "VERIFIED",
+      "reviewedBy": "ENG-MH-48201",
+      "reviewedAt": "2026-10-02T15:37:05.105809+05:30",
+      "notes": "IS 456 RC column-beam preliminary grid verified. Max span 4.2m."
+    },
+    {
+      "id": "gate-81358d2e",
+      "engineerReviewId": "rev-pilot-10739137b8",
+      "gateCode": "G3",
+      "title": "MEP & Services Review",
+      "status": "VERIFIED",
+      "reviewedBy": "ENG-MH-48201",
+      "reviewedAt": "2026-10-02T15:37:05.105809+05:30",
+      "notes": "Dual wet-wall stacks aligned between G and Level 1. Water meter and septic clearances verified."
+    },
+    {
+      "id": "gate-039570fc",
+      "engineerReviewId": "rev-pilot-10739137b8",
+      "gateCode": "G4",
+      "title": "Cost & BOQ Review",
+      "status": "VERIFIED",
+      "reviewedBy": "ENG-MH-48201",
+      "reviewedAt": "2026-10-02T15:37:05.105809+05:30",
+      "notes": "IS 1200 opening deductions verified. Mumbai Q4 rate snapshot applied."
+    },
+    {
+      "id": "gate-c0bc631f",
+      "engineerReviewId": "rev-pilot-10739137b8",
+      "gateCode": "G5",
+      "title": "Build Authorization",
+      "status": "LOCKED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "LOCKED: Requires G0, G1, G2, G3, G4 professional verification."
+    },
+    {
+      "id": "gate-214df5d9",
+      "engineerReviewId": "rev-pilot-10739137b8",
+      "gateCode": "G6",
+      "title": "Contractor Handoff",
+      "status": "LOCKED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "notes": "LOCKED: Requires signed construction release."
+    }
+  ],
+  "issues": [],
+  "decisions": [
+    {
+      "id": "dec-cda36f53",
+      "engineerReviewId": "rev-pilot-10739137b8",
+      "decision": "APPROVE_STAGE",
+      "decidedBy": "ENG-MH-48201",
+      "decidedAt": "2026-10-02T15:37:05.105809+05:30",
+      "reason": "Technical pre-requisites G0\u2013G4 verified. G5/G6 remain locked pending client municipal submission."
+    }
+  ]
+}
