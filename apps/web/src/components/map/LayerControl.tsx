@@ -1,14 +1,14 @@
 import React from 'react';
-import { 
-  Pentagon, 
-  Route, 
-  ShieldAlert, 
-  Maximize2, 
-  Home, 
-  Car, 
-  Ruler, 
-  Layers, 
-  X 
+import {
+  Pentagon,
+  Route,
+  ShieldAlert,
+  Maximize2,
+  Home,
+  Car,
+  Ruler,
+  Layers,
+  X
 } from 'lucide-react';
 import { MapLayersVisibility } from './types';
 

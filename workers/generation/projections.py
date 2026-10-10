@@ -34,7 +34,7 @@ def generate_floor_plan(
     """
     target_level = level_id or (model.levels[0].levelId if model.levels else "LVL-000")
     level_obj = next((lvl for lvl in model.levels if lvl.levelId == target_level), None)
-    
+
     # 1. Filter Spaces
     level_spaces = [
         {
@@ -219,7 +219,10 @@ def generate_elevation(
         if op.hostWallId in facade_wall_ids:
             host = next((w for w in facade_walls if w["elementId"] == op.hostWallId), None)
             if host:
-                u_pos = round(host["u"] + op.positionM, 2)
+                if isinstance(op.positionM, (list, tuple)):
+                    u_pos = round(op.positionM[0] if direction in ["SOUTH", "NORTH"] else op.positionM[1], 2)
+                else:
+                    u_pos = round(host["u"] + float(op.positionM), 2)
                 z_pos = round(host["z"] + op.sillHeightM, 2)
                 facade_openings.append({
                     "openingId": op.openingId,
@@ -266,112 +269,206 @@ def generate_elevation(
 def generate_section(
     model: CanonicalBuildingModel,
     cut_plane: str = "A-A",
-    cut_y: Optional[float] = None
+    cut_y: Optional[float] = None,
+    cut_axis: str = "Y",
+    cut_coord: Optional[float] = None
 ) -> Dict[str, Any]:
     """
     §31 Section Projection:
-    Computes deterministic transverse section cut along plane Y = cut_y.
+    Computes deterministic section cut along plane Y = cut_y (Transverse/Cross Section)
+    or X = cut_x (Longitudinal Section).
     Determines intersecting walls, slabs, rooms, ceiling heights, and stairs.
     """
     env_w = model.buildingEnvelope.get("widthM", 14.0)
     env_l = model.buildingEnvelope.get("lengthM", 14.0)
     total_h = model.buildingEnvelope.get("heightM", 3.6)
-    
-    # Default cut plane passes through mid-building or staircase
-    y_cut = cut_y if cut_y is not None else round(env_l * 0.45, 2)
 
-    # 1. Level Datums
-    levels = [
-        {
-            "levelId": lvl.levelId,
-            "name": lvl.name,
-            "elevationM": lvl.elevationM,
-            "x1": -0.5,
-            "x2": round(env_w + 0.5, 2)
+    axis = cut_axis.upper()
+    if axis == "X":
+        # Longitudinal section cut along plane X = cut_x
+        x_cut = cut_coord if cut_coord is not None else round(env_w * 0.5, 2)
+        h_max = env_l
+
+        # 1. Level Datums
+        levels = [
+            {
+                "levelId": lvl.levelId,
+                "name": lvl.name,
+                "elevationM": lvl.elevationM,
+                "x1": -0.5,
+                "x2": round(h_max + 0.5, 2)
+            }
+            for lvl in model.levels
+        ]
+
+        # 2. Intersecting Cut Walls
+        cut_walls = []
+        for elem in model.elements:
+            if elem.elementType == ElementType.WALL and elem.geometry:
+                c_line = elem.geometry.centerline
+                if len(c_line) >= 2:
+                    x_min = min(c_line[0][0], c_line[1][0])
+                    x_max = max(c_line[0][0], c_line[1][0])
+                    th = elem.geometry.thicknessM or 0.20
+                    ht = elem.geometry.heightM or 3.15
+                    base_z = elem.geometry.baseZ
+
+                    if x_min - 0.05 <= x_cut <= x_max + 0.05:
+                        cut_pos = c_line[0][1] if abs(c_line[0][0] - c_line[1][0]) > 0.01 else c_line[0][1]
+                        cut_walls.append({
+                            "elementId": elem.elementId,
+                            "name": elem.name,
+                            "x": round(cut_pos - th / 2.0, 2),
+                            "z": round(base_z, 2),
+                            "thickness": round(th, 2),
+                            "height": round(ht, 2),
+                            "materialId": elem.materialId,
+                            "hatchPattern": "AAC_BLOCK_HATCH" if "AAC" in (elem.materialId or "") else "CONCRETE_HATCH"
+                        })
+
+        # 3. Cut Slabs
+        slabs = [
+            {
+                "elementId": elem.elementId,
+                "name": elem.name,
+                "x1": 0.0,
+                "x2": round(h_max, 2),
+                "z": elem.geometry.baseZ if elem.geometry else 0.0,
+                "thickness": elem.geometry.thicknessM if elem.geometry else 0.15,
+                "materialId": elem.materialId
+            }
+            for elem in model.elements
+            if elem.elementType == ElementType.SLAB
+        ]
+
+        # 4. Cut Spaces
+        cut_spaces = []
+        for s in model.spaces:
+            b = s.bounds
+            if b.x <= x_cut <= b.x + b.width:
+                cut_spaces.append({
+                    "spaceId": s.spaceId,
+                    "name": s.name,
+                    "spaceType": s.spaceType,
+                    "x1": b.y,
+                    "x2": round(b.y + b.height, 2),
+                    "clearHeightM": s.heightM,
+                    "floor": s.floor
+                })
+
+        return {
+            "designVersionId": model.designVersionId,
+            "modelId": model.modelId,
+            "modelHash": model.metadata.modelHash,
+            "cutPlane": cut_plane,
+            "cutAxis": "X",
+            "cutCoord": x_cut,
+            "cutY": None,
+            "cutX": x_cut,
+            "bounds": {
+                "xMin": 0.0,
+                "xMax": round(h_max, 2),
+                "zMin": -0.6,
+                "zMax": round(total_h + 1.2, 2)
+            },
+            "levels": levels,
+            "cutWalls": cut_walls,
+            "slabs": slabs,
+            "cutSpaces": cut_spaces,
+            "groundLine": {"z": 0.0, "x1": -1.0, "x2": round(h_max + 1.0, 2)}
         }
-        for lvl in model.levels
-    ]
+    else:
+        # Transverse / Cross Section along plane Y = cut_y
+        y_cut = cut_coord if cut_coord is not None else (cut_y if cut_y is not None else round(env_l * 0.45, 2))
 
-    # 2. Intersecting Cut Walls
-    cut_walls = []
-    background_walls = []
+        # 1. Level Datums
+        levels = [
+            {
+                "levelId": lvl.levelId,
+                "name": lvl.name,
+                "elevationM": lvl.elevationM,
+                "x1": -0.5,
+                "x2": round(env_w + 0.5, 2)
+            }
+            for lvl in model.levels
+        ]
 
-    for elem in model.elements:
-        if elem.elementType == ElementType.WALL and elem.geometry:
-            c_line = elem.geometry.centerline
-            if len(c_line) >= 2:
-                # Check if wall intersects y_cut
-                y_min = min(c_line[0][1], c_line[1][1])
-                y_max = max(c_line[0][1], c_line[1][1])
-                th = elem.geometry.thicknessM or 0.20
-                ht = elem.geometry.heightM or 3.15
-                base_z = elem.geometry.baseZ
+        # 2. Intersecting Cut Walls
+        cut_walls = []
+        for elem in model.elements:
+            if elem.elementType == ElementType.WALL and elem.geometry:
+                c_line = elem.geometry.centerline
+                if len(c_line) >= 2:
+                    y_min = min(c_line[0][1], c_line[1][1])
+                    y_max = max(c_line[0][1], c_line[1][1])
+                    th = elem.geometry.thicknessM or 0.20
+                    ht = elem.geometry.heightM or 3.15
+                    base_z = elem.geometry.baseZ
 
-                if y_min - 0.05 <= y_cut <= y_max + 0.05:
-                    # Wall is cut
-                    cut_x = c_line[0][0] if abs(c_line[0][1] - c_line[1][1]) > 0.01 else c_line[0][0]
-                    cut_walls.append({
-                        "elementId": elem.elementId,
-                        "name": elem.name,
-                        "x": round(cut_x - th / 2.0, 2),
-                        "z": round(base_z, 2),
-                        "thickness": round(th, 2),
-                        "height": round(ht, 2),
-                        "materialId": elem.materialId,
-                        "hatchPattern": "AAC_BLOCK_HATCH" if "AAC" in (elem.materialId or "") else "CONCRETE_HATCH"
-                    })
-                elif y_min > y_cut:
-                    # Wall is in the background looking North
-                    pass
+                    if y_min - 0.05 <= y_cut <= y_max + 0.05:
+                        cut_x = c_line[0][0] if abs(c_line[0][1] - c_line[1][1]) > 0.01 else c_line[0][0]
+                        cut_walls.append({
+                            "elementId": elem.elementId,
+                            "name": elem.name,
+                            "x": round(cut_x - th / 2.0, 2),
+                            "z": round(base_z, 2),
+                            "thickness": round(th, 2),
+                            "height": round(ht, 2),
+                            "materialId": elem.materialId,
+                            "hatchPattern": "AAC_BLOCK_HATCH" if "AAC" in (elem.materialId or "") else "CONCRETE_HATCH"
+                        })
 
-    # 3. Cut Slabs
-    slabs = [
-        {
-            "elementId": elem.elementId,
-            "name": elem.name,
-            "x1": 0.0,
-            "x2": round(env_w, 2),
-            "z": elem.geometry.baseZ if elem.geometry else 0.0,
-            "thickness": elem.geometry.thicknessM if elem.geometry else 0.15,
-            "materialId": elem.materialId
+        # 3. Cut Slabs
+        slabs = [
+            {
+                "elementId": elem.elementId,
+                "name": elem.name,
+                "x1": 0.0,
+                "x2": round(env_w, 2),
+                "z": elem.geometry.baseZ if elem.geometry else 0.0,
+                "thickness": elem.geometry.thicknessM if elem.geometry else 0.15,
+                "materialId": elem.materialId
+            }
+            for elem in model.elements
+            if elem.elementType == ElementType.SLAB
+        ]
+
+        # 4. Cut Spaces / Rooms
+        cut_spaces = []
+        for s in model.spaces:
+            b = s.bounds
+            if b.y <= y_cut <= b.y + b.height:
+                cut_spaces.append({
+                    "spaceId": s.spaceId,
+                    "name": s.name,
+                    "spaceType": s.spaceType,
+                    "x1": b.x,
+                    "x2": round(b.x + b.width, 2),
+                    "clearHeightM": s.heightM,
+                    "floor": s.floor
+                })
+
+        return {
+            "designVersionId": model.designVersionId,
+            "modelId": model.modelId,
+            "modelHash": model.metadata.modelHash,
+            "cutPlane": cut_plane,
+            "cutAxis": "Y",
+            "cutCoord": y_cut,
+            "cutY": y_cut,
+            "cutX": None,
+            "bounds": {
+                "xMin": 0.0,
+                "xMax": round(env_w, 2),
+                "zMin": -0.6,
+                "zMax": round(total_h + 1.2, 2)
+            },
+            "levels": levels,
+            "cutWalls": cut_walls,
+            "slabs": slabs,
+            "cutSpaces": cut_spaces,
+            "groundLine": {"z": 0.0, "x1": -1.0, "x2": round(env_w + 1.0, 2)}
         }
-        for elem in model.elements
-        if elem.elementType == ElementType.SLAB
-    ]
-
-    # 4. Cut Spaces / Rooms
-    cut_spaces = []
-    for s in model.spaces:
-        b = s.bounds
-        if b.y <= y_cut <= b.y + b.height:
-            cut_spaces.append({
-                "spaceId": s.spaceId,
-                "name": s.name,
-                "spaceType": s.spaceType,
-                "x1": b.x,
-                "x2": round(b.x + b.width, 2),
-                "clearHeightM": s.heightM,
-                "floor": s.floor
-            })
-
-    return {
-        "designVersionId": model.designVersionId,
-        "modelId": model.modelId,
-        "modelHash": model.metadata.modelHash,
-        "cutPlane": cut_plane,
-        "cutY": y_cut,
-        "bounds": {
-            "xMin": 0.0,
-            "xMax": round(env_w, 2),
-            "zMin": -0.6,
-            "zMax": round(total_h + 1.2, 2)
-        },
-        "levels": levels,
-        "cutWalls": cut_walls,
-        "slabs": slabs,
-        "cutSpaces": cut_spaces,
-        "groundLine": {"z": 0.0, "x1": -1.0, "x2": round(env_w + 1.0, 2)}
-    }
 
 
 def generate_3d(model: CanonicalBuildingModel) -> Dict[str, Any]:

@@ -211,7 +211,7 @@ class CPSATLayoutSolver:
                 sid = item.specId
                 min_w = max(12, int(round(item.minWidthM / SOLVER_UNIT_M)))
                 min_l = max(12, int(round(item.minLengthM / SOLVER_UNIT_M)))
-                
+
                 # Allow orientation swap if preferred aspect ratio permits
                 min_dim = min(min_w, min_l)
                 max_dim = max(int(round(self.env_w_units * 0.75)), int(round(self.env_l_units * 0.75)))
@@ -361,7 +361,7 @@ class CPSATLayoutSolver:
                         v = room_vars[sid]
                         mid_x = self.env_w_units // 2
                         mid_y = self.env_l_units // 2
-                        
+
                         is_left = model.NewBoolVar(f"diff_l_{sid}_{candidate_index}")
                         is_bottom = model.NewBoolVar(f"diff_b_{sid}_{candidate_index}")
                         model.Add(v["x"] < mid_x).OnlyEnforceIf(is_left)

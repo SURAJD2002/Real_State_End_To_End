@@ -1,35 +1,39 @@
 import React, { useState } from 'react';
-import { 
-  HouseLayout, 
-  RoomElement, 
+import {
+  HouseLayout,
+  RoomElement,
   CanvasViewMode,
   CanonicalBuildingModel
 } from '../types';
-import { 
-  Compass, 
-  Layers, 
-  ZoomIn, 
-  ZoomOut, 
-  RotateCcw, 
-  Maximize, 
-  Minimize, 
-  Eye, 
-  Box, 
-  Columns, 
-  CheckCircle2, 
-  X, 
+import {
+  Compass,
+  Layers,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  Maximize,
+  Minimize,
+  Eye,
+  Box,
+  Columns,
+  CheckCircle2,
+  X,
   Square,
   Code2,
   Download,
   Building2,
   Info,
-  CheckCircle
+  CheckCircle,
+  FileText
 } from 'lucide-react';
+import { CadBlueprintView } from './CadBlueprintView';
 
 interface FloorPlanViewerProps {
   layout: HouseLayout;
   buildingModel?: CanonicalBuildingModel;
   designVersionId?: string;
+  projectName?: string;
+  projectId?: string;
 }
 
 export interface InspectedElement {
@@ -45,13 +49,16 @@ export interface InspectedElement {
   properties?: Record<string, any>;
 }
 
-export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({ 
-  layout, 
+export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
+  layout,
   buildingModel,
-  designVersionId 
+  designVersionId,
+  projectName,
+  projectId
 }) => {
   const [selectedFloor, setSelectedFloor] = useState<string>('L0');
   const [viewMode, setViewMode] = useState<CanvasViewMode>('2D_PLAN');
+  const [cadPresentationMode, setCadPresentationMode] = useState<'ARCHITECTURAL' | 'ZONING'>('ARCHITECTURAL');
   const [elevationFacade, setElevationFacade] = useState<'SOUTH' | 'NORTH' | 'EAST' | 'WEST'>('SOUTH');
   const [zoomLevel, setZoomLevel] = useState<number>(1.0);
   const [showDimensions, setShowDimensions] = useState<boolean>(true);
@@ -60,17 +67,46 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [showDebugModal, setShowDebugModal] = useState<boolean>(false);
 
+  const handleExportCadSvg = () => {
+    const svgEl = document.getElementById('cad-drawing-svg') || document.querySelector('svg.cad-blueprint-canvas');
+    if (!svgEl) return;
+    let svgData = new XMLSerializer().serializeToString(svgEl);
+    if (!svgData.startsWith('<?xml')) {
+      svgData = '<?xml version="1.0" encoding="UTF-8"?>\n' + svgData;
+    }
+    const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `planwise-cad-${selectedFloor.toLowerCase()}-${designVersionId || 'sheet'}.svg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Unified Canonical Object Inspector (§42)
   const [inspectedElement, setInspectedElement] = useState<InspectedElement | null>(null);
+  const [activeModel, setActiveModel] = useState<CanonicalBuildingModel | undefined>(buildingModel);
+  const [activeLayout, setActiveLayout] = useState<HouseLayout>(layout);
+  const [editWidthM, setEditWidthM] = useState<string>('4.00');
+  const [editLengthM, setEditLengthM] = useState<string>('3.50');
 
-  const roomsOnFloor = layout.rooms.filter((r) => (r.floor || 'L0') === selectedFloor);
+  React.useEffect(() => {
+    setActiveModel(buildingModel);
+  }, [buildingModel]);
+
+  React.useEffect(() => {
+    setActiveLayout(layout);
+  }, [layout]);
+
+  const roomsOnFloor = (activeLayout?.rooms || layout.rooms).filter((r) => (r.floor || 'L0') === selectedFloor);
 
   // SVG coordinate transformation
   const baseScale = 28;
   const scale = baseScale * zoomLevel;
   const padding = 45;
-  const svgWidth = Math.max(540, layout.buildingEnvelope.widthM * scale + padding * 2);
-  const svgHeight = Math.max(480, layout.buildingEnvelope.lengthM * scale + padding * 2);
+  const svgWidth = Math.max(540, (activeModel?.buildingEnvelope?.widthM || layout.buildingEnvelope.widthM) * scale + padding * 2);
+  const svgHeight = Math.max(480, (activeModel?.buildingEnvelope?.lengthM || layout.buildingEnvelope.lengthM) * scale + padding * 2);
 
   const handleZoom = (delta: number) => {
     setZoomLevel((prev) => Math.min(2.5, Math.max(0.6, prev + delta)));
@@ -83,28 +119,32 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
 
   // Derive model statistics from canonical model or fallback to layout
   const modelStats = {
-    schemaVersion: buildingModel?.schemaVersion || "1.0.0",
-    modelId: buildingModel?.modelId || `BLDG-${layout.archetype?.toUpperCase() || 'OPT'}-001`,
-    designVersionId: designVersionId || buildingModel?.designVersionId || "DV-001",
-    modelHash: buildingModel?.metadata?.modelHash || "sha256:7b91d2c49a0e4811a2f6c",
-    engineVersion: buildingModel?.metadata?.engineVersion || "1.0.0",
-    levelsCount: buildingModel?.levels?.length || (layout.floors > 1 ? 3 : 2),
-    spacesCount: buildingModel?.spaces?.length || layout.rooms.length,
-    wallsCount: buildingModel?.elements?.filter(e => e.elementType === 'WALL').length || (layout.rooms.length * 3 + 4),
-    doorsCount: buildingModel?.openings?.filter(o => o.openingType === 'DOOR').length || layout.rooms.length,
-    windowsCount: buildingModel?.openings?.filter(o => o.openingType === 'WINDOW').length || Math.max(4, layout.rooms.length - 1),
-    columnsCount: buildingModel?.elements?.filter(e => e.elementType === 'COLUMN').length || layout.columns.length,
-    slabsCount: buildingModel?.elements?.filter(e => e.elementType === 'SLAB').length || (layout.floors > 1 ? 3 : 2),
-    isValid: buildingModel?.validation?.isValid ?? true
+    schemaVersion: activeModel?.schemaVersion || "1.0.0",
+    modelId: activeModel?.modelId || `BLDG-${layout.archetype?.toUpperCase() || 'OPT'}-001`,
+    designVersionId: designVersionId || activeModel?.designVersionId || "DV-001",
+    modelHash: activeModel?.metadata?.modelHash || "sha256:7b91d2c49a0e4811a2f6c",
+    engineVersion: activeModel?.metadata?.engineVersion || "1.0.0",
+    levelsCount: activeModel?.levels?.length || (layout.floors > 1 ? 3 : 2),
+    spacesCount: activeModel?.spaces?.length || layout.rooms.length,
+    wallsCount: activeModel?.elements?.filter(e => e.elementType === 'WALL').length || (layout.rooms.length * 3 + 4),
+    doorsCount: activeModel?.openings?.filter(o => o.openingType === 'DOOR').length || layout.rooms.length,
+    windowsCount: activeModel?.openings?.filter(o => o.openingType === 'WINDOW').length || Math.max(4, layout.rooms.length - 1),
+    columnsCount: activeModel?.elements?.filter(e => e.elementType === 'COLUMN').length || layout.columns.length,
+    slabsCount: activeModel?.elements?.filter(e => e.elementType === 'SLAB').length || (layout.floors > 1 ? 3 : 2),
+    isValid: activeModel?.validation?.isValid ?? true
   };
 
   const handleSelectRoom = (r: RoomElement) => {
+    const w = r.bounds?.width || 4.0;
+    const l = r.bounds?.height || 3.5;
+    setEditWidthM(String(w));
+    setEditLengthM(String(l));
     setInspectedElement({
       id: `SPACE-${r.id.toUpperCase().replace(/\s+/g, '_')}`,
       name: r.name,
       category: 'SPACE',
       level: selectedFloor === 'L1' ? 'FIRST (LVL-001)' : 'GROUND (LVL-000)',
-      dimensions: `${r.bounds.width}m × ${r.bounds.height}m (Area: ${r.areaSqm} m²)`,
+      dimensions: `${w}m × ${l}m (Area: ${r.areaSqm || (w * l).toFixed(1)} m²)`,
       material: 'Vitrified Nano-Sealed Floor Tiles (800×800mm)',
       source: 'CP-SAT Spatial Allocation Solver',
       validationStatus: '✓ Valid (NBC 2016 Compliant)',
@@ -115,6 +155,61 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
         privacy: r.privacy || 'Medium Acoustic Buffer'
       }
     });
+  };
+
+  const handleApplyRoomDimensions = () => {
+    if (!inspectedElement || inspectedElement.category !== 'SPACE') return;
+    const newW = parseFloat(editWidthM);
+    const newL = parseFloat(editLengthM);
+    if (isNaN(newW) || isNaN(newL) || newW <= 0 || newL <= 0) return;
+
+    if (activeModel) {
+      const updatedModel: CanonicalBuildingModel = JSON.parse(JSON.stringify(activeModel));
+      const space = updatedModel.spaces.find(s =>
+        s.spaceId === inspectedElement.id ||
+        `SPACE-${s.spaceId.toUpperCase().replace(/\s+/g, '_')}` === inspectedElement.id ||
+        s.name.toLowerCase() === inspectedElement.name.toLowerCase()
+      );
+      if (space) {
+        const oldW = space.bounds.width;
+        const oldL = space.bounds.height;
+        space.bounds.width = newW;
+        space.bounds.height = newL;
+        space.areaSqm = Math.round(newW * newL * 100) / 100;
+
+        // Shift surrounding walls that align with the boundary
+        for (const el of updatedModel.elements) {
+          if (el.elementType === 'WALL' && el.geometry?.centerline) {
+            const cl = el.geometry.centerline;
+            if (Math.abs(cl[0][0] - (space.bounds.x + oldW)) < 0.25 && Math.abs(cl[1][0] - (space.bounds.x + oldW)) < 0.25) {
+              cl[0][0] = space.bounds.x + newW;
+              cl[1][0] = space.bounds.x + newW;
+            }
+            if (Math.abs(cl[0][1] - (space.bounds.y + oldL)) < 0.25 && Math.abs(cl[1][1] - (space.bounds.y + oldL)) < 0.25) {
+              cl[0][1] = space.bounds.y + newL;
+              cl[1][1] = space.bounds.y + newL;
+            }
+          }
+        }
+        setActiveModel(updatedModel);
+      }
+    }
+
+    if (activeLayout) {
+      const updatedLayout: HouseLayout = JSON.parse(JSON.stringify(activeLayout));
+      const room = updatedLayout.rooms.find(r => r.name.toLowerCase() === inspectedElement.name.toLowerCase());
+      if (room) {
+        room.bounds.width = newW;
+        room.bounds.height = newL;
+        room.areaSqm = Math.round(newW * newL * 100) / 100;
+        setActiveLayout(updatedLayout);
+      }
+    }
+
+    setInspectedElement(prev => prev ? {
+      ...prev,
+      dimensions: `${newW.toFixed(2)}m × ${newL.toFixed(2)}m (Area: ${(newW * newL).toFixed(2)} m²)`
+    } : null);
   };
 
   const handleSelectColumn = (col: { id: string; x: number; y: number; widthMm: number; depthMm: number }) => {
@@ -186,6 +281,37 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
             ))}
           </div>
 
+          {/* Presentation Mode Selector (CAD Blueprint vs Color Zoning) */}
+          {viewMode === '2D_PLAN' && (
+            <div className="flex rounded-md bg-slate-950 p-0.5 border border-white/10">
+              <button
+                onClick={() => setCadPresentationMode('ARCHITECTURAL')}
+                className={`flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-semibold rounded transition-all ${
+                  cadPresentationMode === 'ARCHITECTURAL'
+                    ? 'bg-amber-600 text-white font-bold shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Professional CAD Architectural Blueprint (Drafting Line Weights, Furniture, Imperial Dimensions)"
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>CAD Blueprint</span>
+              </button>
+              <button
+                onClick={() => setCadPresentationMode('ZONING')}
+                className={`flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-semibold rounded transition-all ${
+                  cadPresentationMode === 'ZONING'
+                    ? 'bg-blue-600 text-white font-bold shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Color-coded Schematic Zoning View"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                <span>Color Zoning</span>
+              </button>
+            </div>
+          )}
+
+
           {/* Floor Selector if multi-story */}
           {layout.floors > 1 && viewMode === '2D_PLAN' && (
             <div className="flex rounded-md bg-slate-950 p-0.5 border border-white/10">
@@ -243,6 +369,18 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
 
         {/* Right: Model Debug & Tools */}
         <div className="flex items-center gap-1.5">
+          {viewMode === '2D_PLAN' && cadPresentationMode === 'ARCHITECTURAL' && (
+            <button
+              data-testid="btn-export-cad-svg"
+              onClick={handleExportCadSvg}
+              className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 transition-all shadow-sm"
+              title="Export 2D CAD Blueprint as Vector SVG"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Export CAD</span>
+            </button>
+          )}
+
           <button
             onClick={() => setShowDebugModal(true)}
             className="flex items-center gap-1 px-2 py-1 text-xs font-semibold rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-cyan-500/30 transition-all shadow-sm"
@@ -304,11 +442,25 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
 
       {/* Main CAD Interactive Canvas Area */}
       <div className="flex-1 w-full h-full min-h-[420px] overflow-auto flex items-center justify-center p-4 bg-[#05080e] relative">
-        
+
         {/* ========================================================= */}
-        {/* 1. 2D PLAN VIEW (Drawn directly from Canonical Spaces/Walls) */}
+        {/* 1. 2D PLAN VIEW (Architectural Blueprint vs Zoning View) */}
         {/* ========================================================= */}
-        {viewMode === '2D_PLAN' && (
+        {viewMode === '2D_PLAN' && cadPresentationMode === 'ARCHITECTURAL' && (
+          <CadBlueprintView
+            layout={activeLayout}
+            buildingModel={activeModel}
+            selectedFloor={selectedFloor}
+            inspectedElement={inspectedElement}
+            onSelectRoom={handleSelectRoom}
+            onSelectWall={handleSelectWall}
+            zoomLevel={zoomLevel}
+            projectName={projectName || activeModel?.name || 'Bandra West Residential Development'}
+            projectId={projectId || activeModel?.projectId || 'CTS-1842-BANDRA'}
+          />
+        )}
+
+        {viewMode === '2D_PLAN' && cadPresentationMode === 'ZONING' && (
           <div className="relative inline-block transition-transform duration-200">
             <svg
               width={svgWidth}
@@ -355,7 +507,7 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
               )}
 
               {/* Outer Envelope Wall Line (§12) */}
-              <g 
+              <g
                 className="cursor-pointer hover:opacity-90"
                 onClick={() => handleSelectWall('Exterior Envelope Wall (200mm AAC)', true, 200)}
               >
@@ -480,8 +632,8 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   const cd = (col.depthMm / 1000) * scale;
 
                   return (
-                    <g 
-                      key={col.id} 
+                    <g
+                      key={col.id}
                       className="cursor-pointer group"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -535,27 +687,27 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   <text x="485" y="169" fill="#94a3b8" fontSize="9" fontFamily="monospace">+0.60m (PL)</text>
 
                   {/* Building Massing Box */}
-                  <rect 
-                    x="80" 
-                    y="55" 
-                    width="340" 
-                    height="110" 
-                    fill="#1e293b" 
-                    stroke="#38bdf8" 
-                    strokeWidth="2" 
+                  <rect
+                    x="80"
+                    y="55"
+                    width="340"
+                    height="110"
+                    fill="#1e293b"
+                    stroke="#38bdf8"
+                    strokeWidth="2"
                     className="cursor-pointer hover:fill-slate-800 transition-colors"
                     onClick={() => handleSelectWall(`Exterior Facade Wall (${elevationFacade})`, true, 200)}
                   />
 
                   {/* Windows on Facade */}
-                  <rect 
-                    x="120" 
-                    y="80" 
-                    width="60" 
-                    height="45" 
-                    fill="#0284c7" 
-                    fillOpacity="0.4" 
-                    stroke="#38bdf8" 
+                  <rect
+                    x="120"
+                    y="80"
+                    width="60"
+                    height="45"
+                    fill="#0284c7"
+                    fillOpacity="0.4"
+                    stroke="#38bdf8"
                     strokeWidth="1.5"
                     className="cursor-pointer hover:opacity-80"
                     onClick={() => setInspectedElement({
@@ -572,15 +724,15 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   />
                   <line x1="150" y1="80" x2="150" y2="125" stroke="#38bdf8" strokeWidth="1" />
 
-                  <rect 
-                    x="300" 
-                    y="80" 
-                    width="60" 
-                    height="45" 
-                    fill="#0284c7" 
-                    fillOpacity="0.4" 
-                    stroke="#38bdf8" 
-                    strokeWidth="1.5" 
+                  <rect
+                    x="300"
+                    y="80"
+                    width="60"
+                    height="45"
+                    fill="#0284c7"
+                    fillOpacity="0.4"
+                    stroke="#38bdf8"
+                    strokeWidth="1.5"
                     className="cursor-pointer hover:opacity-80"
                     onClick={() => setInspectedElement({
                       id: 'WIN-002',
@@ -597,14 +749,14 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   <line x1="330" y1="80" x2="330" y2="125" stroke="#38bdf8" strokeWidth="1" />
 
                   {/* Main Entry Door */}
-                  <rect 
-                    x="215" 
-                    y="95" 
-                    width="45" 
-                    height="70" 
-                    fill="#b45309" 
-                    stroke="#f59e0b" 
-                    strokeWidth="1.5" 
+                  <rect
+                    x="215"
+                    y="95"
+                    width="45"
+                    height="70"
+                    fill="#b45309"
+                    stroke="#f59e0b"
+                    strokeWidth="1.5"
                     className="cursor-pointer hover:opacity-90"
                     onClick={() => setInspectedElement({
                       id: 'DOOR-001',
@@ -682,13 +834,13 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   <text x="485" y="214" fill="#f87171" fontSize="9" fontFamily="monospace">-1.50m (FOUNDATION)</text>
 
                   {/* Ground Plinth Beam & Slab (+0.60m) */}
-                  <rect 
-                    x="70" 
-                    y="145" 
-                    width="360" 
-                    height="15" 
-                    fill="#334155" 
-                    stroke="#64748b" 
+                  <rect
+                    x="70"
+                    y="145"
+                    width="360"
+                    height="15"
+                    fill="#334155"
+                    stroke="#64748b"
                     strokeWidth="1.5"
                     className="cursor-pointer hover:fill-slate-700"
                     onClick={() => setInspectedElement({
@@ -706,35 +858,35 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   <text x="485" y="149" fill="#94a3b8" fontSize="9" fontFamily="monospace">+0.60m (PLINTH)</text>
 
                   {/* Cut Walls (Cross-Hatched) */}
-                  <rect 
-                    x="85" 
-                    y="45" 
-                    width="20" 
-                    height="100" 
-                    fill="#1e293b" 
-                    stroke="#38bdf8" 
+                  <rect
+                    x="85"
+                    y="45"
+                    width="20"
+                    height="100"
+                    fill="#1e293b"
+                    stroke="#38bdf8"
                     strokeWidth="1.5"
                     className="cursor-pointer hover:fill-blue-950"
                     onClick={() => handleSelectWall('External Masonry Wall (Cross-Cut Section)', true, 200)}
                   />
-                  <rect 
-                    x="240" 
-                    y="45" 
-                    width="12" 
-                    height="100" 
-                    fill="#1e293b" 
-                    stroke="#38bdf8" 
+                  <rect
+                    x="240"
+                    y="45"
+                    width="12"
+                    height="100"
+                    fill="#1e293b"
+                    stroke="#38bdf8"
                     strokeWidth="1.5"
                     className="cursor-pointer hover:fill-blue-950"
                     onClick={() => handleSelectWall('Internal Partition Wall (Cross-Cut Section)', false, 100)}
                   />
-                  <rect 
-                    x="395" 
-                    y="45" 
-                    width="20" 
-                    height="100" 
-                    fill="#1e293b" 
-                    stroke="#38bdf8" 
+                  <rect
+                    x="395"
+                    y="45"
+                    width="20"
+                    height="100"
+                    fill="#1e293b"
+                    stroke="#38bdf8"
                     strokeWidth="1.5"
                     className="cursor-pointer hover:fill-blue-950"
                     onClick={() => handleSelectWall('External Masonry Wall (Cross-Cut Section)', true, 200)}
@@ -748,14 +900,14 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   <text x="320" y="118" fill="#38bdf8" fontSize="10" textAnchor="middle" fontFamily="monospace">Clear Ht: 3.00m</text>
 
                   {/* Suspended RCC Roof Slab (+3.75m) */}
-                  <rect 
-                    x="70" 
-                    y="35" 
-                    width="360" 
-                    height="15" 
-                    fill="#334155" 
-                    stroke="#60a5fa" 
-                    strokeWidth="1.5" 
+                  <rect
+                    x="70"
+                    y="35"
+                    width="360"
+                    height="15"
+                    fill="#334155"
+                    stroke="#60a5fa"
+                    strokeWidth="1.5"
                     className="cursor-pointer hover:fill-slate-700"
                     onClick={() => setInspectedElement({
                       id: 'SLAB-ROOF',
@@ -824,11 +976,11 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   </defs>
 
                   {/* 3D Base Slab Plate (§16) */}
-                  <polygon 
-                    points="300,190 480,100 300,20 120,100" 
-                    fill="#0f172a" 
-                    stroke="#38bdf8" 
-                    strokeWidth="1.5" 
+                  <polygon
+                    points="300,190 480,100 300,20 120,100"
+                    fill="#0f172a"
+                    stroke="#38bdf8"
+                    strokeWidth="1.5"
                     className="cursor-pointer hover:opacity-80"
                     onClick={() => setInspectedElement({
                       id: 'SLAB-PLINTH',
@@ -846,7 +998,7 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   {roomsOnFloor.slice(0, 5).map((r, i) => {
                     const offset = i * 22;
                     return (
-                      <g 
+                      <g
                         key={`3d-${r.id}`}
                         className="cursor-pointer group"
                         onClick={() => handleSelectRoom(r)}
@@ -867,7 +1019,7 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   {[
                     [150, 105], [290, 185], [440, 110], [300, 35]
                   ].map(([cx, cy], idx) => (
-                    <g 
+                    <g
                       key={`3d-col-${idx}`}
                       className="cursor-pointer group"
                       onClick={() => setInspectedElement({
@@ -886,11 +1038,11 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   ))}
 
                   {/* 3D Roof Terrace Plate */}
-                  <polygon 
-                    points="300,120 480,30 300,-50 120,30" 
-                    fill="url(#roof-grad)" 
-                    stroke="#94a3b8" 
-                    strokeWidth="1.5" 
+                  <polygon
+                    points="300,120 480,30 300,-50 120,30"
+                    fill="url(#roof-grad)"
+                    stroke="#94a3b8"
+                    strokeWidth="1.5"
                     opacity="0.85"
                     className="cursor-pointer hover:opacity-100"
                     onClick={() => setInspectedElement({
@@ -930,8 +1082,8 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   <h4 className="font-display font-bold text-sm text-white">{inspectedElement.id}</h4>
                 </div>
               </div>
-              <button 
-                onClick={() => setInspectedElement(null)} 
+              <button
+                onClick={() => setInspectedElement(null)}
                 className="text-slate-400 hover:text-white p-1 rounded hover:bg-white/10"
               >
                 <X className="w-4 h-4" />
@@ -960,6 +1112,45 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                 <div className="bg-slate-900/90 p-2 rounded border border-white/5 font-mono text-[11px] text-cyan-300">
                   {inspectedElement.dimensions}
                 </div>
+                {inspectedElement.category === 'SPACE' && (
+                  <div className="mt-2 p-2.5 rounded-lg bg-slate-900/95 border border-cyan-500/40 space-y-2">
+                    <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-wider block">
+                      Edit Room Dimensions
+                    </span>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="text-[9px] text-slate-400 block mb-0.5">Width (m)</label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          value={editWidthM}
+                          onChange={(e) => setEditWidthM(e.target.value)}
+                          className="w-full bg-slate-950 text-white text-xs px-2 py-1 rounded border border-white/20 focus:border-cyan-400 font-mono"
+                          data-testid="input-room-width"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-[9px] text-slate-400 block mb-0.5">Length (m)</label>
+                        <input
+                          type="number"
+                          step="0.1"
+                          value={editLengthM}
+                          onChange={(e) => setEditLengthM(e.target.value)}
+                          className="w-full bg-slate-950 text-white text-xs px-2 py-1 rounded border border-white/20 focus:border-cyan-400 font-mono"
+                          data-testid="input-room-length"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleApplyRoomDimensions}
+                      className="w-full py-1 px-2 text-xs font-bold rounded bg-cyan-600 hover:bg-cyan-500 text-white transition-colors flex items-center justify-center gap-1 shadow-sm"
+                      data-testid="btn-apply-room-dimensions"
+                    >
+                      Apply Dimension Change
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-1">
@@ -1015,7 +1206,7 @@ export const FloorPlanViewer: React.FC<FloorPlanViewerProps> = ({
                   Canonical Building Model — Debug Inspector (§43)
                 </h3>
               </div>
-              <button 
+              <button
                 onClick={() => setShowDebugModal(false)}
                 className="text-slate-400 hover:text-white p-1 rounded"
               >

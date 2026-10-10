@@ -1,11 +1,11 @@
 {
-  "releaseId": "rel-pilot-20261003-afd2eb28",
-  "designVersionId": "DV-OPT-B-4da40d4e",
+  "releaseId": "rel-pilot-20261008-71e9928d",
+  "designVersionId": "DV-OPT-B-0e1dcb16",
   "currency": "INR",
   "measurementStandard": "IS 1200",
   "lineItems": [
     {
-      "boqItemId": "BOQ-TO-EXC-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-EXC-DV-OPT-B-0e1dcb16",
       "section": "01 Site / Earthwork",
       "itemCode": "EXC-01",
       "description": "Foundation trench excavation in ordinary soil including shoring, dewatering buffer & disposal",
@@ -35,7 +35,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-COL-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-COL-DV-OPT-B-0e1dcb16",
       "section": "02 RCC Structural Works",
       "itemCode": "RCC-COL-01",
       "description": "Reinforced Cement Concrete M25 grade in columns including formwork, vibration & Fe500D rebar",
@@ -65,7 +65,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-SLAB-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-SLAB-DV-OPT-B-0e1dcb16",
       "section": "02 RCC Structural Works",
       "itemCode": "RCC-SLAB-01",
       "description": "Reinforced Cement Concrete M25 in suspended floor & roof slabs net of stair cutouts",
@@ -94,7 +94,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-STAIR-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-STAIR-DV-OPT-B-0e1dcb16",
       "section": "02 RCC Structural Works",
       "itemCode": "RCC-STAIR-01",
       "description": "Reinforced Cement Concrete M25 in stair flights, waist slabs, risers, treads & landings",
@@ -121,7 +121,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-WALL-EXT-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-WALL-EXT-DV-OPT-B-0e1dcb16",
       "section": "03 Masonry",
       "itemCode": "MAS-EXT-01",
       "description": "230mm external brick masonry in cement mortar 1:6 net of door and window openings",
@@ -151,7 +151,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-WALL-INT-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-WALL-INT-DV-OPT-B-0e1dcb16",
       "section": "03 Masonry",
       "itemCode": "MAS-INT-01",
       "description": "100mm/115mm AAC block partition masonry with polymer thin-bed adhesive net of openings",
@@ -185,7 +185,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-PLAST-INT-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-PLAST-INT-DV-OPT-B-0e1dcb16",
       "section": "04 Plaster",
       "itemCode": "PL-INT-01",
       "description": "12mm smooth cement plaster 1:4 to internal wall faces and room ceiling soffits",
@@ -235,7 +235,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-PLAST-EXT-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-PLAST-EXT-DV-OPT-B-0e1dcb16",
       "section": "04 Plaster",
       "itemCode": "PL-EXT-01",
       "description": "20mm double-coat sand-faced waterproof cement plaster 1:4 on external exposed walls",
@@ -265,7 +265,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-FL-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-FL-DV-OPT-B-0e1dcb16",
       "section": "05 Flooring",
       "itemCode": "FL-TILE-01",
       "description": "800x800mm double-charged nano vitrified tile flooring with polymer adhesive & epoxy grout",
@@ -303,7 +303,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-SKIRT-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-SKIRT-DV-OPT-B-0e1dcb16",
       "section": "05 Flooring",
       "itemCode": "FL-SKIRT-01",
       "description": "100mm matching vitrified tile skirting along room perimeters less doorway openings",
@@ -354,7 +354,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-DR-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-DR-DV-OPT-B-0e1dcb16",
       "section": "06 Doors & Windows",
       "itemCode": "DR-01",
       "description": "Pre-hung engineered wooden flush doors (35mm BWP) with hardwood frames & SS mortise hardware",
@@ -393,7 +393,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-WIN-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-WIN-DV-OPT-B-0e1dcb16",
       "section": "06 Doors & Windows",
       "itemCode": "WIN-01",
       "description": "UPVC 3-track sliding window units with mosquito screens, hardware & 5mm toughened clear glass",
@@ -426,7 +426,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-WP-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-WP-DV-OPT-B-0e1dcb16",
       "section": "08 Waterproofing",
       "itemCode": "WP-01",
       "description": "Elastomeric polymer-modified cementitious waterproofing on terrace roof and wet areas with coving",
@@ -456,7 +456,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-PNT-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-PNT-DV-OPT-B-0e1dcb16",
       "section": "07 Painting & Finishes",
       "itemCode": "PNT-01",
       "description": "Interior premium low-VOC emulsion (2 coats over primer/putty) and exterior silicon weather-shield",
@@ -473,21 +473,21 @@
       "equipmentAmount": 6195.25,
       "wastageAmount": 1548.81,
       "sourceElementIds": [
-        "WALL-INT-007",
-        "SPACE-SP-KITCHEN-4",
-        "SPACE-SP-BALC-12",
-        "SPACE-SP-BATH-10",
-        "WALL-EXT-003",
-        "WALL-INT-011",
-        "SPACE-SP-MBED-7",
-        "SPACE-SP-LIVING-2",
-        "SPACE-SP-PUJA-6",
         "WALL-INT-008",
+        "SPACE-SP-BATH-10",
+        "SPACE-SP-UTILITY-5",
+        "WALL-INT-005",
+        "SPACE-SP-MBED-7",
+        "WALL-INT-010",
+        "WALL-INT-012",
+        "SPACE-SP-MBATH-8",
+        "WALL-INT-007",
+        "SPACE-SP-BALC-12",
+        "WALL-EXT-001",
         "WALL-INT-006",
-        "SPACE-SP-DINING-3",
-        "WALL-INT-009",
-        "SPACE-SP-ENTRY-1",
-        "WALL-INT-012"
+        "SPACE-SP-BED-9",
+        "SPACE-SP-PUJA-6",
+        "WALL-INT-009"
       ],
       "measurementRuleId": "QTO-PAINT-001",
       "assemblyId": "PAINT_EMULSION_PREMIUM",
@@ -497,7 +497,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-ELE-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-ELE-DV-OPT-B-0e1dcb16",
       "section": "09 Electrical (Preliminary)",
       "itemCode": "ELE-01",
       "description": "Concealed copper FRLS wiring with PVC conduits, modular switches, DB, MCBs & earthing pit",
@@ -524,7 +524,7 @@
       "status": "CALCULATED"
     },
     {
-      "boqItemId": "BOQ-TO-PLB-DV-OPT-B-4da40d4e",
+      "boqItemId": "BOQ-TO-PLB-DV-OPT-B-0e1dcb16",
       "section": "10 Plumbing (Preliminary)",
       "itemCode": "PLB-01",
       "description": "CPVC/SWR water supply & drainage lines with CP sanitary fittings, EWC, basin & overhead tank",

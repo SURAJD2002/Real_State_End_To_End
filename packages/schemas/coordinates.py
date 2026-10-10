@@ -62,18 +62,18 @@ class SiteReferenceFrame(BaseModel):
     referenceFrameId: str = Field(..., description="Stable ID e.g. RF-MUM-CTS1842-01")
     siteId: str = Field(..., description="Associated Site / Parcel ID")
     version: int = Field(1, description="Sequential frame version")
-    
+
     # Origin Geodetics (Topocentric Tangent Point)
     originLatitude: float = Field(..., description="Origin latitude in decimal degrees")
     originLongitude: float = Field(..., description="Origin longitude in decimal degrees")
     originElevationM: float = Field(0.0, description="Origin height above WGS84 ellipsoid in meters")
-    
+
     # Orientation & Geodetic Datum
     trueNorthBearingDeg: float = Field(0.0, description="Angle from local ENU North to Grid True North in degrees")
     ellipsoid: str = Field("WGS84", description="Reference ellipsoid definition")
     datum: str = Field("WGS84 / EPSG:4326", description="Geodetic datum")
     coordinateSystem: str = Field("SECS_ENU_TOPOCENTRIC", description="Local metric coordinate system identifier")
-    
+
     isLocked: bool = Field(False, description="Frozen when bound to released designs")
     createdAt: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     metadata: Dict[str, Any] = Field(default_factory=dict)

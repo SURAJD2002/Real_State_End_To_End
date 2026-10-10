@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { HouseOption } from '../types';
-import { 
-  Sparkles, 
-  Clock, 
-  FileSpreadsheet, 
-  Lock, 
-  HelpCircle, 
-  ChevronDown, 
+import {
+  Sparkles,
+  Clock,
+  FileSpreadsheet,
+  Lock,
+  HelpCircle,
+  ChevronDown,
   ChevronUp,
   ShieldCheck,
   Scale,
@@ -337,8 +337,8 @@ export const HouseOptionsCarousel: React.FC<HouseOptionsCarouselProps> = ({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-400 mb-1">Bedrooms</label>
-                  <select 
-                    value={bedrooms} 
+                  <select
+                    value={bedrooms}
                     onChange={(e) => setBedrooms(Number(e.target.value))}
                     className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-white font-mono"
                   >
@@ -350,8 +350,8 @@ export const HouseOptionsCarousel: React.FC<HouseOptionsCarouselProps> = ({
 
                 <div>
                   <label className="block text-slate-400 mb-1">Bathrooms</label>
-                  <select 
-                    value={bathrooms} 
+                  <select
+                    value={bathrooms}
                     onChange={(e) => setBathrooms(Number(e.target.value))}
                     className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-white font-mono"
                   >
@@ -365,8 +365,8 @@ export const HouseOptionsCarousel: React.FC<HouseOptionsCarouselProps> = ({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-slate-400 mb-1">Storeys (Floors)</label>
-                  <select 
-                    value={floors} 
+                  <select
+                    value={floors}
                     onChange={(e) => setFloors(Number(e.target.value))}
                     className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-white font-mono"
                   >
@@ -377,8 +377,8 @@ export const HouseOptionsCarousel: React.FC<HouseOptionsCarouselProps> = ({
 
                 <div>
                   <label className="block text-slate-400 mb-1">Architectural Style</label>
-                  <select 
-                    value={preferredStyle} 
+                  <select
+                    value={preferredStyle}
                     onChange={(e) => setPreferredStyle(e.target.value)}
                     className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-white font-mono"
                   >
@@ -391,8 +391,8 @@ export const HouseOptionsCarousel: React.FC<HouseOptionsCarouselProps> = ({
 
               <div>
                 <label className="block text-slate-400 mb-1">Target Budget (INR Lakhs)</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   value={budgetLakhs}
                   onChange={(e) => setBudgetLakhs(Number(e.target.value))}
                   className="w-full bg-slate-950 border border-white/10 rounded-lg p-2 text-white font-mono"
@@ -400,10 +400,10 @@ export const HouseOptionsCarousel: React.FC<HouseOptionsCarouselProps> = ({
               </div>
 
               <div className="flex items-center gap-2 pt-1">
-                <input 
-                  type="checkbox" 
-                  id="parkingReq" 
-                  checked={parkingRequired} 
+                <input
+                  type="checkbox"
+                  id="parkingReq"
+                  checked={parkingRequired}
                   onChange={(e) => setParkingRequired(e.target.checked)}
                   className="rounded bg-slate-950 border-white/20 text-blue-600 focus:ring-0"
                 />

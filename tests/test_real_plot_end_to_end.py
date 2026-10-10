@@ -157,7 +157,7 @@ class TestRealPlotEndToEnd(unittest.TestCase):
             dimensions=PlotDimensions(front_width_ft=40.0, left_length_ft=60.0)
         )
         pgv: ParcelGeometryVersion = self.runner.reconstruct_site_geometry(site_in, site_id="SITE-TEST-001")
-        
+
         self.assertEqual(pgv.source, "USER_PROVIDED")
         self.assertEqual(pgv.confidence, "USER_CONFIRMED")
         self.assertEqual(pgv.units, "METRIC")
@@ -191,7 +191,7 @@ class TestRealPlotEndToEnd(unittest.TestCase):
         )
         res = self.runner.run_e2e_pipeline(payload)
         self.assertEqual(res["status"], "SUCCESS")
-        
+
         fb = res["feasibility"]
         self.assertGreater(fb.grossParcelAreaSqm, 0.0)
         self.assertGreater(fb.permissibleBUASqm, 0.0)
@@ -223,7 +223,7 @@ class TestRealPlotEndToEnd(unittest.TestCase):
             budget=8500000.0
         )
         brief: CustomerBrief = self.runner.convert_to_customer_brief(req)
-        
+
         # Hard constraints
         self.assertTrue(brief.bedroomsConstraint.hardConstraint)
         self.assertEqual(brief.bedroomsConstraint.normalizedValue, 2)
@@ -366,7 +366,7 @@ class TestRealPlotEndToEnd(unittest.TestCase):
             parking=1
         )
         change_res = self.runner.run_change_propagation_test(initial_payload, mutated_requirements)
-        
+
         # Verify stale states
         self.assertTrue(change_res["stale_flags"]["qto_stale"])
         self.assertTrue(change_res["stale_flags"]["boq_stale"])

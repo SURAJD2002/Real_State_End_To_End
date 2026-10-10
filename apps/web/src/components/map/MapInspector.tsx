@@ -1,11 +1,11 @@
 import React from 'react';
-import { 
-  X, 
-  Maximize2, 
-  Pentagon, 
-  Home, 
-  Calculator, 
-  Compass, 
+import {
+  X,
+  Maximize2,
+  Pentagon,
+  Home,
+  Calculator,
+  Compass,
   CheckCircle2,
   ExternalLink,
   Edit,

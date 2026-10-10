@@ -168,7 +168,7 @@ def deduct_road_widening(
     """
     gross_area = float(parcel_poly_secs.area)
     widening_delta = max(0.0, (proposed_road_width_m - existing_road_width_m) / 2.0)
-    
+
     front_edges = [e for e in classified_edges if e.classification == EdgeClassification.FRONT]
     if widening_delta <= 0.0 or not front_edges:
         # Zero widening

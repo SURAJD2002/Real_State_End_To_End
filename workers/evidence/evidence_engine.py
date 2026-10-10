@@ -22,7 +22,7 @@ def evaluate_site_confidence(
 ) -> ConfidenceEvaluationSummary:
     """
     Computes deterministic site confidence level from accumulated evidence items (§2).
-    
+
     Tiers:
     - L0: GIS-derived only (public basemaps / satellite traces)
     - L1: Customer-uploaded documents (deeds, unverified drawings)

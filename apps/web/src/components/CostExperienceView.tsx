@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { HouseOption, BOQLineItem } from '../types';
-import { 
-  Download, 
+import {
+  Download,
   Info,
   Layers,
   FileCode,
@@ -60,8 +60,8 @@ export const CostExperienceView: React.FC<CostExperienceViewProps> = ({
 
   const downloadCSV = () => {
     const headers = [
-      'Item Code', 'Trade Section', 'Description', 'Quantity', 'Unit', 
-      'Material Rate (INR)', 'Labour Rate (INR)', 'Equipment Rate (INR)', 'Unit Rate (INR)', 
+      'Item Code', 'Trade Section', 'Description', 'Quantity', 'Unit',
+      'Material Rate (INR)', 'Labour Rate (INR)', 'Equipment Rate (INR)', 'Unit Rate (INR)',
       'Amount (INR)', 'Confidence', 'Measurement Rule', 'CBM Elements Count'
     ];
     const rows = boq.lines.map((line: BOQLineItem) => [
@@ -308,8 +308,8 @@ export const CostExperienceView: React.FC<CostExperienceViewProps> = ({
                 const isSelected = selectedLineForTrace?.code === line.code;
 
                 return (
-                  <tr 
-                    key={itemCode} 
+                  <tr
+                    key={itemCode}
                     onClick={() => setSelectedLineForTrace(line)}
                     className={`cursor-pointer transition-colors ${
                       isSelected ? 'bg-blue-950/40 border-l-2 border-blue-500' : 'hover:bg-white/5'
@@ -341,7 +341,7 @@ export const CostExperienceView: React.FC<CostExperienceViewProps> = ({
                       </span>
                     </td>
                     <td className="py-2.5 px-3 text-center">
-                      <button 
+                      <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedLineForTrace(line);
@@ -384,7 +384,7 @@ export const CostExperienceView: React.FC<CostExperienceViewProps> = ({
                   <div className="text-[11px] text-slate-400">{selectedLineForTrace.description}</div>
                 </div>
               </div>
-              <button 
+              <button
                 onClick={() => setSelectedLineForTrace(null)}
                 className="text-slate-400 hover:text-white px-2 py-1 rounded hover:bg-white/10 text-xs font-bold"
               >

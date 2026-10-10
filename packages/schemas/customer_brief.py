@@ -79,7 +79,7 @@ class CustomerBrief(BaseModel):
     version: int = Field(1, description="Sequential brief version")
     projectId: str = Field(default="proj-default-01", description="Reference to parent project")
     title: str = Field("Modern Family Residence", description="Project brief title")
-    
+
     # Core Habitable Space Requirements
     bedrooms: int = Field(3, description="Target bedroom count")
     bedroomsConstraint: ConstraintField = Field(
@@ -87,26 +87,26 @@ class CustomerBrief(BaseModel):
             name="bedrooms", requestedValue=3, normalizedValue=3, hardConstraint=True
         )
     )
-    
+
     bathrooms: int = Field(3, description="Target bathroom count")
     bathroomsConstraint: ConstraintField = Field(
         default_factory=lambda: ConstraintField(
             name="bathrooms", requestedValue=3, normalizedValue=3, hardConstraint=True
         )
     )
-    
+
     floors: int = Field(1, description="Requested number of storeys (1 for Villa, 2 for Duplex)")
     floorsConstraint: ConstraintField = Field(
         default_factory=lambda: ConstraintField(
             name="floors", requestedValue=1, normalizedValue=1, hardConstraint=True
         )
     )
-    
+
     # Parking Requirements
     parkingRequired: bool = Field(True)
     parkingBaysCount: int = Field(1, description="Number of covered car parking bays")
     parkingType: str = Field("COVERED_SURFACE", description="COVERED_SURFACE, BASEMENT, STILT")
-    
+
     # Family Demographics & Areas
     familySize: int = Field(4, description="Number of permanent residents")
     targetBuiltUpAreaSqm: Optional[float] = Field(None, description="Requested gross BUA in m²")
@@ -122,7 +122,7 @@ class CustomerBrief(BaseModel):
     preferredStyle: ArchitecturalStyle = ArchitecturalStyle.CONTEMPORARY
     kitchenType: KitchenType = KitchenType.CLOSED
     staircasePreference: StaircasePreference = StaircasePreference.INTERNAL_DOG_LEGGED
-    
+
     # Room Existence Requirements
     livingRoomRequired: bool = True
     diningRequired: bool = True
@@ -132,19 +132,19 @@ class CustomerBrief(BaseModel):
     guestRoomRequired: bool = False
     masterBedroomRequired: bool = True
     balconyRequired: bool = True
-    
+
     # Environmental & Functional Preferences
     daylightPreference: str = Field("MAXIMIZE", description="MAXIMIZE, STANDARD")
     ventilationPreference: str = Field("CROSS_VENTILATION", description="CROSS_VENTILATION, STANDARD")
     accessibilityGroundFloorBed: bool = Field(True, description="Ensure at least one elderly-accessible bedroom on ground")
-    
+
     # Vastu Preference (Strictly a customer soft preference/weight, NEVER a statutory requirement)
     vastuPreference: VastuOrientation = Field(
-        VastuOrientation.EAST, 
+        VastuOrientation.EAST,
         description="Customer spatial orientation preference (weight only, NEVER statutory)"
     )
     futureExpansionPreference: bool = Field(
-        False, 
+        False,
         description="Whether upper slab should be pre-engineered for future vertical expansion"
     )
 

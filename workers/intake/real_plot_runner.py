@@ -254,7 +254,7 @@ class RealPlotPipelineRunner:
             # Clean orthogonal rectangular plot
             w_m = dims.front_width_m if dims.front_width_m is not None else round(dims.front_width_ft * 0.3048, 3)
             l_m = dims.left_length_m if dims.left_length_m is not None else round(dims.left_length_ft * 0.3048, 3)
-            
+
             secs_coords = [
                 [0.0, 0.0],
                 [w_m, 0.0],

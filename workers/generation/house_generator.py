@@ -106,7 +106,7 @@ def solve_room_allocation(archetype_key: str, available_width_m: float, availabl
     for room in rooms:
         floor = room.get("floor", "L0")
         target_area = (room["minArea"] + room["maxArea"]) / 2.0
-        
+
         # Decide column placement based on zoning (Public/Semi to front, Private/Service to rear)
         if room["zone"] in ["PUBLIC", "SEMI_OUTDOOR", "CIRCULATION"]:
             w = col1_w
@@ -227,7 +227,8 @@ def generate_house_options(
     brief: Optional[Any] = None,
     rule_pack_id: str = "MUMBAI_DCPR_2034_V1",
     site_version_id: str = "PV-001",
-    project_id: str = "proj-mumbai-default-01"
+    project_id: str = "proj-mumbai-default-01",
+    declared_plot_area_sqft: Optional[float] = None
 ) -> List[Dict[str, Any]]:
     """
     Unified House Options Generator.
@@ -235,6 +236,12 @@ def generate_house_options(
     If no brief is provided, compiles the 3 Golden Archetypes (Compact 2BHK, Family 3BHK, Duplex 3BHK)
     guaranteeing backwards compatibility with existing CBM & GIS benchmark suites.
     """
+    if declared_plot_area_sqft and declared_plot_area_sqft > 0:
+        import math
+        m2 = declared_plot_area_sqft * 0.092903
+        site_width_m = round(math.sqrt(m2 * (16 / 9)), 2)
+        site_length_m = round(m2 / site_width_m, 2)
+
     if brief is not None:
         return generate_m2_house_options(
             site_width_m=site_width_m,
@@ -243,7 +250,8 @@ def generate_house_options(
             brief=brief,
             rule_pack_id=rule_pack_id,
             site_version_id=site_version_id,
-            project_id=project_id
+            project_id=project_id,
+            declared_plot_area_sqft=declared_plot_area_sqft
         )
 
     # Golden Archetype Suite (Delta Spec §1, §7.2, §26)
@@ -258,7 +266,8 @@ def generate_house_options(
         canonical_model = compile_canonical_building_model(
             layout_data=layout,
             design_version_id=dv_id,
-            archetype=arch_key
+            archetype=arch_key,
+            declared_plot_area_sqft=declared_plot_area_sqft
         )
         options.append({
             "optionId": f"opt-{arch_key}",
@@ -287,7 +296,8 @@ def generate_m2_house_options(
     brief: Optional[Any] = None,
     rule_pack_id: str = "MUMBAI_DCPR_2034_V1",
     site_version_id: str = "PV-001",
-    project_id: str = "proj-mumbai-default-01"
+    project_id: str = "proj-mumbai-default-01",
+    declared_plot_area_sqft: Optional[float] = None
 ) -> List[Dict[str, Any]]:
     """
     Authoritative M2 House Generation Pipeline:
@@ -303,6 +313,12 @@ def generate_m2_house_options(
     from workers.generation.model_compiler import compile_canonical_building_model
     from workers.geometry.solid_engine import SolidModelingEngine, HAS_MANIFOLD
     from workers.generation.validation_engine import run_m2_design_validation
+
+    if declared_plot_area_sqft and declared_plot_area_sqft > 0:
+        import math
+        m2 = declared_plot_area_sqft * 0.092903
+        site_width_m = round(math.sqrt(m2 * (16 / 9)), 2)
+        site_length_m = round(m2 / site_width_m, 2)
 
     # 1. Normalize Customer Brief
     if brief is None:
@@ -343,7 +359,8 @@ def generate_m2_house_options(
             canonical_model = compile_canonical_building_model(
                 layout_data=layout,
                 design_version_id=dv_id,
-                archetype=arch_key
+                archetype=arch_key,
+                declared_plot_area_sqft=declared_plot_area_sqft
             )
             options.append({
                 "optionId": f"opt-{arch_key}",
@@ -367,7 +384,7 @@ def generate_m2_house_options(
     # 4. Filter Non-Dominated Pareto Candidates
     pareto_report = filter_pareto_frontier(candidates, brief)
     active_options = list(pareto_report.paretoOptions)
-    
+
     # Ensure minimum 3 options presented by supplementing with closest candidates
     if len(active_options) < 3 and candidates:
         seen_ids = {item["candidateId"] for item in active_options}
@@ -446,7 +463,8 @@ def generate_m2_house_options(
             project_id=project_id,
             site_geometry_version_id=site_version_id,
             regulation_version_id=rule_pack_id,
-            archetype=f"m2_cpsat_{opt_id}"
+            archetype=f"m2_cpsat_{opt_id}",
+            declared_plot_area_sqft=declared_plot_area_sqft
         )
 
         # 5. Manifold3D Solid Modeling & Watertight Validation (Phase 8)

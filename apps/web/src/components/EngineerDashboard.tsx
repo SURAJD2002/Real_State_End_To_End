@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { HandoffPackage, VerificationGate } from '../types';
-import { 
-  Download, 
-  FileCode, 
-  CheckCircle2, 
-  AlertTriangle, 
+import {
+  Download,
+  FileCode,
+  CheckCircle2,
+  AlertTriangle,
   Clock,
-  HardHat, 
+  HardHat,
   ArrowLeft,
   Hash,
   Award,

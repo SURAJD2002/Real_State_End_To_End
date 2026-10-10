@@ -272,7 +272,7 @@ class TestM2GeneratorAndSolids(unittest.TestCase):
         """Verify structured failure explanation when plot cannot accommodate room program."""
         brief = CustomerBrief(bedrooms=5, bathrooms=4, floors=1) # Huge program
         program = build_room_program_from_brief(brief)
-        
+
         # Envelope too small: 4m x 4m = 16m² for 5BHK
         diagnosis = diagnose_generation_failure(
             envelope_width_m=4.0,

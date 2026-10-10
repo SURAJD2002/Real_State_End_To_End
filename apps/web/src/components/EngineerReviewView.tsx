@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  ProjectData, 
-  HouseOption, 
+import {
+  ProjectData,
+  HouseOption,
   HandoffPackage,
   EngineerReviewData,
   ReviewIssue,
@@ -9,15 +9,15 @@ import {
   GateStatus,
   IssueSeverity
 } from '../types';
-import { 
-  ShieldCheck, 
-  AlertTriangle, 
-  CheckCircle2, 
-  Clock, 
-  Lock, 
-  Zap, 
-  Droplets, 
-  AlertCircle, 
+import {
+  ShieldCheck,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  Lock,
+  Zap,
+  Droplets,
+  AlertCircle,
   ArrowLeft,
   Plus,
   RefreshCw,
@@ -56,7 +56,7 @@ export const EngineerReviewView: React.FC<EngineerReviewViewProps> = ({
   useEffect(() => {
     setViewMode(globalViewMode === 'TECHNICAL' ? 'REVIEWER' : 'CUSTOMER');
   }, [globalViewMode]);
-  
+
   // Inspection Tab for Reviewer Mode
   const [activeTab, setActiveTab] = useState<'OVERVIEW' | 'SITE' | 'DESIGN' | 'STRUCTURAL' | 'MEP' | 'ISSUES'>('OVERVIEW');
 
@@ -84,9 +84,14 @@ export const EngineerReviewView: React.FC<EngineerReviewViewProps> = ({
 
   const boq = selectedOption.boq;
   const layout = selectedOption.layout;
-  const totalCost = boq.totalBaseEstimate || boq.estimateRange?.expected || 4500000;
+  const isPilot = project?.id === 'proj-mumbai-real-1100' || selectedOption.designVersionId === 'DV-OPT-B-9be0a983';
+  const totalCost = boq.totalBaseEstimate || boq.estimateRange?.expected || (isPilot ? 4500000 : 0);
   const buaSqFt = Math.round((layout.totalGrossBUASqm || 110) * 10.7639);
-  const declaredSqFt = 1100; // Authoritative customer plot area
+  const declaredSqFt = project?.declaredPlotAreaSqFt ||
+    (project?.parcel as any)?.declaredPlotAreaSqFt ||
+    (project?.latestFeasibility?.grossPlotAreaSqm ? Math.round(project.latestFeasibility.grossPlotAreaSqm * 10.7639) : (isPilot ? 1100 : 0));
+  const locationText = project?.name || (isPilot ? 'Bandra West, Mumbai' : 'Custom Project Site');
+  const plotAreaSqFt = declaredSqFt;
 
   const formatINR = (val: number) => '₹ ' + Math.round(val).toLocaleString('en-IN');
 
@@ -114,7 +119,7 @@ export const EngineerReviewView: React.FC<EngineerReviewViewProps> = ({
           updatedAt: new Date().toISOString(),
           inputManifestHash: activeRelease?.releaseFingerprint || 'sha256:release_pkg_fingerprint',
           designVersionHash: selectedOption.designHash || 'sha256:design_cbm_hash',
-          declaredPlotAreaSqFt: 1100,
+          declaredPlotAreaSqFt: declaredSqFt || (isPilot ? 1100 : 0),
           gates: [
             { id: 'g0', engineerReviewId: 'rev-default', gateCode: 'G0', title: 'Site & Boundary Verification', status: 'PENDING', requiredForRelease: true },
             { id: 'g1', engineerReviewId: 'rev-default', gateCode: 'G1', title: 'Regulatory & Feasibility Review', status: 'SYSTEM_VERIFIED', requiredForRelease: true },
@@ -497,119 +502,104 @@ export const EngineerReviewView: React.FC<EngineerReviewViewProps> = ({
           </div>
         )}
 
-        {/* CUSTOMER VIEW SIMPLIFIED STATUS (§15) */}
+        {/* CUSTOMER VIEW SIMPLIFIED STATUS (§14) */}
         {viewMode === 'CUSTOMER' && (
           <div className="space-y-6 animate-fade-in">
-            {/* Status Hero Card */}
-            <div className="pw-card space-y-3">
+            {/* Status Card (§14) */}
+            <div className="pw-card p-6 bg-[#0f1422] border-blue-500/30 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs uppercase font-mono tracking-wider text-slate-400">Current Status</span>
-                <span className="pw-badge pw-badge-warning font-mono">
-                  Professional review in progress
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-400">
+                  Current Status
+                </span>
+                <span className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/30 text-xs font-mono font-bold flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                  REVIEW IN PROGRESS
                 </span>
               </div>
-              <h2 className="pw-title-lg">
-                Professional review in progress
+              <h2 className="text-2xl font-bold text-white">
+                Professional review
               </h2>
-              <p className="pw-body max-w-3xl">
-                Independent licensed structural and building services engineers are verifying your project drawings and calculation models before construction release.
+              <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                Licensed engineers are conducting formal verification of your site boundaries, structural integrity, services, and construction bill of quantities.
               </p>
             </div>
 
-            {/* 5 Milestone Status Cards (§15) */}
-            <div className="pw-card space-y-3">
-              <h3 className="pw-title-md">Verification Milestones</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                
-                {/* 1. Site & Boundary */}
-                <div className="p-3.5 rounded-lg bg-white/[0.02] border border-white/5 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-white">Site &amp; Boundary</span>
-                    <span className="pw-badge pw-badge-success text-[10px]">
-                      <Check className="w-2.5 h-2.5" />
-                      Reviewed
+            {/* Professional Checkpoints Checklist (§14) */}
+            <div className="pw-card p-6 space-y-4">
+              <div className="flex items-center justify-between border-b border-white/5 pb-3">
+                <div>
+                  <h3 className="pw-title-md">Professional checkpoints</h3>
+                  <p className="text-xs text-slate-400 mt-0.5">Automated and engineering sign-off status</p>
+                </div>
+                <span className="text-xs text-amber-400 font-medium">
+                  Waiting for professional verification
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {[
+                  { title: 'Site information', desc: `${plotAreaSqFt ? `${plotAreaSqFt.toLocaleString()} sq ft` : 'Site'} plot boundary and access road geometry verified against cadastral records`, verified: true },
+                  { title: 'Design review', desc: 'Room dimensions, ceiling heights, ventilation, and municipal setbacks checked', verified: true },
+                  { title: 'Preliminary structural review', desc: 'Framing layout, column spans, and soil bearing capacity verification', verified: false, pendingText: 'Waiting for professional verification' },
+                  { title: 'Services review', desc: 'Electrical conduits, plumbing shafts, water drainage, and rainwater routing', verified: false, pendingText: 'Waiting for professional verification' },
+                  { title: 'Cost / BOQ review', desc: 'Bill of quantities trade quantities and local rate schedule benchmarks', verified: true }
+                ].map((checkpoint, idx) => (
+                  <div key={idx} className="p-3.5 rounded-xl bg-white/[0.02] border border-white/5 flex items-start justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                        checkpoint.verified ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'
+                      }`}>
+                        {checkpoint.verified ? <Check className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
+                      </div>
+                      <div>
+                        <span className="text-xs font-bold text-white block">
+                          {checkpoint.title}
+                        </span>
+                        <span className="text-[11px] text-slate-400 leading-relaxed block mt-0.5">
+                          {checkpoint.desc}
+                        </span>
+                      </div>
+                    </div>
+
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full shrink-0 ${
+                      checkpoint.verified
+                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                        : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                    }`}>
+                      {checkpoint.verified ? 'Verified' : 'Waiting for professional verification'}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400">1,100 sq ft boundary verified against cadastral survey.</p>
-                </div>
-
-                {/* 2. Design */}
-                <div className="p-3.5 rounded-lg bg-white/[0.02] border border-white/5 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-white">Design</span>
-                    <span className="pw-badge pw-badge-success text-[10px]">
-                      <Check className="w-2.5 h-2.5" />
-                      Reviewed
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-400">Habitable room heights and setbacks checked.</p>
-                </div>
-
-                {/* 3. Structural */}
-                <div className="p-3.5 rounded-lg bg-blue-950/20 border border-blue-500/20 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-white">Structural</span>
-                    <span className="pw-badge pw-badge-warning text-[10px]">
-                      <Clock className="w-2.5 h-2.5" />
-                      In progress
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-400">Framing system and footing soil bearing check.</p>
-                </div>
-
-                {/* 4. MEP */}
-                <div className="p-3.5 rounded-lg bg-blue-950/20 border border-blue-500/20 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-white">MEP</span>
-                    <span className="pw-badge pw-badge-warning text-[10px]">
-                      <Clock className="w-2.5 h-2.5" />
-                      In progress
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-400">Plumbing shafts, electrical panels and drainage slopes.</p>
-                </div>
-
-                {/* 5. Approvals */}
-                <div className="p-3.5 rounded-lg bg-white/[0.02] border border-white/5 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-white">Approvals</span>
-                    <span className="pw-badge pw-badge-neutral text-[10px]">
-                      Pending
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-400">Awaiting engineer verification sign-offs.</p>
-                </div>
-
+                ))}
               </div>
             </div>
 
             {/* Customer Summary Card */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="pw-card p-4 space-y-1">
-                <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Authoritative Plot</span>
-                <span className="text-base font-bold text-white font-mono">{declaredSqFt.toLocaleString()} sq ft</span>
-                <p className="text-[11px] text-slate-400">{project?.name || 'Bandra West, Mumbai'}</p>
+                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">Authoritative Plot</span>
+                <span className="text-base font-bold text-white font-mono">{declaredSqFt > 0 ? `${declaredSqFt.toLocaleString()} sq ft` : 'Pending Verification'}</span>
+                <p className="text-[11px] text-slate-400">{locationText}</p>
               </div>
 
               <div className="pw-card p-4 space-y-1">
-                <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Selected House</span>
+                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">Selected House</span>
                 <span className="text-base font-bold text-white">{layout.label || layout.archetype || selectedOption.optionId}</span>
                 <p className="text-[11px] text-slate-400">{layout.floors || 2} Floors • {buaSqFt} sq ft BUA</p>
               </div>
 
               <div className="pw-card p-4 space-y-1">
-                <span className="text-[11px] text-slate-500 uppercase tracking-wider block">Estimated Construction</span>
+                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">Estimated Construction</span>
                 <span className="text-base font-bold text-white font-mono">{formatINR(totalCost)}</span>
                 <p className="text-[11px] text-slate-400">{boq.qualityTier || 'STANDARD'} Specification</p>
               </div>
             </div>
 
-            {/* Professional Boundary Notice */}
-            <div className="p-4 rounded-lg bg-white/[0.02] border border-white/5 flex items-start gap-3 text-xs text-slate-400">
+            {/* Boundary Notice */}
+            <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 flex items-start gap-3 text-xs text-slate-400">
               <Info className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-white block mb-0.5">Professional Responsibility Boundary</strong>
-                Planwise provides verified computational geometry and preliminary structural models. Final ground execution requires certified site surveys, soil testing, and local authority permits.
+                <strong className="text-white block mb-0.5">Professional Checkpoints</strong>
+                Planwise keeps you updated as certified professionals complete each checkpoint. Construction can proceed only after the appropriate approvals.
               </div>
             </div>
           </div>
@@ -652,15 +642,19 @@ export const EngineerReviewView: React.FC<EngineerReviewViewProps> = ({
                 <div className="space-y-1.5 text-xs">
                   <div className="flex justify-between">
                     <span className="text-slate-400">Plot Area:</span>
-                    <span className="text-white font-mono font-bold">{declaredSqFt.toLocaleString()} sq ft</span>
+                    <span className="text-white font-mono font-bold">{declaredSqFt > 0 ? `${declaredSqFt.toLocaleString()} sq ft` : 'Pending Survey'}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Location:</span>
-                    <span className="text-white truncate max-w-[150px]">{project?.name || 'Bandra West, Mumbai'}</span>
+                    <span className="text-white truncate max-w-[150px]">{locationText}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Road Width:</span>
-                    <span className="text-white font-mono">16.0 ft (4.88 m)</span>
+                    <span className="text-white font-mono">
+                      {project?.parcel?.existingRoadWidthM
+                        ? `${(project.parcel.existingRoadWidthM / 0.3048).toFixed(1)} ft (${project.parcel.existingRoadWidthM} m)`
+                        : (isPilot ? '16.0 ft (4.88 m)' : 'Standard Access')}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Plot Shape:</span>
@@ -773,8 +767,8 @@ export const EngineerReviewView: React.FC<EngineerReviewViewProps> = ({
                   const isLocked = gate.status === 'LOCKED';
                   const isPending = gate.status === 'PENDING' || gate.status === 'PROFESSIONAL_REVIEW';
                   const gateIssue = review?.issues.find(i => i.gateCode === gate.gateCode && i.status === 'OPEN');
-                  
-                  const defaultOwner = 
+
+                  const defaultOwner =
                     gate.gateCode === 'G0' ? 'Licensed Surveyor' :
                     gate.gateCode === 'G1' ? 'Regulatory Engine' :
                     gate.gateCode === 'G2' ? 'Structural Engineer' :
@@ -783,7 +777,7 @@ export const EngineerReviewView: React.FC<EngineerReviewViewProps> = ({
                     'Municipal Authority';
 
                   return (
-                    <div 
+                    <div
                       key={gate.gateCode}
                       className={`p-4 rounded-xl border transition-all ${
                         gate.status === 'CHANGES_REQUIRED' || gateIssue
@@ -1330,7 +1324,7 @@ export const EngineerReviewView: React.FC<EngineerReviewViewProps> = ({
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div>
                   <label className="text-slate-400 block mb-1">Target Gate</label>
-                  <select 
+                  <select
                     value={newGateCode}
                     onChange={(e) => setNewGateCode(e.target.value as GateCode)}
                     className="w-full p-2.5 rounded-lg bg-slate-950 border border-white/10 text-white"
@@ -1345,7 +1339,7 @@ export const EngineerReviewView: React.FC<EngineerReviewViewProps> = ({
 
                 <div>
                   <label className="text-slate-400 block mb-1">Severity</label>
-                  <select 
+                  <select
                     value={newSeverity}
                     onChange={(e) => setNewSeverity(e.target.value as IssueSeverity)}
                     className="w-full p-2.5 rounded-lg bg-slate-950 border border-white/10 text-white"

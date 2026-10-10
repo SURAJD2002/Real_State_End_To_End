@@ -183,6 +183,7 @@ export interface CPMSchedule {
 
 export interface HouseOption {
   optionId: string;
+  title?: string;
   designVersionId: string;
   designHash: string;
   layout: HouseLayout;
@@ -309,7 +310,9 @@ export interface ProjectData {
     existingRoadWidthM: number;
     proposedRoadWidthM: number;
     version: number;
+    declaredPlotAreaSqFt?: number;
   };
+  declaredPlotAreaSqFt?: number;
   latestFeasibility?: FeasibilityResult | null;
   activeRelease?: {
     releaseId: string;
@@ -496,6 +499,7 @@ export interface CanonicalBuildingModel {
   openings: CanonicalOpening[];
   structuralGrid: StructuralGrid;
   materials: CanonicalMaterial[];
+  declaredPlotAreaSqFt?: number;
   validation?: ValidationSummary;
   metadata: {
     engineName: string;
@@ -508,13 +512,13 @@ export interface CanonicalBuildingModel {
 
 export type GateCode = 'G0' | 'G1' | 'G2' | 'G3' | 'G4' | 'G5' | 'G6';
 
-export type GateStatus = 
-  | 'PENDING' 
-  | 'SYSTEM_VERIFIED' 
-  | 'PROFESSIONAL_REVIEW' 
-  | 'VERIFIED' 
-  | 'REVIEWED' 
-  | 'CHANGES_REQUIRED' 
+export type GateStatus =
+  | 'PENDING'
+  | 'SYSTEM_VERIFIED'
+  | 'PROFESSIONAL_REVIEW'
+  | 'VERIFIED'
+  | 'REVIEWED'
+  | 'CHANGES_REQUIRED'
   | 'LOCKED';
 
 export type IssueSeverity = 'INFO' | 'WARNING' | 'BLOCKER';
@@ -523,12 +527,12 @@ export type IssueStatus = 'OPEN' | 'RESOLVED' | 'WAIVED';
 
 export type ReviewDecisionType = 'APPROVE_STAGE' | 'REQUEST_CHANGES' | 'CANNOT_PROCEED';
 
-export type ReviewStatus = 
-  | 'PENDING_ASSIGNMENT' 
-  | 'IN_REVIEW' 
-  | 'CHANGES_REQUIRED' 
-  | 'APPROVED' 
-  | 'REJECTED' 
+export type ReviewStatus =
+  | 'PENDING_ASSIGNMENT'
+  | 'IN_REVIEW'
+  | 'CHANGES_REQUIRED'
+  | 'APPROVED'
+  | 'REJECTED'
   | 'STALE';
 
 export interface ReviewGate {

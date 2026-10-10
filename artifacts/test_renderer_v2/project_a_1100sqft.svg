@@ -1,0 +1,271 @@
+<svg id="cad-drawing-svg" width="640" height="700" viewBox="0 0 640 700" xmlns="http://www.w3.org/2000/svg" font-family="Times New Roman, Times, serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="15" y="15" width="610" height="670" fill="none" stroke="#000" stroke-width="1.2"/>
+<rect x="20" y="20" width="600" height="660" fill="none" stroke="#000" stroke-width="0.5"/>
+<!-- Top dimension: 44'-3" -->
+<g class="cad-dim">
+  <line x1="131.3" y1="35.0" x2="131.3" y2="77.0" stroke="#000" stroke-width="0.75"/>
+  <line x1="508.7" y1="35.0" x2="508.7" y2="77.0" stroke="#000" stroke-width="0.75"/>
+  <line x1="131.3" y1="43.0" x2="508.7" y2="43.0" stroke="#000" stroke-width="0.75"/>
+  <line x1="126.3" y1="48.0" x2="136.3" y2="38.0" stroke="#000" stroke-width="1.2"/>
+  <line x1="503.7" y1="48.0" x2="513.7" y2="38.0" stroke="#000" stroke-width="1.2"/>
+  <text x="320.0" y="37.0" text-anchor="middle" font-size="16" fill="#000">44'-3"</text>
+</g>
+<g class="cad-dim">
+  <line x1="506.7" y1="75.0" x2="558.7" y2="75.0" stroke="#000" stroke-width="0.75"/>
+  <line x1="506.7" y1="444.9" x2="558.7" y2="444.9" stroke="#000" stroke-width="0.75"/>
+  <line x1="546.7" y1="75.0" x2="546.7" y2="444.9" stroke="#000" stroke-width="0.75"/>
+  <line x1="541.7" y1="80.0" x2="551.7" y2="70.0" stroke="#000" stroke-width="1.2"/>
+  <line x1="541.7" y1="449.9" x2="551.7" y2="439.9" stroke="#000" stroke-width="1.2"/>
+  <text x="568.7" y="264.9" text-anchor="middle" font-size="16" fill="#000"     transform="rotate(90 568.7 264.9)">43'-4"</text>
+</g>
+<g id="walls">
+  <polygon data-cbm-id="WALL-EXT-001" data-type="wall" data-is-exterior="true" points="131.3,77.8 508.7,77.8 508.7,72.2 131.3,72.2 131.3,77.8" fill="none" stroke="#000" stroke-width="1.6" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-EXT-002" data-type="wall" data-is-exterior="true" points="505.9,75.0 505.9,444.9 511.5,444.9 511.5,75.0 505.9,75.0" fill="none" stroke="#000" stroke-width="1.6" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-EXT-003" data-type="wall" data-is-exterior="true" points="508.7,442.1 131.3,442.1 131.3,447.7 508.7,447.7 508.7,442.1" fill="none" stroke="#000" stroke-width="1.6" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-EXT-004" data-type="wall" data-is-exterior="true" points="134.1,444.9 134.1,75.0 128.5,75.0 128.5,444.9 134.1,444.9" fill="none" stroke="#000" stroke-width="1.6" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-INT-005" data-type="wall" data-is-exterior="false" points="131.3,146.4 350.2,146.4 350.2,143.6 131.3,143.6 131.3,146.4" fill="rgba(0,0,0,0.04)" stroke="#000" stroke-width="1.0" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-INT-006" data-type="wall" data-is-exterior="false" points="350.2,132.4 508.7,132.4 508.7,129.6 350.2,129.6 350.2,132.4" fill="rgba(0,0,0,0.04)" stroke="#000" stroke-width="1.0" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-INT-007" data-type="wall" data-is-exterior="false" points="350.2,188.4 508.7,188.4 508.7,185.6 350.2,185.6 350.2,188.4" fill="rgba(0,0,0,0.04)" stroke="#000" stroke-width="1.0" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-INT-008" data-type="wall" data-is-exterior="false" points="350.2,267.6 508.7,267.6 508.7,264.8 350.2,264.8 350.2,267.6" fill="rgba(0,0,0,0.04)" stroke="#000" stroke-width="1.0" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-INT-009" data-type="wall" data-is-exterior="false" points="350.2,323.6 508.7,323.6 508.7,320.8 350.2,320.8 350.2,323.6" fill="rgba(0,0,0,0.04)" stroke="#000" stroke-width="1.0" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-INT-010" data-type="wall" data-is-exterior="false" points="350.2,390.3 508.7,390.3 508.7,387.5 350.2,387.5 350.2,390.3" fill="rgba(0,0,0,0.04)" stroke="#000" stroke-width="1.0" style="cursor:pointer"/>
+  <polygon data-cbm-id="WALL-INT-011" data-type="wall" data-is-exterior="false" points="131.3,246.6 350.2,246.6 350.2,243.8 131.3,243.8 131.3,246.6" fill="rgba(0,0,0,0.04)" stroke="#000" stroke-width="1.0" style="cursor:pointer"/>
+</g>
+<g id="columns">
+  <polygon data-cbm-id="COL-A1" data-type="column" points="127.1,68.7 135.5,68.7 135.5,81.3 127.1,81.3 127.1,68.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-A2" data-type="column" points="127.1,180.7 135.5,180.7 135.5,193.3 127.1,193.3 127.1,180.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-A3" data-type="column" points="127.1,292.7 135.5,292.7 135.5,305.3 127.1,305.3 127.1,292.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-A4" data-type="column" points="127.1,404.7 135.5,404.7 135.5,417.3 127.1,417.3 127.1,404.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-B1" data-type="column" points="239.1,68.7 247.5,68.7 247.5,81.3 239.1,81.3 239.1,68.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-B2" data-type="column" points="239.1,180.7 247.5,180.7 247.5,193.3 239.1,193.3 239.1,180.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-B3" data-type="column" points="239.1,292.7 247.5,292.7 247.5,305.3 239.1,305.3 239.1,292.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-B4" data-type="column" points="239.1,404.7 247.5,404.7 247.5,417.3 239.1,417.3 239.1,404.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-C1" data-type="column" points="351.1,68.7 359.5,68.7 359.5,81.3 351.1,81.3 351.1,68.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-C2" data-type="column" points="351.1,180.7 359.5,180.7 359.5,193.3 351.1,193.3 351.1,180.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-C3" data-type="column" points="351.1,292.7 359.5,292.7 359.5,305.3 351.1,305.3 351.1,292.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-C4" data-type="column" points="351.1,404.7 359.5,404.7 359.5,417.3 351.1,417.3 351.1,404.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-D1" data-type="column" points="463.1,68.7 471.5,68.7 471.5,81.3 463.1,81.3 463.1,68.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-D2" data-type="column" points="463.1,180.7 471.5,180.7 471.5,193.3 463.1,193.3 463.1,180.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-D3" data-type="column" points="463.1,292.7 471.5,292.7 471.5,305.3 463.1,305.3 463.1,292.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+  <polygon data-cbm-id="COL-D4" data-type="column" points="463.1,404.7 471.5,404.7 471.5,417.3 463.1,417.3 463.1,404.7" fill="#4a4a4a" stroke="#000" stroke-width="0.8"/>
+</g>
+<g id="stairs">
+</g>
+<g id="openings">
+  <g data-cbm-id="DOOR-001" data-type="door">
+    <!-- Door opening: 1.05m wide, swing=RIGHT_INWARD -->
+    <rect x="172.6" y="71.0" width="29.4" height="8" fill="#fff" stroke="none"/>
+    <line x1="172.6" y1="75.0" x2="202.0" y2="75.0" stroke="#000" stroke-width="0.9"/>
+    <path d="M 172.6 75.0 A 29.4 29.4 0 0 1 172.6 45.6" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="DOOR-002" data-type="door">
+    <!-- Door opening: 0.90m wide, swing=LEFT_INWARD -->
+    <rect x="228.2" y="71.0" width="25.2" height="8" fill="#fff" stroke="none"/>
+    <line x1="228.2" y1="75.0" x2="253.4" y2="75.0" stroke="#000" stroke-width="0.9"/>
+    <path d="M 228.2 75.0 A 25.2 25.2 0 0 1 228.2 49.8" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="DOOR-003" data-type="door">
+    <!-- Door opening: 0.90m wide, swing=LEFT_INWARD -->
+    <rect x="228.2" y="141.0" width="25.2" height="8" fill="#fff" stroke="none"/>
+    <line x1="228.2" y1="145.0" x2="253.4" y2="145.0" stroke="#000" stroke-width="0.9"/>
+    <path d="M 228.2 145.0 A 25.2 25.2 0 0 1 228.2 119.8" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="DOOR-004" data-type="door">
+    <!-- Door opening: 0.90m wide, swing=LEFT_INWARD -->
+    <rect x="416.9" y="71.0" width="25.2" height="8" fill="#fff" stroke="none"/>
+    <line x1="416.9" y1="75.0" x2="442.1" y2="75.0" stroke="#000" stroke-width="0.9"/>
+    <path d="M 416.9 75.0 A 25.2 25.2 0 0 1 416.9 49.8" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="DOOR-005" data-type="door">
+    <!-- Door opening: 0.90m wide, swing=LEFT_INWARD -->
+    <rect x="416.9" y="127.0" width="25.2" height="8" fill="#fff" stroke="none"/>
+    <line x1="416.9" y1="131.0" x2="442.1" y2="131.0" stroke="#000" stroke-width="0.9"/>
+    <path d="M 416.9 131.0 A 25.2 25.2 0 0 1 416.9 105.8" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="DOOR-006" data-type="door">
+    <!-- Door opening: 0.90m wide, swing=LEFT_INWARD -->
+    <rect x="416.9" y="183.0" width="25.2" height="8" fill="#fff" stroke="none"/>
+    <line x1="416.9" y1="187.0" x2="442.1" y2="187.0" stroke="#000" stroke-width="0.9"/>
+    <path d="M 416.9 187.0 A 25.2 25.2 0 0 1 416.9 161.8" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="DOOR-007" data-type="door">
+    <!-- Door opening: 0.80m wide, swing=LEFT_INWARD -->
+    <rect x="418.3" y="262.2" width="22.4" height="8" fill="#fff" stroke="none"/>
+    <line x1="418.3" y1="266.2" x2="440.7" y2="266.2" stroke="#000" stroke-width="0.9"/>
+    <path d="M 418.3 266.2 A 22.4 22.4 0 0 1 418.3 243.8" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="DOOR-008" data-type="door">
+    <!-- Door opening: 0.90m wide, swing=LEFT_INWARD -->
+    <rect x="416.9" y="318.2" width="25.2" height="8" fill="#fff" stroke="none"/>
+    <line x1="416.9" y1="322.2" x2="442.1" y2="322.2" stroke="#000" stroke-width="0.9"/>
+    <path d="M 416.9 322.2 A 25.2 25.2 0 0 1 416.9 297.0" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="DOOR-009" data-type="door">
+    <!-- Door opening: 0.80m wide, swing=LEFT_INWARD -->
+    <rect x="418.3" y="384.9" width="22.4" height="8" fill="#fff" stroke="none"/>
+    <line x1="418.3" y1="388.9" x2="440.7" y2="388.9" stroke="#000" stroke-width="0.9"/>
+    <path d="M 418.3 388.9 A 22.4 22.4 0 0 1 418.3 366.5" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="DOOR-010" data-type="door">
+    <!-- Door opening: 0.90m wide, swing=LEFT_INWARD -->
+    <rect x="228.2" y="241.2" width="25.2" height="8" fill="#fff" stroke="none"/>
+    <line x1="228.2" y1="245.2" x2="253.4" y2="245.2" stroke="#000" stroke-width="0.9"/>
+    <path d="M 228.2 245.2 A 25.2 25.2 0 0 1 228.2 220.0" fill="none" stroke="#000" stroke-width="0.65" stroke-dasharray="4 2"/>
+  </g>
+  <g data-cbm-id="WIN-001" data-type="window">
+  <rect x="110.3" y="107.0" width="42.0" height="6" fill="#fff" stroke="none"/>
+  <line x1="110.3" y1="110.0" x2="152.3" y2="110.0" stroke="#000" stroke-width="1.2"/>
+  <line x1="110.3" y1="108.0" x2="152.3" y2="108.0" stroke="#000" stroke-width="0.5"/>
+  <line x1="110.3" y1="112.0" x2="152.3" y2="112.0" stroke="#000" stroke-width="0.5"/>
+  </g>
+  <g data-cbm-id="WIN-002" data-type="window">
+  <rect x="110.3" y="192.1" width="42.0" height="6" fill="#fff" stroke="none"/>
+  <line x1="110.3" y1="195.1" x2="152.3" y2="195.1" stroke="#000" stroke-width="1.2"/>
+  <line x1="110.3" y1="193.1" x2="152.3" y2="193.1" stroke="#000" stroke-width="0.5"/>
+  <line x1="110.3" y1="197.1" x2="152.3" y2="197.1" stroke="#000" stroke-width="0.5"/>
+  </g>
+  <g data-cbm-id="WIN-003" data-type="window">
+  <rect x="500.3" y="100.0" width="16.8" height="6" fill="#fff" stroke="none"/>
+  <line x1="500.3" y1="103.0" x2="517.1" y2="103.0" stroke="#000" stroke-width="1.2"/>
+  <line x1="500.3" y1="101.0" x2="517.1" y2="101.0" stroke="#000" stroke-width="0.5"/>
+  <line x1="500.3" y1="105.0" x2="517.1" y2="105.0" stroke="#000" stroke-width="0.5"/>
+  </g>
+  <g data-cbm-id="WIN-004" data-type="window">
+  <rect x="500.3" y="156.0" width="16.8" height="6" fill="#fff" stroke="none"/>
+  <line x1="500.3" y1="159.0" x2="517.1" y2="159.0" stroke="#000" stroke-width="1.2"/>
+  <line x1="500.3" y1="157.0" x2="517.1" y2="157.0" stroke="#000" stroke-width="0.5"/>
+  <line x1="500.3" y1="161.0" x2="517.1" y2="161.0" stroke="#000" stroke-width="0.5"/>
+  </g>
+  <g data-cbm-id="WIN-005" data-type="window">
+  <rect x="487.7" y="223.8" width="42.0" height="6" fill="#fff" stroke="none"/>
+  <line x1="487.7" y1="226.8" x2="529.7" y2="226.8" stroke="#000" stroke-width="1.2"/>
+  <line x1="487.7" y1="224.8" x2="529.7" y2="224.8" stroke="#000" stroke-width="0.5"/>
+  <line x1="487.7" y1="228.8" x2="529.7" y2="228.8" stroke="#000" stroke-width="0.5"/>
+  </g>
+  <g data-cbm-id="WIN-006" data-type="window">
+  <rect x="500.3" y="291.2" width="16.8" height="6" fill="#fff" stroke="none"/>
+  <line x1="500.3" y1="294.2" x2="517.1" y2="294.2" stroke="#000" stroke-width="1.2"/>
+  <line x1="500.3" y1="292.2" x2="517.1" y2="292.2" stroke="#000" stroke-width="0.5"/>
+  <line x1="500.3" y1="296.2" x2="517.1" y2="296.2" stroke="#000" stroke-width="0.5"/>
+  </g>
+  <g data-cbm-id="WIN-007" data-type="window">
+  <rect x="487.7" y="352.6" width="42.0" height="6" fill="#fff" stroke="none"/>
+  <line x1="487.7" y1="355.6" x2="529.7" y2="355.6" stroke="#000" stroke-width="1.2"/>
+  <line x1="487.7" y1="353.6" x2="529.7" y2="353.6" stroke="#000" stroke-width="0.5"/>
+  <line x1="487.7" y1="357.6" x2="529.7" y2="357.6" stroke="#000" stroke-width="0.5"/>
+  </g>
+  <g data-cbm-id="WIN-008" data-type="window">
+  <rect x="500.3" y="413.9" width="16.8" height="6" fill="#fff" stroke="none"/>
+  <line x1="500.3" y1="416.9" x2="517.1" y2="416.9" stroke="#000" stroke-width="1.2"/>
+  <line x1="500.3" y1="414.9" x2="517.1" y2="414.9" stroke="#000" stroke-width="0.5"/>
+  <line x1="500.3" y1="418.9" x2="517.1" y2="418.9" stroke="#000" stroke-width="0.5"/>
+  </g>
+  <g data-cbm-id="WIN-009" data-type="window">
+  <rect x="110.3" y="277.2" width="42.0" height="6" fill="#fff" stroke="none"/>
+  <line x1="110.3" y1="280.2" x2="152.3" y2="280.2" stroke="#000" stroke-width="1.2"/>
+  <line x1="110.3" y1="278.2" x2="152.3" y2="278.2" stroke="#000" stroke-width="0.5"/>
+  <line x1="110.3" y1="282.2" x2="152.3" y2="282.2" stroke="#000" stroke-width="0.5"/>
+  </g>
+</g>
+<g id="spaces">
+  <g data-cbm-id="SPACE-FOYER" data-type="space">
+    <g data-symbol-id="furn-living-SPACE-FOYER">
+      <rect x="326" y="85" width="18" height="50" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <text x="240.8" y="106.0" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">ENTRANCE FOYER</text>
+    <text x="240.8" y="122.0" text-anchor="middle" font-size="10" fill="#000">25&apos;-8&quot;x8&apos;-2&quot;</text>
+  </g>
+  <g data-cbm-id="SPACE-LIVING_DINING" data-type="space">
+    <g data-symbol-id="furn-living-SPACE-LIVING_DINING">
+      <rect x="326" y="155" width="18" height="56" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <text x="240.8" y="191.1" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">LIVING &amp; DINING ROOM</text>
+    <text x="240.8" y="207.1" text-anchor="middle" font-size="10" fill="#000">25&apos;-8&quot;x11&apos;-9&quot;</text>
+  </g>
+  <g data-cbm-id="SPACE-KITCHEN" data-type="space">
+    <g data-symbol-id="furn-kitchen-SPACE-KITCHEN">
+      <path d="M 354 79 L 354 127 L 370 127 L 370 95 L 505 95 L 505 79 Z" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <text x="429.5" y="99.0" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">MODULAR KITCHEN</text>
+    <text x="429.5" y="115.0" text-anchor="middle" font-size="10" fill="#000">18&apos;-7&quot;x6&apos;-7&quot;</text>
+  </g>
+  <g data-cbm-id="SPACE-UTILITY" data-type="space">
+    <g data-symbol-id="furn-kitchen-SPACE-UTILITY">
+      <path d="M 354 135 L 354 183 L 370 183 L 370 151 L 505 151 L 505 135 Z" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <text x="429.5" y="155.0" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">UTILITY / WASH YARD</text>
+    <text x="429.5" y="171.0" text-anchor="middle" font-size="10" fill="#000">18&apos;-7&quot;x6&apos;-7&quot;</text>
+  </g>
+  <g data-cbm-id="SPACE-MASTER_BED" data-type="space">
+    <g data-symbol-id="furn-bed-SPACE-MASTER_BED">
+      <rect x="356" y="197" width="6" height="44" fill="none" stroke="#000" stroke-width="0.75"/>
+      <rect x="362" y="199" width="48" height="40" fill="none" stroke="#000" stroke-width="0.75"/>
+      <rect x="364" y="201" width="12" height="16" rx="2" fill="none" stroke="#000" stroke-width="0.75"/>
+      <rect x="364" y="221" width="12" height="16" rx="2" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <text x="429.5" y="222.6" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">MASTER BEDROOM</text>
+    <text x="429.5" y="238.6" text-anchor="middle" font-size="10" fill="#000">18&apos;-7&quot;x9&apos;-3&quot;</text>
+  </g>
+  <g data-cbm-id="SPACE-MASTER_BATH" data-type="space">
+    <g data-symbol-id="furn-bed-SPACE-MASTER_BATH">
+      <rect x="356" y="276" width="6" height="44" fill="none" stroke="#000" stroke-width="0.75"/>
+      <rect x="362" y="278" width="48" height="36" fill="none" stroke="#000" stroke-width="0.75"/>
+      <rect x="364" y="280" width="12" height="16" rx="2" fill="none" stroke="#000" stroke-width="0.75"/>
+      <rect x="364" y="300" width="12" height="16" rx="2" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <g data-symbol-id="furn-toilet-SPACE-MASTER_BATH">
+      <rect x="355" y="271" width="14" height="8" fill="none" stroke="#000" stroke-width="0.75"/>
+      <ellipse cx="362" cy="286" rx="6" ry="8" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <text x="429.5" y="290.2" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">ATTACHED TOILET (MASTER)</text>
+    <text x="429.5" y="306.2" text-anchor="middle" font-size="10" fill="#000">18&apos;-7&quot;x6&apos;-7&quot;</text>
+  </g>
+  <g data-cbm-id="SPACE-BED_2" data-type="space">
+    <g data-symbol-id="furn-bed-SPACE-BED_2">
+      <rect x="356" y="332" width="6" height="44" fill="none" stroke="#000" stroke-width="0.75"/>
+      <rect x="362" y="334" width="48" height="40" fill="none" stroke="#000" stroke-width="0.75"/>
+      <rect x="364" y="336" width="12" height="16" rx="2" fill="none" stroke="#000" stroke-width="0.75"/>
+      <rect x="364" y="356" width="12" height="16" rx="2" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <text x="429.5" y="351.6" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">BEDROOM 2 / GUEST</text>
+    <text x="429.5" y="367.6" text-anchor="middle" font-size="10" fill="#000">18&apos;-7&quot;x7&apos;-10&quot;</text>
+  </g>
+  <g data-cbm-id="SPACE-COMMON_BATH" data-type="space">
+    <g data-symbol-id="furn-toilet-SPACE-COMMON_BATH">
+      <rect x="355" y="394" width="14" height="8" fill="none" stroke="#000" stroke-width="0.75"/>
+      <ellipse cx="362" cy="409" rx="6" ry="8" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <text x="429.5" y="412.9" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">COMMON TOILET</text>
+    <text x="429.5" y="428.9" text-anchor="middle" font-size="10" fill="#000">18&apos;-7&quot;x6&apos;-7&quot;</text>
+  </g>
+  <g data-cbm-id="SPACE-BALCONY" data-type="space">
+    <g data-symbol-id="furn-living-SPACE-BALCONY">
+      <rect x="326" y="255" width="18" height="50" fill="none" stroke="#000" stroke-width="0.75"/>
+    </g>
+    <text x="240.8" y="276.2" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">LIVING DECK / BALCONY</text>
+    <text x="240.8" y="292.2" text-anchor="middle" font-size="10" fill="#000">8&apos;-2&quot; WIDE</text>
+  </g>
+</g>
+<g id="compass" transform="translate(81,467)">
+  <circle cx="22" cy="22" r="18" fill="none" stroke="#000" stroke-width="0.8"/>
+  <polygon points="22,22 22,4 25,22" fill="#000" stroke="#000" stroke-width="0.5"/>
+  <polygon points="22,22 22,4 19,22" fill="#fff" stroke="#000" stroke-width="0.5"/>
+  <polygon points="22,22 40,22 22,25" fill="#000" stroke="#000" stroke-width="0.5"/>
+  <polygon points="22,22 40,22 22,19" fill="#fff" stroke="#000" stroke-width="0.5"/>
+  <polygon points="22,22 22,40 19,22" fill="#000" stroke="#000" stroke-width="0.5"/>
+  <polygon points="22,22 22,40 25,22" fill="#fff" stroke="#000" stroke-width="0.5"/>
+  <polygon points="22,22 4,22 22,19" fill="#000" stroke="#000" stroke-width="0.5"/>
+  <polygon points="22,22 4,22 22,25" fill="#fff" stroke="#000" stroke-width="0.5"/>
+  <text x="22" y="2" text-anchor="middle" font-size="9" font-weight="bold" fill="#000">N</text>
+</g>
+<g id="sheet-title">
+  <text x="320.0" y="482.9" text-anchor="middle" font-size="15" font-weight="bold" letter-spacing="1" fill="#000">GROUND FLOOR PLAN</text>
+  <line x1="255.0" y1="486.9" x2="385.0" y2="486.9" stroke="#000" stroke-width="1.0"/>
+  <line x1="255.0" y1="488.9" x2="385.0" y2="488.9" stroke="#000" stroke-width="0.5"/>
+</g>
+<g id="road-frontage">
+  <rect x="111.3" y="502.9" width="417.4" height="52" fill="none" stroke="#000" stroke-width="1.0"/>
+  <text x="320.0" y="535.9" text-anchor="middle" font-size="16" letter-spacing="12" font-weight="bold" fill="#000">R O A D</text>
+</g>
+</svg>

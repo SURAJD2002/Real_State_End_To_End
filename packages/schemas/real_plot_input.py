@@ -47,14 +47,14 @@ class PlotDimensions(BaseModel):
     left_length_ft: Optional[float] = Field(None, description="Length of left lateral boundary (ft)")
     right_length_ft: Optional[float] = Field(None, description="Length of right lateral boundary (ft)")
     diagonal_ft: Optional[float] = Field(None, description="Internal diagonal measurement for quadrilateral closure (ft)")
-    
+
     # Metric alternatives
     front_width_m: Optional[float] = Field(None, description="Front width in meters")
     back_width_m: Optional[float] = Field(None, description="Rear width in meters")
     left_length_m: Optional[float] = Field(None, description="Left length in meters")
     right_length_m: Optional[float] = Field(None, description="Right length in meters")
     diagonal_m: Optional[float] = Field(None, description="Diagonal length in meters")
-    
+
     # Explicit vertex coordinates if surveyor/CAD data is entered directly
     coordinates_wgs84: Optional[List[List[float]]] = Field(None, description="Explicit WGS84 [[lon, lat], ...]")
     coordinates_secs: Optional[List[List[float]]] = Field(None, description="Explicit SECS [[east, north], ...]")

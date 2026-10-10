@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  ShieldCheck, 
-  AlertTriangle, 
-  FileCheck, 
-  Compass, 
-  CheckCircle2, 
-  X, 
-  ChevronDown, 
-  ChevronUp, 
+import {
+  ShieldCheck,
+  AlertTriangle,
+  FileCheck,
+  Compass,
+  CheckCircle2,
+  X,
+  ChevronDown,
+  ChevronUp,
   Layers
 } from 'lucide-react';
 
@@ -56,7 +56,7 @@ export const SiteEvidencePanel: React.FC<SiteEvidencePanelProps> = ({
         fetch(`/api/v1/sites/${siteId}/confidence`),
         fetch(`/api/v1/sites/${siteId}/evidence`)
       ]);
-      
+
       if (confRes.ok) {
         const confData = await confRes.json();
         setConfidence(confData);
@@ -234,8 +234,8 @@ export const SiteEvidencePanel: React.FC<SiteEvidencePanelProps> = ({
             <div className="bg-slate-900/60 p-2 rounded-lg border border-white/5">
               <span className="text-[9px] text-slate-500 uppercase block">Boundary</span>
               <span className="font-bold text-amber-300 text-xs">
-                {confidence?.overallConfidence === 'L3_LICENSED_SURVEY' || confidence?.overallConfidence === 'L4_ENGINEERING_READY' 
-                  ? 'LICENSED SURVEY' 
+                {confidence?.overallConfidence === 'L3_LICENSED_SURVEY' || confidence?.overallConfidence === 'L4_ENGINEERING_READY'
+                  ? 'LICENSED SURVEY'
                   : 'CUSTOMER PROVIDED'}
               </span>
               <span className="text-[9px] text-slate-500 block">

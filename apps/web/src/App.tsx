@@ -17,16 +17,37 @@ import { DesignOptionsView } from './components/DesignOptionsView';
 import { CostSummaryView } from './components/CostSummaryView';
 import { BuildReviewView } from './components/BuildReviewView';
 import { EngineerReviewView } from './components/EngineerReviewView';
-import { 
-  WorkflowStep, 
-  ProjectData, 
-  FeasibilityResult, 
-  HouseOption, 
-  HandoffPackage 
+import { MyProjectModal } from './components/MyProjectModal';
+import {
+  WorkflowStep,
+  ProjectData,
+  FeasibilityResult,
+  HouseOption,
+  HandoffPackage
 } from './types';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Loader2 } from 'lucide-react';
+import { useAuth } from './context/AuthContext';
+import { LoginView } from './components/auth/LoginView';
+import { RegisterView } from './components/auth/RegisterView';
+import { ForgotPasswordView } from './components/auth/ForgotPasswordView';
+import { ResetPasswordView } from './components/auth/ResetPasswordView';
 
 export const App: React.FC = () => {
+  const { user, session, isLoading } = useAuth();
+  const [currentPath, setCurrentPath] = useState<string>(() => window.location.pathname || '/');
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname || '/');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const navigate = (path: string) => {
+    window.history.pushState({}, '', path);
+    setCurrentPath(path);
+  };
   const [project, setProject] = useState<ProjectData | null>(null);
   const [activeStep, setActiveStep] = useState<WorkflowStep>('SITE');
   const [viewMode, setViewMode] = useState<'CUSTOMER' | 'TECHNICAL'>('CUSTOMER');
@@ -51,13 +72,18 @@ export const App: React.FC = () => {
   const [designPhase, setDesignPhase] = useState<'INTAKE' | 'OPTIONS'>('INTAKE');
   const [isGeneratingDesign, setIsGeneratingDesign] = useState<boolean>(false);
   const [customerRequirements, setCustomerRequirements] = useState<CustomerDesignRequirements | null>(null);
+  const [isMyProjectOpen, setIsMyProjectOpen] = useState<boolean>(false);
 
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const apiBase = '/api/v1';
 
-  // 1. Initial Load: Fetch default project and house options
+  // 1. Initial Load: Fetch projects and house options for authenticated tenant
   useEffect(() => {
-    fetch(`${apiBase}/projects`)
+    const authHeaders: Record<string, string> = session?.access_token
+      ? { 'Authorization': `Bearer ${session.access_token}` }
+      : {};
+
+    fetch(`${apiBase}/projects`, { headers: authHeaders })
       .then((res) => res.json())
       .then((projects: ProjectData[]) => {
         if (projects && projects.length > 0) {
@@ -86,7 +112,7 @@ export const App: React.FC = () => {
       });
 
     // Fetch initial house options
-    fetch(`${apiBase}/projects/proj-mumbai-real-1100/house-options`)
+    fetch(`${apiBase}/projects/proj-mumbai-real-1100/house-options`, { headers: authHeaders })
       .then((res) => res.json())
       .then((opts: HouseOption[]) => {
         if (opts && opts.length > 0) {
@@ -95,7 +121,7 @@ export const App: React.FC = () => {
         }
       })
       .catch((err) => console.warn('Could not load house options from API', err));
-  }, []);
+  }, [session?.access_token]);
 
   // 2. Debounced Auto-Save Mechanism (600ms)
   useEffect(() => {
@@ -117,7 +143,8 @@ export const App: React.FC = () => {
           existingRoadWidthM: existingRoadWidth,
           proposedRoadWidthM: proposedRoadWidth,
           tenureType: 'PRIVATE_FREEHOLD',
-          cadastralSurveyNumber: project?.parcel?.cadastralNumber || 'CTS-1842-BANDRA'
+          cadastralSurveyNumber: project?.parcel?.cadastralNumber || 'CTS-1842-BANDRA',
+          declaredPlotAreaSqFt: project?.declaredPlotAreaSqFt
         })
       })
         .then((res) => res.json())
@@ -133,14 +160,14 @@ export const App: React.FC = () => {
   }, [coordinates, existingRoadWidth, proposedRoadWidth, project?.id, project?.parcel?.version]);
 
   // 3. Trigger Feasibility DAG Run & Regenerate House Options
-  const handleRunFeasibility = useCallback(async () => {
+  const handleRunFeasibility = useCallback(async (targetProjId?: string) => {
     if (coordinates.length < 3) {
       alert('Please draw at least 3 vertices to form a closed parcel polygon.');
       return;
     }
 
     setIsCalculating(true);
-    const projId = project?.id || 'proj-mumbai-real-1100';
+    const projId = targetProjId || project?.id || 'proj-mumbai-real-1100';
 
     try {
       const res = await fetch(`${apiBase}/projects/${projId}/calculate-feasibility`, {
@@ -244,7 +271,13 @@ export const App: React.FC = () => {
   const handleGenerateDesignOptions = async (reqs: CustomerDesignRequirements): Promise<boolean> => {
     setIsGeneratingDesign(true);
     setCustomerRequirements(reqs);
-    const projId = project?.id || 'proj-mumbai-real-1100';
+    const isPilot = project?.id === 'proj-mumbai-real-1100';
+    const projId = project?.id || (isPilot ? 'proj-mumbai-real-1100' : null);
+    if (!projId) {
+      setIsGeneratingDesign(false);
+      return false;
+    }
+    const declaredSqFt = project?.declaredPlotAreaSqFt || (project?.parcel as any)?.declaredPlotAreaSqFt || (isPilot ? 1100 : null);
 
     try {
       // Call M2 generation pipeline
@@ -258,7 +291,8 @@ export const App: React.FC = () => {
           parkingRequired: reqs.parkingCars > 0,
           preferredStyle: reqs.preferredStyle,
           budgetInr: reqs.budgetInr,
-          qualityTier: 'STANDARD'
+          qualityTier: 'STANDARD',
+          declaredPlotAreaSqFt: declaredSqFt
         })
       });
 
@@ -412,29 +446,84 @@ export const App: React.FC = () => {
     setExistingRoadWidth(rwm);
     setProposedRoadWidth(Math.max(rwm * 1.5, 12.0));
 
-    setProject((prev) => ({
-      id: prev?.id || 'proj-mumbai-real-1100',
+    const isPilotBaseline = project?.id === 'proj-mumbai-real-1100' &&
+      landData.declaredAreaSqft === 1100 &&
+      landData.location.toLowerCase().includes('bandra');
+
+    const nextProjectId = isPilotBaseline
+      ? 'proj-mumbai-real-1100'
+      : (project?.id && project.id !== 'proj-mumbai-real-1100' ? project.id : `proj-cust-${Date.now().toString(36)}`);
+
+    const finalCoords = landData.coordinates || coordinates;
+    const parcelVersion = (project?.parcel?.version || 1) + 1;
+
+    setProject({
+      id: nextProjectId,
       name: landData.location,
       description: `${landData.city}, ${landData.state}`,
       jurisdiction: 'MUMBAI_DCPR_2034',
       status: 'DRAFT',
-      createdAt: prev?.createdAt || new Date().toISOString(),
+      createdAt: project?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      declaredPlotAreaSqFt: landData.declaredAreaSqft,
       parcel: {
-        coordinates: landData.coordinates || coordinates,
-        cadastralNumber: prev?.parcel?.cadastralNumber || 'CTS-1842-BANDRA',
+        coordinates: finalCoords,
+        cadastralNumber: project?.parcel?.cadastralNumber || (isPilotBaseline ? 'CTS-1842-BANDRA' : 'CTS-SITE-REF'),
         tenureType: 'PRIVATE_FREEHOLD',
         existingRoadWidthM: rwm,
         proposedRoadWidthM: Math.max(rwm * 1.5, 12.0),
-        version: (prev?.parcel?.version || 1) + 1
+        version: parcelVersion,
+        declaredPlotAreaSqFt: landData.declaredAreaSqft
       },
-      latestFeasibility: feasibility,
-      activeRelease: prev?.activeRelease || null
-    }));
+      latestFeasibility: isPilotBaseline ? project?.latestFeasibility : null,
+      activeRelease: isPilotBaseline ? project?.activeRelease : null
+    });
 
-    handleRunFeasibility();
+    // Auto-save project geometries with declaredPlotAreaSqFt to backend
+    fetch(`${apiBase}/projects/${nextProjectId}/geometries`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        version: parcelVersion,
+        coordinates: finalCoords,
+        existingRoadWidthM: rwm,
+        proposedRoadWidthM: Math.max(rwm * 1.5, 12.0),
+        tenureType: 'PRIVATE_FREEHOLD',
+        cadastralSurveyNumber: isPilotBaseline ? 'CTS-1842-BANDRA' : 'CTS-SITE-REF',
+        declaredPlotAreaSqFt: landData.declaredAreaSqft
+      })
+    }).catch((err) => console.warn('Could not auto-save geometries', err));
+
+    setDesignPhase('INTAKE');
+    setHouseOptions([]);
+    setSelectedOptionId('');
+    handleRunFeasibility(nextProjectId);
     setActiveStep('FEASIBILITY');
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-screen h-screen flex flex-col items-center justify-center bg-slate-950 text-slate-300">
+        <Loader2 className="h-10 w-10 text-blue-500 animate-spin mb-4" />
+        <h2 className="text-base font-semibold tracking-wide text-slate-100 font-mono">PLANWISE ENTERPRISE</h2>
+        <p className="text-xs text-slate-500 mt-1">Verifying secure tenant session...</p>
+      </div>
+    );
+  }
+
+  // Explicit Authentication Views
+  if (currentPath === '/register') {
+    return <RegisterView onNavigate={navigate} onSuccess={() => navigate('/')} />;
+  }
+  if (currentPath === '/forgot-password') {
+    return <ForgotPasswordView onNavigate={navigate} />;
+  }
+  if (currentPath === '/reset-password') {
+    return <ResetPasswordView onNavigate={navigate} onSuccess={() => navigate('/login')} />;
+  }
+  if (currentPath === '/login' || !user) {
+    return <LoginView onNavigate={navigate} onSuccess={() => navigate('/')} />;
+  }
 
   return (
     <div className="w-screen h-screen flex flex-col bg-[#0b0d11] overflow-hidden select-none">
@@ -450,6 +539,7 @@ export const App: React.FC = () => {
         onLoadGoldenDataset={handleLoadGoldenDataset}
         viewMode={viewMode}
         onToggleViewMode={setViewMode}
+        onOpenMyProject={() => setIsMyProjectOpen(true)}
       />
 
       {/* Main Workspace Body Organized by Workflow Step */}
@@ -467,6 +557,7 @@ export const App: React.FC = () => {
               <LandIntakeView
                 initialLocation={project?.name || 'Bandra West, Mumbai'}
                 initialCoordinates={coordinates}
+                initialPlotArea={project?.declaredPlotAreaSqFt || (project?.id === 'proj-mumbai-real-1100' ? 1100 : undefined)}
                 onConfirmPlot={handleConfirmLandPlot}
                 onOpenTechnicalMap={() => setViewMode('TECHNICAL')}
               />
@@ -541,6 +632,7 @@ export const App: React.FC = () => {
               onProceedToDesign={() => setActiveStep('DESIGN')}
               onBackToLand={() => setActiveStep('SITE')}
               onOpenTechnicalView={() => setViewMode('TECHNICAL')}
+              onRetry={handleRunFeasibility}
             />
           ) : (
             <main
@@ -610,6 +702,7 @@ export const App: React.FC = () => {
                 isGenerating={isGeneratingDesign}
                 onGenerateOptions={handleGenerateDesignOptions}
                 onBackToFeasibility={() => setActiveStep('FEASIBILITY')}
+                plotAreaSqFt={project?.declaredPlotAreaSqFt || (project?.parcel as any)?.declaredPlotAreaSqFt || (project?.id === 'proj-mumbai-real-1100' ? 1100 : null)}
               />
             ) : (
               <DesignOptionsView
@@ -622,6 +715,14 @@ export const App: React.FC = () => {
                 }}
                 onChangeRequirements={() => setDesignPhase('INTAKE')}
                 onOpenTechnicalView={() => setViewMode('TECHNICAL')}
+                onRetry={() => {
+                  if (customerRequirements) {
+                    handleGenerateDesignOptions(customerRequirements);
+                  } else {
+                    setDesignPhase('INTAKE');
+                  }
+                }}
+                plotAreaSqFt={project?.declaredPlotAreaSqFt || (project?.parcel as any)?.declaredPlotAreaSqFt || (project?.id === 'proj-mumbai-real-1100' ? 1100 : null)}
               />
             )
           ) : (
@@ -638,10 +739,12 @@ export const App: React.FC = () => {
               {/* Center: The Floor Plan Canvas Hero (Flex-1) */}
               <div className="flex-1 h-full min-w-0">
                 {selectedOption ? (
-                  <FloorPlanViewer 
-                    layout={selectedOption.layout} 
+                  <FloorPlanViewer
+                    layout={selectedOption.layout}
                     buildingModel={selectedOption.buildingModel}
                     designVersionId={selectedOption.designVersionId}
+                    projectName={project?.name}
+                    projectId={project?.parcel?.cadastralNumber || project?.id}
                   />
                 ) : (
                   <div className="h-full glass-panel flex items-center justify-center text-slate-500 text-xs">
@@ -659,10 +762,12 @@ export const App: React.FC = () => {
             viewMode === 'CUSTOMER' ? (
               <CostSummaryView
                 selectedOption={selectedOption}
+                project={project}
                 onUpdateTier={handleUpdateTier}
                 onProceedToBuild={() => setActiveStep('BUILD')}
                 onBackToDesign={() => setActiveStep('DESIGN')}
                 onOpenTechnicalView={() => setViewMode('TECHNICAL')}
+                onRetry={() => handleUpdateTier('STANDARD')}
               />
             ) : (
               <main className="relative flex-1 w-full h-full">
@@ -751,6 +856,14 @@ export const App: React.FC = () => {
         onClose={() => setBuildModalOption(null)}
         onConfirmBuild={handleConfirmBuild}
         isLocking={isLockingBuild}
+      />
+
+      <MyProjectModal
+        isOpen={isMyProjectOpen}
+        onClose={() => setIsMyProjectOpen(false)}
+        project={project}
+        activeStep={activeStep}
+        onContinue={(step) => setActiveStep(step)}
       />
     </div>
   );

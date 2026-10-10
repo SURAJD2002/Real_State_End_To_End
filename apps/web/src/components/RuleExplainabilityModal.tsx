@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  X, 
-  Ruler, 
-  ShieldCheck, 
-  Calculator, 
-  Search, 
+import {
+  X,
+  Ruler,
+  ShieldCheck,
+  Calculator,
+  Search,
   BookOpen
 } from 'lucide-react';
 import { FeasibilityResult } from '../types';
@@ -28,7 +28,7 @@ export const RuleExplainabilityModal: React.FC<RuleExplainabilityModalProps> = (
 
   const filteredTraces = traces.filter((t: any) => {
     const matchesCategory = selectedCategory === 'ALL' || t.category === selectedCategory;
-    const matchesSearch = searchQuery === '' || 
+    const matchesSearch = searchQuery === '' ||
       t.ruleName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.ruleId.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.explanation.toLowerCase().includes(searchQuery.toLowerCase());

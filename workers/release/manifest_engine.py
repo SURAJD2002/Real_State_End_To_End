@@ -38,22 +38,30 @@ def generate_release_fingerprint(
     return hashlib.sha256(manifest_string.strip().encode()).hexdigest()
 
 
-def generate_ifc4_model(house_option_or_model: Any, release_id: str) -> str:
+def generate_ifc4_model(
+    house_option_or_model: Any,
+    release_id: str,
+    site_data: Optional[Dict[str, Any]] = None,
+    reference_frame: Optional[Dict[str, Any]] = None,
+    release_timestamp: Optional[str] = None
+) -> str:
     """
-    Generates an open-standard IFC4 STEP physical file representation
-    derived directly from the Canonical Building Model (§1, §33).
-    Maps:
-      Level   -> IFCBUILDINGSTOREY
-      Space   -> IFCSPACE
-      Wall    -> IFCWALL
-      Door    -> IFCDOOR
-      Window  -> IFCWINDOW
-      Column  -> IFCCOLUMN
-      Slab    -> IFCSLAB
-      Material-> IFCMATERIAL
+    Generates an open-standard, georeferenced IFC4 STEP physical file representation
+    derived deterministically from the Canonical Building Model (§1, §33).
+
+    Professional BIM Enhancements (Milestone 1):
+    1. Deterministic RFC 4122 UUIDv5 compressed to 22-character IFC GUIDs.
+    2. buildingSMART Georeferencing: IfcProjectedCRS (EPSG:32643) and IfcMapConversion.
+    3. Standard property sets: Pset_WallCommon, Pset_ConcreteElementGeneral, Pset_SlabCommon, Pset_DoorCommon, Pset_WindowCommon.
+    4. International classification references: Uniclass 2015.
+    5. Byte-for-byte determinism across repeated exports.
     """
     from packages.schemas.building_model import CanonicalBuildingModel, ElementType, OpeningType
     from workers.generation.model_compiler import compile_canonical_building_model
+    from workers.release.ifc_guid import generate_deterministic_ifc_guid
+    from workers.release.ifc_georeference import resolve_projected_crs
+    from workers.release.ifc_properties import IFCPropertySetBuilder
+    from workers.release.ifc_classification import IFCClassificationBuilder
 
     # Resolve CanonicalBuildingModel instance
     if isinstance(house_option_or_model, CanonicalBuildingModel):
@@ -67,17 +75,26 @@ def generate_ifc4_model(house_option_or_model: Any, release_id: str) -> str:
         layout = house_option_or_model.get("layout", house_option_or_model) if isinstance(house_option_or_model, dict) else {}
         model = compile_canonical_building_model(layout, design_version_id=release_id)
 
-    timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
+    # Deterministic timestamp tied to release/compilation
+    if release_timestamp:
+        timestamp = release_timestamp
+    elif hasattr(model, "metadata") and getattr(model.metadata, "compilationTimestamp", None):
+        raw_ts = model.metadata.compilationTimestamp
+        timestamp = raw_ts.split(".")[0].replace("Z", "")
+    else:
+        timestamp = "2026-10-02T12:00:00"
+
+    project_guid = generate_deterministic_ifc_guid(release_id, f"PROJECT_{getattr(model, 'projectId', 'proj')}")
 
     ifc_lines = [
         "ISO-10303-21;",
         "HEADER;",
-        f"FILE_DESCRIPTION(('ViewDefinition [CoordinationView]'),'2;1');",
+        "FILE_DESCRIPTION(('ViewDefinition [CoordinationView]'),'2;1');",
         f"FILE_NAME('{release_id}.ifc','{timestamp}',('Planwise Enterprise Platform'),('Archonet'),'Planwise IFC4 Canonical Mapper v2.0','Canonical Building Model Engine','Preliminary Automated Rule Check');",
         "FILE_SCHEMA(('IFC4'));",
         "ENDSEC;",
         "DATA;",
-        "#1=IFCPROJECT('0Yv7W8H49A_u7oG1hK2L',#2,'Planwise Canonical Building Model',$,$,$,$,(#3),#4);",
+        f"#1=IFCPROJECT('{project_guid}',#2,'Planwise Canonical Building Model',$,$,$,$,(#3),#4);",
         "#2=IFCOWNERHISTORY(#5,#6,$,.ADDED.,$,$,$,$);",
         "#5=IFCPERSONANDORGANIZATION(#7,#8,$);",
         "#7=IFCPERSON($,'Architect','Planwise Model Engine',$,$,$,$,$);",
@@ -92,19 +109,38 @@ def generate_ifc4_model(house_option_or_model: Any, release_id: str) -> str:
         "#4=IFCUNITASSIGNMENT((#14,#15,#16));",
         "#14=IFCSIUNIT(*,.LENGTHUNIT.,$,.METRE.);",
         "#15=IFCSIUNIT(*,.AREAUNIT.,$,.SQUARE_METRE.);",
-        "#16=IFCSIUNIT(*,.VOLUMEUNIT.,$,.CUBIC_METRE.);",
-        f"#20=IFCSITE('1Lz9A0H32B_v8oG1hK3M',#2,'Site Parcel',$,$,#9,$,$,.ELEMENT.,(19,6,43),(72,52,47),0.,$,$);",
-        f"#30=IFCBUILDING('2Mz0B1H43C_w9oG1hK4N',#2,'{model.name}',$,$,#9,$,$,.ELEMENT.,$,$,$);"
+        "#16=IFCSIUNIT(*,.VOLUMEUNIT.,$,.CUBIC_METRE.);"
     ]
 
-    entity_id = 40
+    entity_id = 20
+
+    # Georeferencing (IfcProjectedCRS & IfcMapConversion)
+    crs_meta = resolve_projected_crs(model=model, site_data=site_data, reference_frame=reference_frame)
+    if crs_meta:
+        crs_step, map_step, _, _ = crs_meta.to_step_entities(
+            context_id=3,
+            unit_id=14,
+            start_entity_id=entity_id
+        )
+        ifc_lines.append(crs_step)
+        ifc_lines.append(map_step)
+        entity_id += 2
+
+    # Spatial Hierarchy
+    site_guid = generate_deterministic_ifc_guid(release_id, f"SITE_{getattr(model, 'siteGeometryVersionId', 'site')}")
+    bldg_guid = generate_deterministic_ifc_guid(release_id, f"BUILDING_{model.modelId}")
+    ifc_lines.append(f"#{entity_id}=IFCSITE('{site_guid}',#2,'Site Parcel',$,$,#9,$,$,.ELEMENT.,(19,6,43),(72,52,47),0.,$,$);")
+    entity_id += 1
+    ifc_lines.append(f"#{entity_id}=IFCBUILDING('{bldg_guid}',#2,'{model.name}',$,$,#9,$,$,.ELEMENT.,$,$,$);")
+    entity_id += 1
 
     # 1. Building Storeys
     storey_ref_map = {}
     for lvl in model.levels:
         storey_ref_map[lvl.levelId] = entity_id
+        lvl_guid = generate_deterministic_ifc_guid(release_id, f"LEVEL_{lvl.levelId}")
         ifc_lines.append(
-            f"#{entity_id}=IFCBUILDINGSTOREY('LVL_{lvl.levelId}',#2,'{lvl.name}',$,$,#9,$,$,.ELEMENT.,{float(lvl.elevationM)});"
+            f"#{entity_id}=IFCBUILDINGSTOREY('{lvl_guid}',#2,'{lvl.name}',$,$,#9,$,$,.ELEMENT.,{float(lvl.elevationM)});"
         )
         entity_id += 1
 
@@ -121,50 +157,118 @@ def generate_ifc4_model(house_option_or_model: Any, release_id: str) -> str:
     for s in model.spaces:
         st_ref = storey_ref_map.get(s.levelId, 40)
         zone_val = s.zone.value if hasattr(s.zone, "value") else str(s.zone)
+        space_guid = generate_deterministic_ifc_guid(release_id, f"SPACE_{s.spaceId}")
         ifc_lines.append(
-            f"#{entity_id}=IFCSPACE('{s.spaceId}',#2,'{s.name}','{zone_val}',$,#9,$,'{s.spaceType}',.ELEMENT.,.INTERNAL.,$);"
+            f"#{entity_id}=IFCSPACE('{space_guid}',#2,'{s.name}','{zone_val}',$,#9,$,'{s.spaceType}',.ELEMENT.,.INTERNAL.,$);"
         )
         entity_id += 1
 
+    # Element entity index maps
+    wall_entity_map = {}
+    col_entity_map = {}
+    slab_entity_map = {}
+    door_entity_map = {}
+    win_entity_map = {}
+
     # 4. Walls
-    wall_ref_map = {}
     for elem in model.elements:
         if elem.elementType == ElementType.WALL:
-            wall_ref_map[elem.elementId] = entity_id
+            wall_entity_map[elem.elementId] = entity_id
             th = (elem.geometry.thicknessM if elem.geometry else 0.20) or 0.20
             w_type = elem.wallType.value if elem.wallType else "STANDARD"
+            wall_guid = generate_deterministic_ifc_guid(release_id, elem.elementId)
             ifc_lines.append(
-                f"#{entity_id}=IFCWALL('{elem.elementId}',#2,'{elem.name}','{w_type}',$,#9,$,$);"
+                f"#{entity_id}=IFCWALL('{wall_guid}',#2,'{elem.name}','{w_type}',$,#9,$,$);"
             )
             entity_id += 1
 
     # 5. Openings (Doors & Windows hosted by walls)
     for op in model.openings:
+        op_guid = generate_deterministic_ifc_guid(release_id, op.openingId)
         if op.openingType == OpeningType.DOOR:
+            door_entity_map[op.openingId] = entity_id
             ifc_lines.append(
-                f"#{entity_id}=IFCDOOR('{op.openingId}',#2,'Door {op.openingId}','Hosted by {op.hostWallId}',$,#9,$,{float(op.heightM)},{float(op.widthM)},.DOOR.,.NOTDEFINED.,$);"
+                f"#{entity_id}=IFCDOOR('{op_guid}',#2,'Door {op.openingId}','Hosted by {op.hostWallId}',$,#9,$,{float(op.heightM)},{float(op.widthM)},.DOOR.,.NOTDEFINED.,$);"
             )
         elif op.openingType == OpeningType.WINDOW:
+            win_entity_map[op.openingId] = entity_id
             ifc_lines.append(
-                f"#{entity_id}=IFCWINDOW('{op.openingId}',#2,'Window {op.openingId}','Hosted by {op.hostWallId}',$,#9,$,{float(op.heightM)},{float(op.widthM)},.WINDOW.,.NOTDEFINED.,$);"
+                f"#{entity_id}=IFCWINDOW('{op_guid}',#2,'Window {op.openingId}','Hosted by {op.hostWallId}',$,#9,$,{float(op.heightM)},{float(op.widthM)},.WINDOW.,.NOTDEFINED.,$);"
             )
         entity_id += 1
 
     # 6. Columns
     for elem in model.elements:
         if elem.elementType == ElementType.COLUMN:
+            col_entity_map[elem.elementId] = entity_id
+            col_guid = generate_deterministic_ifc_guid(release_id, elem.elementId)
             ifc_lines.append(
-                f"#{entity_id}=IFCCOLUMN('{elem.elementId}',#2,'{elem.name}','RCC Column',$,#9,$,$);"
+                f"#{entity_id}=IFCCOLUMN('{col_guid}',#2,'{elem.name}','RCC Column',$,#9,$,$);"
             )
             entity_id += 1
 
     # 7. Slabs
     for elem in model.elements:
         if elem.elementType == ElementType.SLAB:
+            slab_entity_map[elem.elementId] = entity_id
+            slab_guid = generate_deterministic_ifc_guid(release_id, elem.elementId)
             ifc_lines.append(
-                f"#{entity_id}=IFCSLAB('{elem.elementId}',#2,'{elem.name}','Suspended Floor Slab',$,#9,$,.FLOOR.);"
+                f"#{entity_id}=IFCSLAB('{slab_guid}',#2,'{elem.name}','Suspended Floor Slab',$,#9,$,.FLOOR.);"
             )
             entity_id += 1
+
+    # 8. Standard buildingSMART Property Sets (Psets)
+    pset_builder = IFCPropertySetBuilder(release_id=release_id, owner_history_id=2)
+
+    for elem in model.elements:
+        if elem.elementType == ElementType.WALL:
+            p_lines, entity_id = pset_builder.build_wall_properties(elem, wall_entity_map[elem.elementId], entity_id)
+            ifc_lines.extend(p_lines)
+        elif elem.elementType == ElementType.COLUMN:
+            p_lines, entity_id = pset_builder.build_column_properties(elem, col_entity_map[elem.elementId], entity_id)
+            ifc_lines.extend(p_lines)
+        elif elem.elementType == ElementType.SLAB:
+            p_lines, entity_id = pset_builder.build_slab_properties(elem, slab_entity_map[elem.elementId], entity_id)
+            ifc_lines.extend(p_lines)
+
+    for op in model.openings:
+        if op.openingType == OpeningType.DOOR and op.openingId in door_entity_map:
+            p_lines, entity_id = pset_builder.build_door_properties(op, door_entity_map[op.openingId], entity_id)
+            ifc_lines.extend(p_lines)
+        elif op.openingType == OpeningType.WINDOW and op.openingId in win_entity_map:
+            p_lines, entity_id = pset_builder.build_window_properties(op, win_entity_map[op.openingId], entity_id)
+            ifc_lines.extend(p_lines)
+
+    # 9. International Classifications (Uniclass 2015)
+    class_builder = IFCClassificationBuilder(release_id=release_id, owner_history_id=2)
+    c_lines, class_sys_id, entity_id = class_builder.build_classification_system(entity_id)
+    ifc_lines.extend(c_lines)
+
+    # References
+    if wall_entity_map:
+        ref_lines, ref_wall_id, entity_id = class_builder.build_classification_reference("WALL_AAC", class_sys_id, entity_id)
+        ifc_lines.extend(ref_lines)
+        assoc_lines, entity_id = class_builder.associate_classification(list(wall_entity_map.values()), ref_wall_id, "WALLS", entity_id)
+        ifc_lines.extend(assoc_lines)
+
+    concrete_ids = list(col_entity_map.values()) + list(slab_entity_map.values())
+    if concrete_ids:
+        ref_lines, ref_conc_id, entity_id = class_builder.build_classification_reference("CONCRETE_STRUCTURAL", class_sys_id, entity_id)
+        ifc_lines.extend(ref_lines)
+        assoc_lines, entity_id = class_builder.associate_classification(concrete_ids, ref_conc_id, "CONCRETE", entity_id)
+        ifc_lines.extend(assoc_lines)
+
+    if door_entity_map:
+        ref_lines, ref_door_id, entity_id = class_builder.build_classification_reference("DOOR_SET", class_sys_id, entity_id)
+        ifc_lines.extend(ref_lines)
+        assoc_lines, entity_id = class_builder.associate_classification(list(door_entity_map.values()), ref_door_id, "DOORS", entity_id)
+        ifc_lines.extend(assoc_lines)
+
+    if win_entity_map:
+        ref_lines, ref_win_id, entity_id = class_builder.build_classification_reference("WINDOW_SET", class_sys_id, entity_id)
+        ifc_lines.extend(ref_lines)
+        assoc_lines, entity_id = class_builder.associate_classification(list(win_entity_map.values()), ref_win_id, "WINDOWS", entity_id)
+        ifc_lines.extend(assoc_lines)
 
     ifc_lines.extend([
         "ENDSEC;",
@@ -191,7 +295,7 @@ def compile_handoff_package(
     Assembles the complete professional engineer handoff package per Delta Spec §13.
     """
     resolved_dv_id = design_version_id or house_option.get("designVersionId") or house_option.get("layout", {}).get("designVersionId", "DV-OPT-B-9be0a983")
-    
+
     default_disclaimers = {
         "computationalValidationNotice": "Computational validation is not professional certification.",
         "preliminaryCostNotice": "Preliminary cost estimate is not a contractor quotation.",

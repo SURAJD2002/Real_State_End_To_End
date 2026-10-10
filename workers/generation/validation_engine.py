@@ -39,7 +39,7 @@ def validate_building_model(model: CanonicalBuildingModel) -> ValidationSummary:
     # =========================================================
     # 1. MODEL_INTEGRITY CHECKS (§27)
     # =========================================================
-    
+
     # Check level uniqueness
     seen_levels = set()
     for lvl in model.levels:
@@ -316,7 +316,7 @@ def validate_building_model(model: CanonicalBuildingModel) -> ValidationSummary:
         ys = sorted(list({c.properties.get("y", 0.0) for c in columns}))
         max_x_span = max([xs[i+1] - xs[i] for i in range(len(xs)-1)], default=0.0)
         max_y_span = max([ys[i+1] - ys[i] for i in range(len(ys)-1)], default=0.0)
-        
+
         if max_x_span > 6.5 or max_y_span > 6.5:
             issues.append(ValidationIssue(
                 ruleId="STRUCT-SPAN-001",
@@ -586,7 +586,7 @@ def diagnose_generation_failure(
     """
     envelope_area = round(envelope_width_m * envelope_length_m, 2)
     min_required_area = program.total_minimum_area_sqm() if hasattr(program, "total_minimum_area_sqm") else 120.0
-    
+
     reasons: List[str] = []
     affected_constraints: List[str] = []
     nearest_relaxation: Dict[str, Any] = {}

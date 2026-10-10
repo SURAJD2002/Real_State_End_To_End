@@ -27,9 +27,8 @@ venv/
 ENV/
 develop-eggs/
 downloads/
-eggs/
-.eggs/
-lib/
+/lib/
+!apps/web/src/lib/
 lib64/
 parts/
 sdist/
@@ -67,4 +66,6 @@ scratch/
 test-results/
 playwright-report/
 blob-report/
+artifacts/reports/
+artifacts/test_reports/
 

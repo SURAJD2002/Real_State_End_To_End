@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1190.55 841.89" width="1190.55" height="841.89" data-drawing-id="A-204" data-scale="1:100">
+<!-- Planwise Enterprise Professional Architectural Drawing Sheet -->
+<!-- Generated deterministically from Canonical Building Model: sha256:ec57846e2168f7f042040e4a95bfa2db6d5a327f4be5b054c2a5ec31de5983ba -->
+<defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+    .title { font-weight: 700; fill: #0F172A; }
+    .header { font-weight: 600; fill: #1E293B; }
+    .label { font-size: 7px; fill: #64748B; font-weight: 500; }
+    .value { font-size: 8.5px; fill: #0F172A; font-weight: 600; }
+    .dim-text { font-size: 6.5px; fill: #0F172A; font-weight: 500; text-anchor: middle; }
+    .room-name { font-size: 8px; font-weight: 700; fill: #0F172A; text-anchor: middle; }
+    .room-area { font-size: 6.8px; font-weight: 500; fill: #475569; text-anchor: middle; }
+    .tag-text { font-size: 6px; font-weight: 700; fill: #2563EB; text-anchor: middle; }
+    .grid-text { font-size: 8px; font-weight: 700; fill: #1E293B; text-anchor: middle; dominant-baseline: central; }
+  </style>
+</defs>
+<rect x="0" y="0" width="1190.55" height="841.89" fill="#FFFFFF"/>
+<g id="sheet-border">
+  <rect x="56.69" y="28.35" width="1105.51" height="785.19" fill="none" stroke="#0F172A" stroke-width="1.7"/>
+</g>
+<g id="drawing-viewport">
+  <g id="ground-line">
+    <line x1="346.44" y1="518.11" x2="493.56" y2="518.11" stroke="#0F172A" stroke-width="1.7"/>
+  </g>
+  <g id="walls">
+    <rect data-cbm-id="WALL-EXT-002" data-element-type="IfcWall" x="374.79" y="428.82" width="90.42" height="89.29" fill="#F1F5F9" stroke="#0F172A" stroke-width="0.99"/>
+  </g>
+  <g id="slab-bands">
+    <rect x="374.79" y="513.86" width="90.42" height="4.25" fill="#CBD5E1" stroke="#0F172A" stroke-width="0.71"/>
+    <rect x="374.79" y="424.57" width="90.42" height="4.25" fill="#CBD5E1" stroke="#0F172A" stroke-width="0.71"/>
+    <rect x="374.79" y="335.28" width="90.42" height="4.25" fill="#CBD5E1" stroke="#0F172A" stroke-width="0.71"/>
+  </g>
+  <g id="openings">
+  </g>
+  <g id="level-markers">
+    <line x1="360.61" y1="518.11" x2="479.39" y2="518.11" stroke="#DC2626" stroke-width="0.6" stroke-dasharray="4,2"/>
+    <text x="485.39" y="521.11" font-size="7px" font-weight="600" fill="#DC2626">GROUND (±0.000)</text>
+    <line x1="360.61" y1="428.82" x2="479.39" y2="428.82" stroke="#DC2626" stroke-width="0.6" stroke-dasharray="4,2"/>
+    <text x="485.39" y="431.82" font-size="7px" font-weight="600" fill="#DC2626">FIRST (+3.150)</text>
+    <line x1="360.61" y1="339.53" x2="479.39" y2="339.53" stroke="#DC2626" stroke-width="0.6" stroke-dasharray="4,2"/>
+    <text x="485.39" y="342.53" font-size="7px" font-weight="600" fill="#DC2626">TERRACE (+6.300)</text>
+  </g>
+</g>
+<g id="disclaimers">
+  <text x="70.0" y="745.0" font-size="6.5px" font-weight="700" fill="#475569">PROFESSIONAL DRAWING STATUS NOTICE:</text>
+  <text x="70.0" y="755.0" font-size="5.5px" fill="#94A3B8">Computational drawing generated from the Planwise Canonical Building Model. This document is preliminary </text>
+  <text x="70.0" y="763.0" font-size="5.5px" fill="#94A3B8">and requires review, coordination, and certification by the appropriate licensed professional before statutory submission or construction.</text>
+  <text x="70.0" y="773.0" font-size="5.5px" fill="#94A3B8">Structural representation shown is preliminary and derived from the Planwise canonical model. Final struc</text>
+  <text x="70.0" y="781.0" font-size="5.5px" fill="#94A3B8">tural design and certification remain subject to licensed structural engineer review.</text>
+  <text x="70.0" y="793.0" font-size="6px" font-weight="700" fill="#DC2626">NOT FOR CONSTRUCTION — SUBJECT TO STATUTORY SANCTION &amp; PE REVIEW</text>
+</g>
+<g id="title-block">
+  <rect x="802.2" y="668.54" width="360.0" height="145.0" fill="#FFFFFF" stroke="#0F172A" stroke-width="1.7"/>
+  <line x1="802.2" y1="696.54" x2="1162.2" y2="696.54" stroke="#0F172A" stroke-width="0.8"/>
+  <text x="814.2" y="686.54" font-size="12px" font-weight="800" fill="#0F172A">PLANWISE ENTERPRISE</text>
+  <text x="1150.2" y="686.54" font-size="7.5px" font-weight="700" fill="#2563EB" text-anchor="end">AUTONOMOUS ARCHITECTURAL BIM</text>
+  <line x1="802.2" y1="728.54" x2="1162.2" y2="728.54" stroke="#0F172A" stroke-width="0.5"/>
+  <text class="label" x="814.2" y="706.54">PROJECT</text>
+  <text class="value" x="814.2" y="719.54">Bandra West Residential Development</text>
+  <text class="label" x="1042.2" y="706.54">PROJECT ID</text>
+  <text class="value" x="1042.2" y="719.54">proj-mumbai-real-1100</text>
+  <line x1="802.2" y1="764.54" x2="1162.2" y2="764.54" stroke="#0F172A" stroke-width="0.5"/>
+  <text class="label" x="814.2" y="740.54">DRAWING TITLE</text>
+  <text x="814.2" y="756.54" font-size="11px" font-weight="800" fill="#0F172A">RIGHT ELEVATION (EAST)</text>
+  <line x1="902.2" y1="764.54" x2="902.2" y2="813.54" stroke="#0F172A" stroke-width="0.5"/>
+  <line x1="982.2" y1="764.54" x2="982.2" y2="813.54" stroke="#0F172A" stroke-width="0.5"/>
+  <line x1="1062.2" y1="764.54" x2="1062.2" y2="813.54" stroke="#0F172A" stroke-width="0.5"/>
+  <text class="label" x="814.2" y="776.54">DRAWING NO.</text>
+  <text class="value" x="814.2" y="790.54" font-size="11px">A-204</text>
+  <text class="label" x="910.2" y="776.54">REV</text>
+  <text class="value" x="910.2" y="790.54">R0</text>
+  <text class="label" x="990.2" y="776.54">SCALE</text>
+  <text class="value" x="990.2" y="790.54">1:100</text>
+  <text class="label" x="1070.2" y="776.54">SHEET</text>
+  <text class="value" x="1070.2" y="790.54">7 OF 9</text>
+  <line x1="802.2" y1="796.54" x2="1162.2" y2="796.54" stroke="#0F172A" stroke-width="0.5"/>
+  <text class="label" x="814.2" y="806.54">STATUS:</text>
+  <text x="857.2" y="806.54" font-size="7px" font-weight="700" fill="#DC2626">PRELIMINARY / FOR PROFESSIONAL REVIEW</text>
+  <text class="label" x="1070.2" y="806.54">DATE: 2026-10-02</text>
+</g>
+</svg>

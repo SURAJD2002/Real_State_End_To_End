@@ -1,7 +1,7 @@
 # Planwise Enterprise — Real Plot Data End-to-End Test Report
-**Test Execution Date:** 2026-10-01  
-**Platform Version:** Planwise Enterprise 2026.Q4  
-**Pipeline Scope:** Pure Structured Data Intake → M1 Feasibility → M2 Generation → CBM → 12-Check Validation → M3 QTO → BOQ → Preliminary Cost → Change Propagation  
+**Test Execution Date:** 2026-10-01
+**Platform Version:** Planwise Enterprise 2026.Q4
+**Pipeline Scope:** Pure Structured Data Intake → M1 Feasibility → M2 Generation → CBM → 12-Check Validation → M3 QTO → BOQ → Preliminary Cost → Change Propagation
 **Image/OCR Status:** 0% Image Processing / 0% OCR (100% Mathematical & Computational Geometry)
 
 ---
@@ -246,7 +246,7 @@ Each takeoff record maps directly to an itemized trade assembly in the authorita
 
 ## 11. Preliminary Construction Cost Waterfall
 
-Pricing was executed against the cryptographically signed rate snapshot:  
+Pricing was executed against the cryptographically signed rate snapshot:
 `INDIA-MUMBAI-2026-Q4-V1` (MCGM Standard Schedule of Rates + CPWD DSR 2026.Q4).
 
 ```
@@ -268,8 +268,8 @@ PRELIMINARY CONSTRUCTION COST WATERFALL
   - Cost per sq.ft of Net Carpet (878.4 sq.ft)  :  ₹2,081.00 / sq.ft
 ```
 
-> **STATUTORY SAFETY LABEL:**  
-> **PRELIMINARY CONSTRUCTION COST — NOT A FINAL CONTRACTOR QUOTATION**  
+> **STATUTORY SAFETY LABEL:**
+> **PRELIMINARY CONSTRUCTION COST — NOT A FINAL CONTRACTOR QUOTATION**
 > *This estimate is generated deterministically from algorithmic model takeoff and immutable regional schedules of rates. Formal structural engineering calculations, licensed soil testing, and detailed contractor bidding are required prior to commercial commitment.*
 
 ---
@@ -350,7 +350,7 @@ Before this computational model can transition to physical construction or legal
 
 The **Planwise Enterprise Real Plot Data End-to-End Test** has executed to completion with **100% PASS** rate across all modules:
 - Zero image processing / OCR used.
-- Complete deterministic pipeline validated:  
+- Complete deterministic pipeline validated:
   **LAND DATA $\rightarrow$ FEASIBILITY $\rightarrow$ BUILDABLE ENVELOPE $\rightarrow$ HOUSE OPTIONS $\rightarrow$ 2D/3D CBM $\rightarrow$ 12 VALIDATION CHECKS $\rightarrow$ QTO $\rightarrow$ BOQ $\rightarrow$ PRELIMINARY COST $\rightarrow$ CHANGE PROPAGATION.**
 - All 84 unit and integration regression tests passing in the Python suite.
 - All 20 Vitest CAD interaction tests passing.

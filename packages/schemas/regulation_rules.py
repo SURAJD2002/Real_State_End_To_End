@@ -124,12 +124,12 @@ class RuleExecutionTrace(BaseModel):
     ruleName: str
     citation: str
     timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
-    
+
     # Mathematical Inputs & Outputs
     inputs: Dict[str, Any] = Field(..., description="Exact numerical & geometric inputs passed to rule")
     calculationFormula: str = Field(..., description="Human and machine readable formula applied")
     outputs: Dict[str, Any] = Field(..., description="Calculated values produced by rule")
-    
+
     status: RuleStatus = RuleStatus.CALCULATED
     severity: RuleSeverity = RuleSeverity.MANDATORY
     evidenceReferences: List[str] = Field(default_factory=list, description="IDs of site evidence records backing inputs")
@@ -144,16 +144,16 @@ class FeasibilityExplainabilityBreakdown(BaseModel):
     roadWideningDeductionSqm: float
     amenityReservationSqm: float
     netParcelAreaSqm: float
-    
+
     frontSetbackDeductionSqm: float
     rearSetbackDeductionSqm: float
     sideSetbacksDeductionSqm: float
-    
+
     rawSetbackEnvelopeAreaSqm: float
     maxGroundCoveragePercent: float
     maxGroundCoverageAreaSqm: float
     effectivePermittedFootprintSqm: float
-    
+
     baseFSI: float
     premiumFSI: float
     tdrFSI: float
@@ -164,5 +164,5 @@ class FeasibilityExplainabilityBreakdown(BaseModel):
     parkingStallsRequired: int
     rulePackId: str = "MUMBAI-DCPR-2034-V1"
     rulePackVersion: str = "1.0.0"
-    
+
     traces: List[RuleExecutionTrace] = Field(default_factory=list)

@@ -158,7 +158,8 @@ def compile_canonical_building_model(
     project_id: str = "proj-mumbai-default-01",
     site_geometry_version_id: str = "PV-001",
     regulation_version_id: str = "MUMBAI_DCPR_2034_V1",
-    archetype: Optional[str] = None
+    archetype: Optional[str] = None,
+    declared_plot_area_sqft: Optional[float] = None
 ) -> CanonicalBuildingModel:
     """
     Deterministic compiler: Transforms raw layout data / room program
@@ -166,6 +167,7 @@ def compile_canonical_building_model(
     """
     if layout_data is None:
         layout_data = {}
+    declared_sqft = declared_plot_area_sqft or layout_data.get("declaredPlotAreaSqFt")
     if archetype:
         layout_data["archetype"] = archetype
     archetype = layout_data.get("archetype", archetype or "compact_2bhk")
@@ -540,7 +542,7 @@ def compile_canonical_building_model(
                     structuralRole=StructuralRole.PRIMARY_FRAME,
                     gridReference=f"{gx.tag}-{gy.tag}",
                     properties={
-                        "rebarSchedule": "8-T16_Fe500D", 
+                        "rebarSchedule": "8-T16_Fe500D",
                         "tieSpacingMm": 150,
                         "widthMm": int(cw_m * 1000),
                         "depthMm": int(cd_m * 1000),
@@ -722,6 +724,7 @@ def compile_canonical_building_model(
         structuralGrid=structural_grid,
         materials=materials,
         systems=systems,
+        declaredPlotAreaSqFt=declared_sqft,
         metadata=ModelMetadata(
             engineName="planwise-canonical-compiler",
             engineVersion="1.0.0",

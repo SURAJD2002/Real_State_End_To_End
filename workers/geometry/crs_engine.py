@@ -68,7 +68,7 @@ def ecef_to_geodetic(x: float, y: float, z: float) -> Tuple[float, float, float]
     Uses Bowring's algorithm (1985) which is numerically exact to < 10⁻¹² m for terrestrial coordinates.
     """
     p = math.sqrt(x**2 + y**2)
-    
+
     # Handle poles singularity
     if p < 1e-9:
         lat = 90.0 if z >= 0 else -90.0

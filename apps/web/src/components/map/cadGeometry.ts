@@ -2,7 +2,7 @@
  * Planwise Enterprise CAD & GIS Geometry Engine
  * Authoritative client-side geometric utilities for snapping, validation,
  * self-intersection detection, UTM Zone 43N conversion, and CAD precision tools.
- * 
+ *
  * Note: Statutory land area, setback offsets, and authoritative calculations
  * are calculated by the PostGIS/FastAPI backend. These client-side tools provide
  * instant 60fps interaction, snapping, and validation feedback.

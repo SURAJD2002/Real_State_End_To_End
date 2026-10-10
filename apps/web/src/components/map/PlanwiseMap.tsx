@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { 
-  MapInteractionMode, 
-  MapLayersVisibility, 
-  SiteLocationMetadata, 
+import {
+  MapInteractionMode,
+  MapLayersVisibility,
+  SiteLocationMetadata,
   MeasurementState,
   SelectedMapElement,
-  CadSnapSettings 
+  CadSnapSettings
 } from './types';
 import { LocationSearch } from './LocationSearch';
 import { MapToolbar } from './MapToolbar';

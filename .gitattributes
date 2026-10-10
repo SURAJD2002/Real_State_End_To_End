@@ -1,0 +1,8 @@
+# Git attributes for binary assets
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pptx binary
+*.zip binary
+*.ifc binary

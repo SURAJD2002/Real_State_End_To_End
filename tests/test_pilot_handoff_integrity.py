@@ -48,8 +48,18 @@ class TestPilotHandoffIntegrity(unittest.TestCase):
         cls.handoff_dir = ROOT_DIR / "artifacts" / "pilot_handoff"
         cls.ctx = ReleaseContext(release_id=cls.authoritative_release_id)
 
-        # Ensure handoff package is exported and up to date
-        cls.artifacts = cls.ctx.export_handoff_package(output_dir=cls.handoff_dir)
+        # Ensure handoff package exists without mutating authoritative files if present
+        if not (cls.handoff_dir / "pilot_release_manifest.json").exists():
+            cls.artifacts = cls.ctx.export_handoff_package(output_dir=cls.handoff_dir)
+        else:
+            cls.artifacts = {
+                "manifest": cls.handoff_dir / "pilot_release_manifest.json",
+                "ifc4Model": cls.handoff_dir / "pilot_model_ifc4.ifc",
+                "boq": cls.handoff_dir / "pilot_boq_export.json",
+                "costEstimate": cls.handoff_dir / "pilot_cost_estimate.json",
+                "validation": cls.handoff_dir / "pilot_validation_report.json",
+                "review": cls.handoff_dir / "pilot_engineer_review.json"
+            }
 
     # 1. Release Identity Consistency
     def test_01_release_identity_consistency(self):

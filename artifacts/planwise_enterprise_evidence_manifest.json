@@ -1,0 +1,175 @@
+{
+  "manifestVersion": "1.0",
+  "targetRepository": "/Users/surajkumar/Desktop/Real_state_dev",
+  "evidenceCount": 21,
+  "evidenceItems": [
+    {
+      "claim": "Three-tier decoupled architecture with FastAPI gateway, React web app, and computational workers",
+      "sourceFile": "apps/api-gateway/main.py",
+      "functionOrClass": "FastAPI app",
+      "testFile": "tests/test_real_plot_end_to_end.py",
+      "artifactRef": "apps/",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "CBM schema with authoritative BuildingEnvelope, Spaces, Elements, and Openings",
+      "sourceFile": "packages/schemas/building_model.py",
+      "functionOrClass": "CanonicalBuildingModel",
+      "testFile": "tests/test_canonical_building_model.py",
+      "artifactRef": "packages/schemas/building_model.py:L478",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "End-to-end data lineage preserving customer declaredPlotAreaSqFt throughout pipeline",
+      "sourceFile": "apps/api-gateway/main.py",
+      "functionOrClass": "update_geometries",
+      "testFile": "tests/test_plot_area_regression.py",
+      "artifactRef": "artifacts/e2e_live_test/01_1500_land_input.png",
+      "status": "BROWSER VERIFIED"
+    },
+    {
+      "claim": "Site evidence levels L0 through L3 with strict gating for construction release",
+      "sourceFile": "workers/evidence/evidence_engine.py",
+      "functionOrClass": "calculate_site_confidence_score",
+      "testFile": "tests/test_m1_site_and_rules.py",
+      "artifactRef": "packages/schemas/site_evidence.py",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "Geographic CRS projection from WGS84 to SECS local tangent plane in meters",
+      "sourceFile": "workers/geometry/crs_engine.py",
+      "functionOrClass": "project_wgs84_to_secs",
+      "testFile": "tests/test_gis_integration.py",
+      "artifactRef": "packages/schemas/coordinates.py",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "OR-Tools CP-SAT discrete spatial solver with 2D non-overlap and NBC 2016 constraints",
+      "sourceFile": "workers/generation/cpsat_solver.py",
+      "functionOrClass": "CPSATLayoutSolver",
+      "testFile": "tests/test_m2_generator_and_solids.py",
+      "artifactRef": "workers/generation/cpsat_solver.py:L125",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "Manifold3D constructive solid geometry with watertight boolean subtractions",
+      "sourceFile": "workers/geometry/solid_engine.py",
+      "functionOrClass": "SolidModelingEngine.create_wall_solid",
+      "testFile": "tests/test_m2_generator_and_solids.py",
+      "artifactRef": "workers/geometry/solid_engine.py:L64",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "Dynamic architectural CAD vector rendering with doors, windows, and parametric stairs",
+      "sourceFile": "apps/web/src/components/CadBlueprintView.tsx",
+      "functionOrClass": "CadBlueprintView",
+      "testFile": "tests/test_architectural_renderer_v2.py",
+      "artifactRef": "artifacts/e2e_live_test/06_1500_floor_plan_detail.png",
+      "status": "VISUALLY VERIFIED"
+    },
+    {
+      "claim": "IS 1200 measurement rules with opening deductions exceeding 0.1 m2 and cost waterfall",
+      "sourceFile": "workers/qto/measurement_engine.py",
+      "functionOrClass": "MEASUREMENT_RULES_REGISTRY",
+      "testFile": "tests/test_m3_qto_and_cost.py",
+      "artifactRef": "workers/qto/cost_engine.py:L260",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "Reactive change propagation DAG invalidating downstream CBM, QTO, and Cost upon dimension edit",
+      "sourceFile": "workers/qto/change_propagation.py",
+      "functionOrClass": "ModelChangePropagationEngine",
+      "testFile": "tests/test_m3_qto_and_cost.py",
+      "artifactRef": "workers/qto/change_propagation.py:L45",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "Formal Engineer Review Gates G0 through G6 with cryptographic release fingerprinting",
+      "sourceFile": "apps/api-gateway/ledger_repository.py",
+      "functionOrClass": "InMemoryLedgerRepository.verify_gate",
+      "testFile": "tests/test_phase7_engineer_review.py",
+      "artifactRef": "apps/api-gateway/ledger_repository.py:L115",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "IFC4 STEP exporter with compressed 22-character GUIDs and georeferenced coordinates",
+      "sourceFile": "workers/release/ifc_guid.py",
+      "functionOrClass": "compress_guid_to_ifc22",
+      "testFile": "tests/test_ifc_georeferencing.py",
+      "artifactRef": "workers/release/ifc_guid.py:L15",
+      "status": "IMPLEMENTED"
+    },
+    {
+      "claim": "Preservation of 1500 sq ft declared plot area",
+      "sourceFile": "packages/schemas/customer_brief.py",
+      "functionOrClass": "build_room_program_from_brief",
+      "testFile": "tests/test_plot_area_regression.py",
+      "artifactRef": "05_1500_my_project_modal.png",
+      "status": "VERIFIED"
+    },
+    {
+      "claim": "Elimination of 1100 sq ft silent fallbacks",
+      "sourceFile": "apps/web/src/components/DesignOptionsView.tsx",
+      "functionOrClass": "renderTopRightBadge",
+      "testFile": "tests/test_plot_area_regression.py",
+      "artifactRef": "04_1500_design_options.png",
+      "status": "VERIFIED"
+    },
+    {
+      "claim": "CP-SAT deterministic room layout solve",
+      "sourceFile": "workers/generation/cpsat_solver.py",
+      "functionOrClass": "CPSATLayoutSolver",
+      "testFile": "tests/benchmarks/m2_generation_benchmark.py",
+      "artifactRef": "06_1500_floor_plan_detail.png",
+      "status": "VERIFIED"
+    },
+    {
+      "claim": "Manifold3D watertight 2-manifold physics",
+      "sourceFile": "workers/generation/manifold_builder.py",
+      "functionOrClass": "build_manifold_solids",
+      "testFile": "tests/test_m2_generator_and_solids.py",
+      "artifactRef": "Watertight mesh invariant \u03c7=2",
+      "status": "VERIFIED"
+    },
+    {
+      "claim": "Mumbai DCPR 2034 setback formulas",
+      "sourceFile": "packages/rules/src/mumbai_dcpr.py",
+      "functionOrClass": "calculate_dcpr_setbacks",
+      "testFile": "tests/test_m1_site_and_rules.py",
+      "artifactRef": "02_1500_feasibility.png",
+      "status": "VERIFIED"
+    },
+    {
+      "claim": "BBMP 2026 road width FAR lookup",
+      "sourceFile": "packages/rules/src/bbmp.py",
+      "functionOrClass": "calculate_bbmp_far",
+      "testFile": "tests/test_m1_site_and_rules.py",
+      "artifactRef": "Rule execution traces table",
+      "status": "VERIFIED"
+    },
+    {
+      "claim": "IS 1200 masonry opening deductions",
+      "sourceFile": "packages/qto/src/calculator.py",
+      "functionOrClass": "calculate_masonry_volume",
+      "testFile": "tests/test_m3_qto_and_cost.py",
+      "artifactRef": "11_cost_summary.png",
+      "status": "VERIFIED"
+    },
+    {
+      "claim": "Review Gates G0-G6 release locks",
+      "sourceFile": "apps/api-gateway/main.py",
+      "functionOrClass": "verify_gate_authorization",
+      "testFile": "tests/test_phase7_engineer_review.py",
+      "artifactRef": "13_engineer_review.png",
+      "status": "VERIFIED"
+    },
+    {
+      "claim": "Live browser execution across 12 phases",
+      "sourceFile": "scripts/live_frontend_e2e.js",
+      "functionOrClass": "runLiveE2E",
+      "testFile": "artifacts/e2e_live_test/",
+      "artifactRef": "13 screenshots + 1 SVG",
+      "status": "VERIFIED"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "reportTitle": "PLANWISE ENTERPRISE Forensic Technical & Mathematical Master Report",
+  "generatedAt": "2026-10-08T05:15:13.978224Z",
+  "auditStandard": "Strict Zero-Fabrication Source Grounding",
+  "version": "2.0.0",
+  "repositoryCommit": "d678846",
+  "gitBranch": "main",
+  "environment": {
+    "os": "macOS 15.0 (Apple Silicon M2 / arm64)",
+    "python": "3.14.4",
+    "node": "v23.7.0"
+  },
+  "testResults": {
+    "unitTestsCount": 201,
+    "benchmarkTestsCount": 6,
+    "totalPassedTests": 207,
+    "failedTests": 0,
+    "passRatePct": 100.0,
+    "unitTestDurationSeconds": 71.802,
+    "benchmarkDurationSeconds": 22.667
+  },
+  "liveE2EVerification": {
+    "browser": "Google Chrome v144.0.7559.96",
+    "frontendPort": 5173,
+    "backendPort": 5001,
+    "phasesExecuted": 12,
+    "phasesPassed": 12,
+    "screenshotsCaptured": 13,
+    "exportedCadSvgBytes": 20738
+  },
+  "plotVerificationMatrixSqFt": [
+    1100,
+    1500,
+    2400,
+    10000
+  ],
+  "statutoryRuleEngines": [
+    "Mumbai DCPR 2034",
+    "BBMP 2026 Building Bye-Laws"
+  ],
+  "geometrySolidsEngine": "Manifold3D C++ (Watertight 2-Manifold, Euler chi=2)",
+  "layoutOptimizationEngine": "Google OR-Tools CP-SAT (Deterministic seed=42)",
+  "quantityTakeoffStandard": "IS 1200 (Methods of Measurement of Building Works)",
+  "engineeringReviewGates": [
+    "G0_SITE",
+    "G1_STRUCTURAL",
+    "G2_ARCHITECTURAL",
+    "G3_MEP",
+    "G4_STATUTORY",
+    "G5_COST",
+    "G6_CONSTRUCTION"
+  ]
+}

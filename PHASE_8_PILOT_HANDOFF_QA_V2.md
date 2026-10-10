@@ -1,15 +1,15 @@
 # PLANWISE ENTERPRISE — PHASE 8 PILOT HANDOFF PACKAGE QA (V2)
 ## Definitive Release Lineage Synchronization & Quality Assurance Verification Report
 
-**Audit Date:** October 2, 2026  
-**Auditor Engine:** Planwise Enterprise Static, Relational, & Cryptographic QA Suite  
-**Package Directory:** `artifacts/pilot_handoff/`  
-**Authoritative Project ID:** `proj-mumbai-real-1100`  
-**Authoritative Release ID:** `rel-pilot-20261002-aedf9830`  
-**Authoritative Design Version ID:** `DV-OPT-B-9be0a983`  
-**Authoritative Engineer Review ID:** `rev-pilot-10739137b8`  
-**Authoritative Release Fingerprint:** `876f21ae800940245ed9702d9e00e27be2be636f033f5d24e85c0bb4fe877cb4`  
-**Authoritative Plot Area:** `1,100.0 sq ft` (102.19 sqm) — STRICT INVARIANT  
+**Audit Date:** October 2, 2026
+**Auditor Engine:** Planwise Enterprise Static, Relational, & Cryptographic QA Suite
+**Package Directory:** `artifacts/pilot_handoff/`
+**Authoritative Project ID:** `proj-mumbai-real-1100`
+**Authoritative Release ID:** `rel-pilot-20261002-aedf9830`
+**Authoritative Design Version ID:** `DV-OPT-B-9be0a983`
+**Authoritative Engineer Review ID:** `rev-pilot-10739137b8`
+**Authoritative Release Fingerprint:** `876f21ae800940245ed9702d9e00e27be2be636f033f5d24e85c0bb4fe877cb4`
+**Authoritative Plot Area:** `1,100.0 sq ft` (102.19 sqm) — STRICT INVARIANT
 
 ---
 
@@ -27,9 +27,9 @@ All 16 previous discrepancies cataloged in `PHASE_8_PILOT_HANDOFF_QA.md` have be
 
 The earlier version divergence (`HANDOFF_PACKAGE_BLOCKED`) was caused by two architectural flaws:
 
-1. **Unbounded Test Runner Export Coupling:**  
+1. **Unbounded Test Runner Export Coupling:**
    `workers/intake/controlled_pilot_runner.py` previously hardcoded its output directory to `artifacts/pilot_handoff/`. Whenever the automated test suite (`tests/test_controlled_pilot.py`) was executed, `ControlledPilotRunner.execute_pilot()` ran end-to-end afresh, generated ephemeral UUIDs (`rel-pilot-20261002-81c3abbd`, `DV-OPT-B-a7e0f279`, `rev-pilot-0327c0111c`), and clobbered the authoritative release artifacts on disk.
-2. **Missing Authoritative Release Context Layer:**  
+2. **Missing Authoritative Release Context Layer:**
    Handoff export was previously coupled directly to runtime pipeline output objects rather than loading from the immutable PostgreSQL release ledger. Furthermore, `compile_handoff_package` in `manifest_engine.py` omitted explicit top-level fields for `projectId`, `releaseId`, `designVersionId`, and `declaredPlotAreaSqFt`, while using static, hardcoded artifact manifest names (`Traceable_Bill_Of_Quantities.csv`, etc.) and omitting mandatory professional safety disclosures.
 
 ---
@@ -96,21 +96,21 @@ All files in [`artifacts/pilot_handoff/`](file:///Users/surajkumar/Desktop/Real_
 
 ### 5. Automated Test Suite Results
 
-1. **Pilot Handoff Integrity Tests (`tests/test_pilot_handoff_integrity.py`):**  
+1. **Pilot Handoff Integrity Tests (`tests/test_pilot_handoff_integrity.py`):**
    `16 / 16 PASSED` (11.64s)
-2. **Controlled Pilot Tests (`tests/test_controlled_pilot.py`):**  
+2. **Controlled Pilot Tests (`tests/test_controlled_pilot.py`):**
    `7 / 7 PASSED` (3.82s)
-3. **Phase 8.1 Persistence Tests (`tests/test_phase8_1_persistence.py`):**  
+3. **Phase 8.1 Persistence Tests (`tests/test_phase8_1_persistence.py`):**
    `7 / 7 PASSED` (0.64s)
-4. **Phase 7 Engineer Review Tests (`tests/test_phase7_engineer_review.py`):**  
+4. **Phase 7 Engineer Review Tests (`tests/test_phase7_engineer_review.py`):**
    `15 / 15 PASSED` (0.01s)
-5. **Real Plot E2E Tests (`tests/test_real_plot_end_to_end.py`):**  
+5. **Real Plot E2E Tests (`tests/test_real_plot_end_to_end.py`):**
    `13 / 13 PASSED` (15.15s)
-6. **Frontend Unit & CAD Tests (`npm --prefix apps/web test`):**  
+6. **Frontend Unit & CAD Tests (`npm --prefix apps/web test`):**
    `20 / 20 PASSED` (0.24s)
-7. **Frontend Production Build (`npm --prefix apps/web run build`):**  
+7. **Frontend Production Build (`npm --prefix apps/web run build`):**
    `SUCCESS` (3.73s, zero TypeScript or bundling errors)
-8. **Full Repository Regression Discovery (`unittest discover tests`):**  
+8. **Full Repository Regression Discovery (`unittest discover tests`):**
    `131 / 131 PASSED` (53.69s)
 
 ---

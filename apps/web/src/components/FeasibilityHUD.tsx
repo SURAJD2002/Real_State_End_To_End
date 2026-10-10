@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { 
-  BarChart3, 
-  TrendingUp, 
-  Ruler, 
-  Car, 
-  Building, 
-  Coins, 
-  ChevronRight, 
-  ChevronDown, 
-  ShieldCheck, 
+import {
+  BarChart3,
+  TrendingUp,
+  Ruler,
+  Car,
+  Building,
+  Coins,
+  ChevronRight,
+  ChevronDown,
+  ShieldCheck,
   HelpCircle,
   CheckCircle2
 } from 'lucide-react';

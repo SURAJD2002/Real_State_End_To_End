@@ -1,23 +1,23 @@
 # PLANWISE ENTERPRISE — PHASE 8 PILOT HANDOFF PACKAGE QA
 ## Comprehensive Quality Assurance & Forensic Integrity Audit
 
-**Audit Date:** October 2, 2026  
-**QA Engine:** Planwise Enterprise Static & Relational Verification Suite  
-**Audit Target:** `artifacts/pilot_handoff/`  
-**Target Project ID:** `proj-mumbai-real-1100`  
-**Target Release ID:** `rel-pilot-20261002-aedf9830`  
-**Target Design Version ID:** `DV-OPT-B-9be0a983`  
+**Audit Date:** October 2, 2026
+**QA Engine:** Planwise Enterprise Static & Relational Verification Suite
+**Audit Target:** `artifacts/pilot_handoff/`
+**Target Project ID:** `proj-mumbai-real-1100`
+**Target Release ID:** `rel-pilot-20261002-aedf9830`
+**Target Design Version ID:** `DV-OPT-B-9be0a983`
 **Final QA Verdict:** **`HANDOFF_PACKAGE_BLOCKED`**
 
 ---
 
 ### Executive Summary
 
-An exhaustive, non-destructive quality assurance audit was conducted on the physical pilot handoff package located in [`artifacts/pilot_handoff/`](file:///Users/surajkumar/Desktop/Real_state_dev/artifacts/pilot_handoff/). 
+An exhaustive, non-destructive quality assurance audit was conducted on the physical pilot handoff package located in [`artifacts/pilot_handoff/`](file:///Users/surajkumar/Desktop/Real_state_dev/artifacts/pilot_handoff/).
 
 The audit evaluated 11 explicit verification criteria spanning IFC4 syntactic validity, spatial/physical entity completeness, release manifest binding, CBM element traceability, financial waterfall coherence, validation report alignment, PostgreSQL ledger persistence parity, cryptographic fingerprint consistency, benchmark contamination prevention, gate lock status (G5/G6), and mandatory professional handoff safety disclaimers.
 
-**Key Finding:**  
+**Key Finding:**
 While individual components exhibit valid syntax, proper engineering logic, and adherence to physical constraints (e.g. 100% valid CBM element mapping, zero benchmark contamination, and strict G5/G6 lock enforcement), the handoff package in `artifacts/pilot_handoff/` is **`BLOCKED`** due to critical release identification drift (ephemeral test execution overwriting target release artifacts), missing metadata fields in the release manifest, artifact manifest file naming/hash divergence, and unstated top-level handoff disclaimers.
 
 ---
@@ -67,11 +67,11 @@ The following register details every discrepancy detected during audit. In accor
 
 ### Root Cause Analysis
 
-1. **Non-Isolated Test Output Directory:**  
+1. **Non-Isolated Test Output Directory:**
    `workers/intake/controlled_pilot_runner.py` defaults its export directory to `artifacts/pilot_handoff/` via `self.output_dir = ROOT_DIR / "artifacts" / "pilot_handoff"`. When unit tests (`tests/test_controlled_pilot.py`) execute, `ControlledPilotRunner.execute_pilot()` is run anew with newly generated UUIDs (`rel-pilot-20261002-81c3abbd`, `DV-OPT-B-a7e0f279`, `rev-pilot-0327c0111c`), overwriting the authoritative pilot package artifacts on disk.
-2. **Missing Metadata Fields in Handoff Package Template:**  
+2. **Missing Metadata Fields in Handoff Package Template:**
    `manifest_engine.py:compile_handoff_package` populates `projectContext` and `designOption`, but omits explicit top-level fields for `projectId`, `designVersionId`, and `declaredPlotAreaSqFt`.
-3. **Static Manifest Artifact File Table:**  
+3. **Static Manifest Artifact File Table:**
    The `artifactManifest` generated in `manifest_engine.py` was authored with generalized file names (`Traceable_Bill_Of_Quantities.csv`, etc.) rather than dynamically hashing the actual files exported to `artifacts/pilot_handoff/`.
 
 ---
@@ -79,7 +79,7 @@ The following register details every discrepancy detected during audit. In accor
 ### File Classification
 
 #### Exact Files Safe to Send to Professional:
-**None (0 files)**  
+**None (0 files)**
 *Reason: No file in `artifacts/pilot_handoff/` currently bears both the target release identifier `rel-pilot-20261002-aedf9830` and design version `DV-OPT-B-9be0a983`. Sending any of these files would introduce release version inconsistency with the PostgreSQL immutable ledger.*
 
 #### Exact Files Requiring Correction:

@@ -64,7 +64,7 @@ class RoomSpecification(BaseModel):
     roomType: RoomType
     displayName: str
     floorIndex: int = 0  # 0 for Ground, 1 for Level 1, etc.
-    
+
     # Dimensional Thresholds (meters & square meters)
     minAreaSqm: float
     preferredAreaSqm: float
@@ -72,7 +72,7 @@ class RoomSpecification(BaseModel):
     minWidthM: float
     minLengthM: float
     preferredAspectRatio: float = 1.33 # Length / Width ratio
-    
+
     # Requirement & Environmental Flags
     isRequired: bool = True
     daylight: DaylightRequirement = DaylightRequirement.DIRECT_WINDOW
@@ -81,7 +81,7 @@ class RoomSpecification(BaseModel):
     isWetArea: bool = False
     isCirculation: bool = False
     displayColor: str = "#60a5fa"
-    
+
     # Target centroid priority for Vastu / orientation soft optimization
     preferredCardinalSector: Optional[str] = None # "NE", "SE", "SW", "NW", "NORTH", "EAST"
 
@@ -230,9 +230,9 @@ def build_room_program_from_brief(brief: Any) -> RoomProgram:
     """
     specs: List[RoomSpecification] = []
     r_idx = 1
-    
+
     is_duplex = brief.floors > 1
-    
+
     # 1. Entrance Foyer
     prof = STANDARD_ROOM_PROFILES[RoomType.ENTRY]
     specs.append(RoomSpecification(

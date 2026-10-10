@@ -83,15 +83,15 @@ class SiteEvidence(BaseModel):
     sourceDocumentId: Optional[str] = Field(None, description="External file or scan reference ID")
     provider: str = Field(..., description="Organization or person who supplied the evidence")
     capturedAt: str = Field(..., description="ISO-8601 timestamp of data capture in field")
-    
+
     # Accuracy & Confidence
     accuracyM: float = Field(..., description="Reported spatial accuracy tolerance in meters (e.g. ±0.02m for Total Station)")
     confidenceLevel: SiteConfidenceTier = Field(..., description="Assigned confidence tier for this evidence")
-    
+
     # Geometry & CRS
     geometry: Optional[Dict[str, Any]] = Field(None, description="GeoJSON geometry or spatial feature representation")
     coordinateReference: str = Field("EPSG:4326", description="Spatial reference system e.g. EPSG:4326 or SECS")
-    
+
     # Provenance Audit Trail
     verificationStatus: VerificationStatus = Field(VerificationStatus.UNVERIFIED, description="Current verification state")
     verifiedBy: Optional[str] = Field(None, description="Licensed Engineer or Surveyor ID who stamped the evidence")

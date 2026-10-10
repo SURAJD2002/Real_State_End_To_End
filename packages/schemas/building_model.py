@@ -300,7 +300,7 @@ class CanonicalBuildingModel(BaseModel):
     projectId: str = Field(..., description="Reference to Project.id")
     siteGeometryVersionId: str = Field(..., description="Reference to authoritative site parcel geometry version, e.g. PV-002")
     regulationVersionId: str = Field("MUMBAI_DCPR_2034_V1", description="Statutory rule set reference")
-    
+
     name: str = Field(..., description="Design archetype name")
     archetype: str = Field(..., description="compact_2bhk, family_3bhk, duplex_3bhk")
     description: str = Field("", description="Architectural summary")
@@ -320,9 +320,10 @@ class CanonicalBuildingModel(BaseModel):
     materials: List[Material] = Field(default_factory=list, description="Versioned material catalog")
     materialAssignments: List[MaterialAssignment] = Field(default_factory=list)
     systems: List[BuildingSystem] = Field(default_factory=list, description="MEP preliminary systems")
-    
+
     validation: Optional[ValidationSummary] = None
     metadata: ModelMetadata = Field(default_factory=ModelMetadata)
+    declaredPlotAreaSqFt: Optional[float] = Field(None, description="Authoritative declared plot area in square feet")
 
     def compute_hash(self) -> str:
         """
@@ -369,5 +370,7 @@ class CanonicalBuildingModel(BaseModel):
                 for o in self.openings
             ]
         }
+        if self.declaredPlotAreaSqFt is not None:
+            snapshot["declaredPlotAreaSqFt"] = self.declaredPlotAreaSqFt
         serialized = json.dumps(snapshot, sort_keys=True)
         return hashlib.sha256(serialized.encode("utf-8")).hexdigest()

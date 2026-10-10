@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { HouseOption, HandoffPackage } from '../types';
-import { 
-  Lock, 
-  AlertTriangle, 
-  CheckCircle2, 
-  HardHat, 
-  Hash 
+import {
+  Lock,
+  AlertTriangle,
+  CheckCircle2,
+  HardHat,
+  Hash
 } from 'lucide-react';
 
 interface BuildReleaseViewProps {

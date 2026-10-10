@@ -1,8 +1,8 @@
 # Planwise Enterprise — Phase 8 Pilot Readiness Audit
 
-**Authoritative Pilot Evaluation: Land Intake to Engineer Review**  
-**Repository:** `https://github.com/SURAJD2002/Real_State_End_To_End`  
-**Milestone Baseline:** `v0.7.0-phase7` (`c11f2c110b012e22ec21b6c69d8549bd9422cbc5`)  
+**Authoritative Pilot Evaluation: Land Intake to Engineer Review**
+**Repository:** `https://github.com/SURAJD2002/Real_State_End_To_End`
+**Milestone Baseline:** `v0.7.0-phase7` (`c11f2c110b012e22ec21b6c69d8549bd9422cbc5`)
 **Audit Scope:** End-to-end verification of 1,100 sq ft ($27.5\text{ ft} \times 40.0\text{ ft}$, $16.0\text{ ft}$ road) residential project across 17 stages without inventing features or refactoring codebase.
 
 ---
@@ -320,7 +320,7 @@ The full pipeline was executed independently across multiple environments:
 
 ## J. P0 Fixes Required Before Real Pilot
 
-**Zero (0) P0 fixes are required.**  
+**Zero (0) P0 fixes are required.**
 The platform can process one real 1,100 sq ft residential project from end-to-end today in a live pilot session.
 
 ---

@@ -1,6 +1,6 @@
 {
-  "designVersionId": "DV-OPT-B-4da40d4e",
-  "modelHash": "sha256:91ceda60009c8f04eb77cfb87f861f7d3b273fc78d763adebb567cb421c01df0",
+  "designVersionId": "DV-OPT-B-0e1dcb16",
+  "modelHash": "sha256:87c60cecc5549d86b81605dfe04b6071f254ea4a311349c581d621972f395015",
   "validation": {
     "isValid": true,
     "totalIssues": 10,

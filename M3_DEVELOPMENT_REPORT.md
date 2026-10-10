@@ -1,9 +1,9 @@
 # PLANWISE ENTERPRISE — M3 FINAL DEVELOPMENT REPORT
 ## Model-Linked QTO + BOQ + Deterministic Cost Engine
 
-**Author**: Principal Quantity Surveying + Cost Engineering + BIM Data Engineer  
-**Date**: 2026-10-01  
-**Project**: Planwise Enterprise (M3 Milestone)  
+**Author**: Principal Quantity Surveying + Cost Engineering + BIM Data Engineer
+**Date**: 2026-10-01
+**Project**: Planwise Enterprise (M3 Milestone)
 **Status**: COMPLETE — ALL ACCEPTANCE CRITERIA VERIFIED
 
 ---

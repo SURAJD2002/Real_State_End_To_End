@@ -108,7 +108,7 @@ def run_all_benchmarks() -> Dict[str, Any]:
     benchmarks = load_golden_benchmarks()
     results = [run_benchmark_audit(b) for b in benchmarks]
     all_passed = all(r["passed"] for r in results)
-    
+
     return {
         "totalBenchmarks": len(benchmarks),
         "passedCount": sum(1 for r in results if r["passed"]),
