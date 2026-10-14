@@ -371,12 +371,14 @@ def generate_m2_house_options(
                 "layout": layout,
                 "scores": scores,
                 "validation": canonical_model.validation.dict() if canonical_model.validation else None,
+                "isFallback": True,
+                "fallbackReason": "CP_SAT_INFEASIBLE_OR_TIMEOUT",
                 "compliance": {
-                    "statutorySetbacks": "PASS",
-                    "nbcRoomMinimums": "PASS",
-                    "lightVentilation": "PASS",
-                    "fireEgress": "PASS",
-                    "structuralGridCheck": "PASS"
+                    "statutorySetbacks": "WARNING_UNVERIFIED_FALLBACK",
+                    "nbcRoomMinimums": "WARNING_UNVERIFIED_FALLBACK",
+                    "lightVentilation": "WARNING_UNVERIFIED_FALLBACK",
+                    "fireEgress": "WARNING_UNVERIFIED_FALLBACK",
+                    "structuralGridCheck": "WARNING_UNVERIFIED_FALLBACK"
                 }
             })
         return options
