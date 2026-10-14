@@ -91,34 +91,44 @@ def solve_room_allocation(archetype_key: str, available_width_m: float, availabl
     scale_w = min(available_width_m, 14.0)
     scale_l = min(available_length_m, 16.0)
 
-    # Deterministic spatial grid generation (in millimeters)
+    # Determine vertical scale factor if rooms exceed available length
+    raw_y_left = 0.0
+    raw_y_right = 0.0
+    for room in rooms:
+        target_area = (room["minArea"] + room["maxArea"]) / 2.0
+        if room["zone"] in ["PUBLIC", "SEMI_OUTDOOR", "CIRCULATION"]:
+            w = scale_w * 0.58
+            raw_y_left += max(2.5, round(target_area / w, 2))
+        else:
+            w = scale_w * 0.42
+            raw_y_right += max(2.0, round(target_area / w, 2))
+
+    max_raw_y = max(raw_y_left, raw_y_right)
+    v_scale = min(1.0, available_length_m / max_raw_y) if max_raw_y > 0 else 1.0
+
     placed_rooms = []
-    current_x = 0.0
-    current_y = 0.0
-
-    # Layout generation using 2-column or 3-column architectural bay distribution
-    col1_w = scale_w * 0.58
-    col2_w = scale_w * 0.42
-
     y_left = 0.0
     y_right = 0.0
+    col1_w = scale_w * 0.58
+    col2_w = scale_w * 0.42
 
     for room in rooms:
         floor = room.get("floor", "L0")
         target_area = (room["minArea"] + room["maxArea"]) / 2.0
 
-        # Decide column placement based on zoning (Public/Semi to front, Private/Service to rear)
         if room["zone"] in ["PUBLIC", "SEMI_OUTDOOR", "CIRCULATION"]:
             w = col1_w
-            h = max(2.5, round(target_area / w, 2))
+            base_h = max(2.0, round(target_area / w, 2))
+            h = round(base_h * v_scale, 2)
             x = 0.0
-            y = y_left
+            y = round(y_left, 2)
             y_left += h
         else:
             w = col2_w
-            h = max(2.0, round(target_area / w, 2))
+            base_h = max(1.8, round(target_area / w, 2))
+            h = round(base_h * v_scale, 2)
             x = col1_w
-            y = y_right
+            y = round(y_right, 2)
             y_right += h
 
         placed_rooms.append({
@@ -130,7 +140,6 @@ def solve_room_allocation(archetype_key: str, available_width_m: float, availabl
             "areaSqm": round(w * h, 2),
             "widthM": round(w, 2),
             "lengthM": round(h, 2),
-            # Coordinates in meters from origin [x, y, width, height]
             "bounds": {
                 "x": round(x, 2),
                 "y": round(y, 2),
@@ -139,12 +148,12 @@ def solve_room_allocation(archetype_key: str, available_width_m: float, availabl
             }
         })
 
-    # Generate Structural Column Grid (e.g. 3.5m - 4.5m bays)
+    # Generate Structural Column Grid
     columns = []
     col_spacing_x = 4.0
     col_spacing_y = 4.0
     max_x = scale_w
-    max_y = max(y_left, y_right)
+    max_y = round(min(available_length_m, max(y_left, y_right)), 2)
 
     num_cols_x = max(2, int(max_x / col_spacing_x) + 1)
     num_cols_y = max(2, int(max_y / col_spacing_y) + 1)
@@ -160,7 +169,7 @@ def solve_room_allocation(archetype_key: str, available_width_m: float, availabl
             })
 
     total_usable_sqm = sum(r["areaSqm"] for r in placed_rooms)
-    total_gross_sqm = round(total_usable_sqm * 1.15, 2) # Adding 15% wall & circulation thickness
+    total_gross_sqm = round(total_usable_sqm * 1.15, 2)
 
     return {
         "solverStatus": "OPTIMAL" if HAS_CP_SAT else "FEASIBLE",
@@ -172,7 +181,7 @@ def solve_room_allocation(archetype_key: str, available_width_m: float, availabl
         "totalGrossBUASqm": total_gross_sqm,
         "buildingEnvelope": {
             "widthM": round(scale_w, 2),
-            "lengthM": round(max(y_left, y_right), 2),
+            "lengthM": max_y,
             "heightM": 3.6 if arch["floors"] == 1 else 7.2
         },
         "rooms": placed_rooms,
@@ -238,9 +247,20 @@ def generate_house_options(
     """
     if declared_plot_area_sqft and declared_plot_area_sqft > 0:
         import math
-        m2 = declared_plot_area_sqft * 0.092903
-        site_width_m = round(math.sqrt(m2 * (16 / 9)), 2)
-        site_length_m = round(m2 / site_width_m, 2)
+        plot_m2 = declared_plot_area_sqft * 0.092903
+        plot_w = round(math.sqrt(plot_m2 / 1.45), 2)
+        plot_l = round(plot_m2 / plot_w, 2)
+        # Deduct statutory setbacks: sides 1.0m each, front 3.0m, rear 1.5m
+        eff_w = max(4.5, plot_w - 2.0)
+        eff_l = max(5.0, plot_l - 4.5)
+        # Statutory ground coverage cap: 55%
+        max_footprint = plot_m2 * 0.55
+        if (eff_w * eff_l) > max_footprint:
+            scale = math.sqrt(max_footprint / (eff_w * eff_l))
+            eff_w = round(eff_w * scale, 2)
+            eff_l = round(eff_l * scale, 2)
+        site_width_m = round(eff_w, 2)
+        site_length_m = round(eff_l, 2)
 
     if brief is not None:
         return generate_m2_house_options(
@@ -316,9 +336,20 @@ def generate_m2_house_options(
 
     if declared_plot_area_sqft and declared_plot_area_sqft > 0:
         import math
-        m2 = declared_plot_area_sqft * 0.092903
-        site_width_m = round(math.sqrt(m2 * (16 / 9)), 2)
-        site_length_m = round(m2 / site_width_m, 2)
+        plot_m2 = declared_plot_area_sqft * 0.092903
+        plot_w = round(math.sqrt(plot_m2 / 1.45), 2)
+        plot_l = round(plot_m2 / plot_w, 2)
+        # Deduct statutory setbacks: sides 1.0m each, front 3.0m, rear 1.5m
+        eff_w = max(4.5, plot_w - 2.0)
+        eff_l = max(5.0, plot_l - 4.5)
+        # Statutory ground coverage cap: 55%
+        max_footprint = plot_m2 * 0.55
+        if (eff_w * eff_l) > max_footprint:
+            scale = math.sqrt(max_footprint / (eff_w * eff_l))
+            eff_w = round(eff_w * scale, 2)
+            eff_l = round(eff_l * scale, 2)
+        site_width_m = round(eff_w, 2)
+        site_length_m = round(eff_l, 2)
 
     # 1. Normalize Customer Brief
     if brief is None:
