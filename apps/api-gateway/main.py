@@ -734,7 +734,13 @@ def request_build(design_version_id: str, payload: BuildRequestPayload):
 def get_handoff_package(release_id: str):
     if release_id not in RELEASES_DB:
         raise HTTPException(status_code=404, detail="Release record not found")
-    return RELEASES_DB[release_id]["handoffPackage"]
+    rel = RELEASES_DB[release_id]
+    if rel.get("lifecycleState") != "PROFESSIONALLY_ACCEPTED":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Release handoff package cannot be downloaded until professional review acceptance and all gates approved."
+        )
+    return rel["handoffPackage"]
 
 @app.post("/api/v1/releases/{release_id}/approvals")
 def update_gate_approval(release_id: str, approval: ProfessionalGateApproval):
@@ -758,10 +764,10 @@ def update_gate_approval(release_id: str, approval: ProfessionalGateApproval):
     if not updated:
         raise HTTPException(status_code=400, detail=f"Gate {approval.gate} not found in manifest")
 
-    # If all G0-G3 gates approved, advance to PROFESSIONALLY_ACCEPTED
+    # If all G0-G4 gates approved, advance to PROFESSIONALLY_ACCEPTED
     all_approved = all(
         g["status"] == "APPROVED"
-        for g in pkg["humanVerificationGates"][:4]
+        for g in pkg["humanVerificationGates"][:5]
     )
     if all_approved:
         rel["lifecycleState"] = "PROFESSIONALLY_ACCEPTED"
@@ -783,7 +789,14 @@ def download_ifc_model(release_id: str):
     if release_id not in RELEASES_DB:
         raise HTTPException(status_code=404, detail="Release not found")
 
-    opt = RELEASES_DB[release_id]["houseOption"]
+    rel = RELEASES_DB[release_id]
+    if rel.get("lifecycleState") != "PROFESSIONALLY_ACCEPTED":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Release IFC model cannot be exported until professional review acceptance and all gates approved."
+        )
+
+    opt = rel["houseOption"]
     ifc_text = generate_ifc4_model(opt, release_id)
     return Response(
         content=ifc_text,
@@ -896,7 +909,12 @@ def get_engineer_review_issues(review_id: str):
 
 
 @app.post("/api/v1/engineer-reviews/{review_id}/gates/{gate_code}/verify")
-def verify_review_gate(review_id: str, gate_code: str, payload: GateVerificationPayload):
+def verify_review_gate(
+    review_id: str,
+    gate_code: str,
+    payload: GateVerificationPayload,
+    current_user: Dict[str, Any] = Depends(get_current_user)
+):
     """
     Updates status for a specific gate (independent gate transitions, anti-bypass §8, §11).
     G5 (Build Authorization) & G6 (Contractor Handoff) cannot be verified until G0-G4 are verified.
@@ -949,7 +967,11 @@ def verify_review_gate(review_id: str, gate_code: str, payload: GateVerification
 
 
 @app.post("/api/v1/engineer-reviews/{review_id}/issues", status_code=status.HTTP_201_CREATED)
-def create_review_issue(review_id: str, payload: CreateIssuePayload):
+def create_review_issue(
+    review_id: str,
+    payload: CreateIssuePayload,
+    current_user: Dict[str, Any] = Depends(get_current_user)
+):
     """Records a structured issue against a specific gate (§8)."""
     if review_id not in ENGINEER_REVIEWS_DB:
         raise HTTPException(status_code=404, detail="Engineer review not found")
@@ -979,7 +1001,11 @@ def create_review_issue(review_id: str, payload: CreateIssuePayload):
 
 
 @app.post("/api/v1/engineer-reviews/{review_id}/decision")
-def record_review_decision(review_id: str, payload: ReviewDecisionPayload):
+def record_review_decision(
+    review_id: str,
+    payload: ReviewDecisionPayload,
+    current_user: Dict[str, Any] = Depends(get_current_user)
+):
     """Records an engineering review decision (APPROVE_STAGE, CANNOT_PROCEED) (§9)."""
     if review_id not in ENGINEER_REVIEWS_DB:
         raise HTTPException(status_code=404, detail="Engineer review not found")
@@ -1016,7 +1042,11 @@ def record_review_decision(review_id: str, payload: ReviewDecisionPayload):
 
 
 @app.post("/api/v1/engineer-reviews/{review_id}/request-changes")
-def request_review_changes(review_id: str, payload: RequestChangesPayload):
+def request_review_changes(
+    review_id: str,
+    payload: RequestChangesPayload,
+    current_user: Dict[str, Any] = Depends(get_current_user)
+):
     """
     Transitions review to CHANGES_REQUIRED (§10).
     Requires at least one structured issue detailing required action.
