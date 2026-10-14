@@ -668,23 +668,24 @@ def request_build(design_version_id: str, payload: BuildRequestPayload):
             break
 
     if not target_option:
-        # Fallback to generating a fresh option if not in cache
-        opts = generate_house_options()
-        target_option = opts[0]
-        target_option["boq"] = compute_traceable_boq(target_option, quality_tier=payload.requestedQualityTier)
-        target_option["schedule"] = generate_construction_schedule(
-            total_bua_sqm=target_option["layout"]["totalGrossBUASqm"],
-            floors=target_option["layout"]["floors"]
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Design option '{payload.optionId}' for version '{design_version_id}' not found. Cannot request build on uncompiled option."
         )
-        target_proj_id = "proj-mumbai-real-1100"
 
     release_id = f"rel-{uuid.uuid4().hex[:12]}"
 
-    # Compute SHA-256 release fingerprint
+    # Compute SHA-256 release fingerprint from active design option
+    geom_hash = target_option.get("designHash", f"sha256:{design_version_id}")
+    if isinstance(target_option.get("buildingModel"), dict):
+        meta = target_option["buildingModel"].get("metadata", {})
+        if isinstance(meta, dict) and meta.get("modelHash"):
+            geom_hash = meta["modelHash"]
+
     fingerprint = generate_release_fingerprint(
-        geometry_hash="sha256:geom_bandra_1100",
-        regulation_hash="sha256:mcgm_dcpr2034_v1",
-        customer_brief_hash="sha256:brief_std_res",
+        geometry_hash=geom_hash,
+        regulation_hash=target_option.get("regulationVersionId", "sha256:mcgm_dcpr2034_v1"),
+        customer_brief_hash=target_option.get("briefId", "sha256:brief_active"),
         design_hash=target_option["designHash"],
         boq_hash=f"sha256:{hashlib.sha256(json.dumps(target_option['boq']['lines']).encode()).hexdigest()[:12]}",
         schedule_hash=f"sha256:{hashlib.sha256(json.dumps(target_option['schedule']['activities']).encode()).hexdigest()[:12]}"
