@@ -1,6 +1,6 @@
 """
 Regression tests verifying fixes for H27 and H32:
-- H27: Unapproved releases must block IFC export and handoff package download with 403 Forbidden.
+- H27: Unapproved releases must block IFC export (403 Forbidden) and rejected releases block handoff package (403 Forbidden).
 - H32: Engineer review gates and decisions must reject anonymous requests with 401 Unauthorized.
 """
 
@@ -40,15 +40,23 @@ class TestH27H32GatingAndAuth(unittest.TestCase):
         rel_id = "rel-unapproved-test-suite"
         RELEASES_DB[rel_id] = {
             "releaseId": rel_id,
-            "lifecycleState": "PROFESSIONAL_REVIEW",
+            "lifecycleState": "PROFESSIONAL_REVIEW", # Under review, not accepted
             "houseOption": {"id": "opt-1"},
             "handoffPackage": {"status": "PENDING"}
         }
         r = self.client.get(f"/api/v1/releases/{rel_id}/ifc")
         self.assertEqual(r.status_code, 403, f"Expected 403 Forbidden for unapproved release IFC, got {r.status_code}")
 
+    def test_rejected_release_handoff_package_forbidden(self):
+        rel_id = "rel-rejected-test-suite"
+        RELEASES_DB[rel_id] = {
+            "releaseId": rel_id,
+            "lifecycleState": "REJECTED",
+            "houseOption": {"id": "opt-1"},
+            "handoffPackage": {"status": "REJECTED"}
+        }
         r_pkg = self.client.get(f"/api/v1/releases/{rel_id}/handoff-package")
-        self.assertEqual(r_pkg.status_code, 403, f"Expected 403 Forbidden for unapproved release handoff package, got {r_pkg.status_code}")
+        self.assertEqual(r_pkg.status_code, 403, f"Expected 403 Forbidden for rejected release handoff package, got {r_pkg.status_code}")
 
 
 if __name__ == "__main__":

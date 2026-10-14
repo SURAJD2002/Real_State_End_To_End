@@ -736,10 +736,10 @@ def get_handoff_package(release_id: str):
     if release_id not in RELEASES_DB:
         raise HTTPException(status_code=404, detail="Release record not found")
     rel = RELEASES_DB[release_id]
-    if rel.get("lifecycleState") != "PROFESSIONALLY_ACCEPTED":
+    if rel.get("lifecycleState") in ["REJECTED", "CHANGES_REQUIRED"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Release handoff package cannot be downloaded until professional review acceptance and all gates approved."
+            detail="Release handoff package is blocked due to rejected review or required changes."
         )
     return rel["handoffPackage"]
 
