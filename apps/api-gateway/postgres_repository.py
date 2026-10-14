@@ -107,7 +107,7 @@ class OrganizationRepository:
     _MEMBERSHIP_CACHE: Dict[str, Dict[str, Any]] = {}
 
     @classmethod
-    def get_or_create_user_organization(cls, user_id: str, email: str, org_name: Optional[str] = None) -> Dict[str, Any]:
+    def get_or_create_user_organization(cls, user_id: str, email: str, org_name: Optional[str] = None, role: Optional[str] = None) -> Dict[str, Any]:
         """
         Retrieves user's active organization or provisions a new one with OWNER role.
         Prevents unauthorized self-assignment of OWNER to existing organizations.
@@ -115,6 +115,8 @@ class OrganizationRepository:
         uid = to_valid_uuid(user_id)
         if uid in cls._MEMBERSHIP_CACHE:
             return cls._MEMBERSHIP_CACHE[uid]
+        if user_id in cls._MEMBERSHIP_CACHE:
+            return cls._MEMBERSHIP_CACHE[user_id]
 
         sql_check = f"""
         SELECT om.organization_id, om.role, o.name, o.slug
@@ -135,6 +137,7 @@ class OrganizationRepository:
                     "role": rows[0]["role"]
                 }
                 cls._MEMBERSHIP_CACHE[uid] = res
+                cls._MEMBERSHIP_CACHE[user_id] = res
                 return res
         except Exception:
             pass
@@ -142,6 +145,11 @@ class OrganizationRepository:
         clean_name = (org_name or f"{email.split('@')[0].capitalize()}'s Team").replace("'", "''")
         org_id = str(uuid.uuid4())
         slug = f"org-{uuid.uuid4().hex[:8]}"
+        VALID_ROLES = {"OWNER", "ADMIN", "MEMBER", "REVIEWER", "ENGINEER", "ARCHITECT", "CUSTOMER", "VIEWER"}
+        if role and str(role).upper() in VALID_ROLES:
+            assigned_role = str(role).upper()
+        else:
+            assigned_role = "OWNER"
         sql_create = f"""
         DO $$
         BEGIN
@@ -151,7 +159,7 @@ class OrganizationRepository:
 
             IF EXISTS (SELECT 1 FROM auth.users WHERE id = '{uid}') THEN
                 INSERT INTO public.organization_memberships (organization_id, user_id, role)
-                VALUES ('{org_id}', '{uid}', 'OWNER')
+                VALUES ('{org_id}', '{uid}', '{assigned_role}')
                 ON CONFLICT (organization_id, user_id) DO NOTHING;
             END IF;
         END $$;
@@ -167,9 +175,10 @@ class OrganizationRepository:
                 "name": clean_name,
                 "slug": slug
             },
-            "role": "OWNER"
+            "role": assigned_role
         }
         cls._MEMBERSHIP_CACHE[uid] = res
+        cls._MEMBERSHIP_CACHE[user_id] = res
         return res
 
     @staticmethod

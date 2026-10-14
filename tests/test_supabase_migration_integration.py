@@ -48,6 +48,7 @@ class TestSupabaseMigrationIntegration(unittest.TestCase):
             "20261010050000",
             "20261010060000",
             "20261010070000",
+            "20261010080000",
         ]
         self.assertEqual(versions, expected_versions, f"Recorded versions mismatch: {versions}")
 

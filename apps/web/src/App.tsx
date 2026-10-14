@@ -77,13 +77,17 @@ export const App: React.FC = () => {
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const apiBase = '/api/v1';
 
+  const getAuthHeaders = useCallback((additionalHeaders: Record<string, string> = {}): Record<string, string> => {
+    const headers: Record<string, string> = { ...additionalHeaders };
+    if (session?.access_token) {
+      headers['Authorization'] = `Bearer ${session.access_token}`;
+    }
+    return headers;
+  }, [session?.access_token]);
+
   // 1. Initial Load: Fetch projects and house options for authenticated tenant
   useEffect(() => {
-    const authHeaders: Record<string, string> = session?.access_token
-      ? { 'Authorization': `Bearer ${session.access_token}` }
-      : {};
-
-    fetch(`${apiBase}/projects`, { headers: authHeaders })
+    fetch(`${apiBase}/projects`, { headers: getAuthHeaders() })
       .then((res) => res.json())
       .then((projects: ProjectData[]) => {
         if (projects && projects.length > 0) {
@@ -112,7 +116,7 @@ export const App: React.FC = () => {
       });
 
     // Fetch initial house options
-    fetch(`${apiBase}/projects/proj-mumbai-real-1100/house-options`, { headers: authHeaders })
+    fetch(`${apiBase}/projects/proj-mumbai-real-1100/house-options`, { headers: getAuthHeaders() })
       .then((res) => res.json())
       .then((opts: HouseOption[]) => {
         if (opts && opts.length > 0) {
@@ -121,7 +125,7 @@ export const App: React.FC = () => {
         }
       })
       .catch((err) => console.warn('Could not load house options from API', err));
-  }, [session?.access_token]);
+  }, [session?.access_token, getAuthHeaders]);
 
   // 2. Debounced Auto-Save Mechanism (600ms)
   useEffect(() => {
@@ -136,7 +140,7 @@ export const App: React.FC = () => {
       const projId = project?.id || 'proj-mumbai-real-1100';
       fetch(`${apiBase}/projects/${projId}/geometries`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           version: project?.parcel?.version || 1,
           coordinates,
@@ -157,12 +161,16 @@ export const App: React.FC = () => {
         clearTimeout(debounceTimerRef.current);
       }
     };
-  }, [coordinates, existingRoadWidth, proposedRoadWidth, project?.id, project?.parcel?.version]);
+  }, [coordinates, existingRoadWidth, proposedRoadWidth, project?.id, project?.parcel?.version, getAuthHeaders]);
 
   // 3. Trigger Feasibility DAG Run & Regenerate House Options
-  const handleRunFeasibility = useCallback(async (targetProjId?: string) => {
-    if (coordinates.length < 3) {
-      alert('Please draw at least 3 vertices to form a closed parcel polygon.');
+  const handleRunFeasibility = useCallback(async (targetProjId?: string, overrideCoords?: [number, number][]) => {
+    const activeCoords = (overrideCoords && overrideCoords.length >= 3)
+      ? overrideCoords
+      : (coordinates.length >= 3 ? coordinates : (project?.parcel?.coordinates || []));
+
+    if (activeCoords.length < 3) {
+      console.warn('Need at least 3 vertices to form a closed parcel polygon.');
       return;
     }
 
@@ -171,14 +179,17 @@ export const App: React.FC = () => {
 
     try {
       const res = await fetch(`${apiBase}/projects/${projId}/calculate-feasibility`, {
-        method: 'POST'
+        method: 'POST',
+        headers: getAuthHeaders()
       });
       if (!res.ok) throw new Error('Feasibility run failed');
       const data: FeasibilityResult = await res.json();
       setFeasibility(data);
 
       // Refresh house options
-      const optRes = await fetch(`${apiBase}/projects/${projId}/house-options`);
+      const optRes = await fetch(`${apiBase}/projects/${projId}/house-options`, {
+        headers: getAuthHeaders()
+      });
       if (optRes.ok) {
         const opts = await optRes.json();
         setHouseOptions(opts);
@@ -188,13 +199,16 @@ export const App: React.FC = () => {
     } finally {
       setIsCalculating(false);
     }
-  }, [coordinates, project?.id]);
+  }, [coordinates, project?.id, project?.parcel?.coordinates, getAuthHeaders]);
 
   // 4. Load Golden Benchmark
   const handleLoadGoldenDataset = useCallback(async () => {
     setIsCalculating(true);
     try {
-      const res = await fetch(`${apiBase}/projects/load-golden-dataset`, { method: 'POST' });
+      const res = await fetch(`${apiBase}/projects/load-golden-dataset`, {
+        method: 'POST',
+        headers: getAuthHeaders()
+      });
       if (res.ok) {
         const data = await res.json();
         setProject(data.project);
@@ -204,7 +218,9 @@ export const App: React.FC = () => {
         setFeasibility(data.feasibility);
 
         // Fetch refreshed house options
-        const optRes = await fetch(`${apiBase}/projects/${data.project.id}/house-options`);
+        const optRes = await fetch(`${apiBase}/projects/${data.project.id}/house-options`, {
+          headers: getAuthHeaders()
+        });
         if (optRes.ok) {
           const opts = await optRes.json();
           setHouseOptions(opts);
@@ -217,13 +233,15 @@ export const App: React.FC = () => {
       console.warn('Golden dataset load fallback', err);
     }
     setIsCalculating(false);
-  }, []);
+  }, [getAuthHeaders]);
 
   // 5. Handle Quality Tier Update in Cost View
   const handleUpdateTier = async (tier: string) => {
     const projId = project?.id || 'proj-mumbai-real-1100';
     try {
-      const res = await fetch(`${apiBase}/projects/${projId}/house-options?quality_tier=${tier}`);
+      const res = await fetch(`${apiBase}/projects/${projId}/house-options?quality_tier=${tier}`, {
+        headers: getAuthHeaders()
+      });
       if (res.ok) {
         const opts = await res.json();
         setHouseOptions(opts);
@@ -242,7 +260,7 @@ export const App: React.FC = () => {
     try {
       const res = await fetch(`${apiBase}/design-versions/${targetOption.designVersionId}/build-request`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           designVersionId: targetOption.designVersionId,
           optionId: targetOption.optionId,
@@ -283,7 +301,7 @@ export const App: React.FC = () => {
       // Call M2 generation pipeline
       const genRes = await fetch(`${apiBase}/sites/${projId}/design-options/generate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           bedrooms: reqs.bedrooms,
           bathrooms: reqs.bathrooms,
@@ -309,7 +327,9 @@ export const App: React.FC = () => {
       }
 
       // Fallback to project house-options
-      const optRes = await fetch(`${apiBase}/projects/${projId}/house-options`);
+      const optRes = await fetch(`${apiBase}/projects/${projId}/house-options`, {
+        headers: getAuthHeaders()
+      });
       if (optRes.ok) {
         const opts: HouseOption[] = await optRes.json();
         if (opts.length > 0) {
@@ -351,7 +371,7 @@ export const App: React.FC = () => {
     try {
       const res = await fetch(`${apiBase}/projects/${projId}/geometries`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           version: project?.parcel?.version || 1,
           coordinates,
@@ -482,7 +502,7 @@ export const App: React.FC = () => {
     // Auto-save project geometries with declaredPlotAreaSqFt to backend
     fetch(`${apiBase}/projects/${nextProjectId}/geometries`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({
         version: parcelVersion,
         coordinates: finalCoords,
@@ -497,7 +517,7 @@ export const App: React.FC = () => {
     setDesignPhase('INTAKE');
     setHouseOptions([]);
     setSelectedOptionId('');
-    handleRunFeasibility(nextProjectId);
+    handleRunFeasibility(nextProjectId, finalCoords);
     setActiveStep('FEASIBILITY');
   };
 

@@ -276,9 +276,10 @@ async def get_current_user_optional(credentials: Optional[HTTPAuthorizationCrede
     email = claims.get("email", "")
     user_metadata = claims.get("user_metadata", {})
     org_name = user_metadata.get("org_name")
+    explicit_role = user_metadata.get("role") or claims.get("app_role") or (claims.get("role") if claims.get("role") != "authenticated" else None)
 
     # Resolve organization & role strictly from database
-    org_info = OrganizationRepository.get_or_create_user_organization(user_id, email, org_name)
+    org_info = OrganizationRepository.get_or_create_user_organization(user_id, email, org_name, role=explicit_role)
 
     return {
         "id": user_id,

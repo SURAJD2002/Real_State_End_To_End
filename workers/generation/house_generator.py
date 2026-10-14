@@ -246,21 +246,13 @@ def generate_house_options(
     guaranteeing backwards compatibility with existing CBM & GIS benchmark suites.
     """
     if declared_plot_area_sqft and declared_plot_area_sqft > 0:
-        import math
-        plot_m2 = declared_plot_area_sqft * 0.092903
-        plot_w = round(math.sqrt(plot_m2 / 1.45), 2)
-        plot_l = round(plot_m2 / plot_w, 2)
-        # Deduct statutory setbacks: sides 1.0m each, front 3.0m, rear 1.5m
-        eff_w = max(4.5, plot_w - 2.0)
-        eff_l = max(5.0, plot_l - 4.5)
-        # Statutory ground coverage cap: 55%
-        max_footprint = plot_m2 * 0.55
-        if (eff_w * eff_l) > max_footprint:
-            scale = math.sqrt(max_footprint / (eff_w * eff_l))
-            eff_w = round(eff_w * scale, 2)
-            eff_l = round(eff_l * scale, 2)
-        site_width_m = round(eff_w, 2)
-        site_length_m = round(eff_l, 2)
+        from workers.geometry.envelope import compute_statutory_envelope
+        env_res = compute_statutory_envelope(
+            plot_input={"declaredPlotAreaSqFt": declared_plot_area_sqft},
+            jurisdiction=rule_pack_id
+        )
+        site_width_m = env_res["envelopeWidthM"]
+        site_length_m = env_res["envelopeLengthM"]
 
     if brief is not None:
         return generate_m2_house_options(
@@ -335,21 +327,13 @@ def generate_m2_house_options(
     from workers.generation.validation_engine import run_m2_design_validation
 
     if declared_plot_area_sqft and declared_plot_area_sqft > 0:
-        import math
-        plot_m2 = declared_plot_area_sqft * 0.092903
-        plot_w = round(math.sqrt(plot_m2 / 1.45), 2)
-        plot_l = round(plot_m2 / plot_w, 2)
-        # Deduct statutory setbacks: sides 1.0m each, front 3.0m, rear 1.5m
-        eff_w = max(4.5, plot_w - 2.0)
-        eff_l = max(5.0, plot_l - 4.5)
-        # Statutory ground coverage cap: 55%
-        max_footprint = plot_m2 * 0.55
-        if (eff_w * eff_l) > max_footprint:
-            scale = math.sqrt(max_footprint / (eff_w * eff_l))
-            eff_w = round(eff_w * scale, 2)
-            eff_l = round(eff_l * scale, 2)
-        site_width_m = round(eff_w, 2)
-        site_length_m = round(eff_l, 2)
+        from workers.geometry.envelope import compute_statutory_envelope
+        env_res = compute_statutory_envelope(
+            plot_input={"declaredPlotAreaSqFt": declared_plot_area_sqft},
+            jurisdiction=rule_pack_id
+        )
+        site_width_m = env_res["envelopeWidthM"]
+        site_length_m = env_res["envelopeLengthM"]
 
     # 1. Normalize Customer Brief
     if brief is None:
@@ -366,21 +350,34 @@ def generate_m2_house_options(
     program = build_room_program_from_brief(brief)
     graph = build_default_residential_adjacency_graph()
 
+    # Calculate minimum footprint needed for program vs envelope
+    min_program_area = sum(r.minAreaSqm for r in program.rooms)
+    envelope_footprint = site_width_m * site_length_m
+    effective_floors = brief.floors
+    effective_brief = brief
+    if (envelope_footprint >= 45.0 and site_width_m >= 5.0 and site_length_m >= 5.0) and min_program_area > (envelope_footprint * 0.90) and effective_floors < 2:
+        effective_floors = 2
+        effective_brief = brief.model_copy(update={"floors": 2}) if hasattr(brief, "model_copy") else brief.copy(update={"floors": 2})
+        program = build_room_program_from_brief(effective_brief)
+
     # 3. Solve spatial layouts via OR-Tools CP-SAT
     solver = CPSATLayoutSolver(
         program=program,
         adjacency_graph=graph,
-        brief=brief,
+        brief=effective_brief,
         envelope_width_m=site_width_m,
         envelope_length_m=site_length_m,
-        max_floors=brief.floors,
+        max_floors=effective_floors,
         time_limit_seconds=1.2
     )
     candidates = solver.solve_candidates(target_candidates=3)
 
     # Fallback to standard archetypes if plot constraints make CP-SAT infeasible
     if not candidates:
-        archetypes = ["compact_2bhk", "family_3bhk", "duplex_3bhk"]
+        if brief and getattr(brief, "bedrooms", 3) >= 3:
+            archetypes = ["family_3bhk", "duplex_3bhk", "compact_2bhk"]
+        else:
+            archetypes = ["compact_2bhk", "family_3bhk", "duplex_3bhk"]
         options = []
         for arch_key in archetypes:
             layout = solve_room_allocation(arch_key, site_width_m, site_length_m)

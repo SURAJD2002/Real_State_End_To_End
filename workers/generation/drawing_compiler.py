@@ -906,6 +906,8 @@ def generate_pdf_sheet(
     # Fix PDF Document ID from MD5 digest of seed, eliminating random/time-based variations.
     md5_digest = hashlib.md5(deterministic_seed.encode("utf-8")).digest()
     c._doc.ID = lambda: (md5_digest, md5_digest)
+    from reportlab.lib.utils import TimeStamp
+    c._doc._timeStamp = TimeStamp(1790942400)
     c.setTitle(f"Planwise - {spec['drawingId']} {spec['drawingTitle']}")
     c.setAuthor("Planwise Enterprise Platform")
     c.setSubject(f"Architectural Drawing {spec['drawingId']}")

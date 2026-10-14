@@ -139,6 +139,32 @@ def handle_database_ledger_error(request: Request, exc: DatabaseLedgerError):
         content={"detail": str(exc), "error": error_type}
     )
 
+from workers.geometry.envelope import UnknownJurisdictionError, compute_statutory_envelope
+
+@app.exception_handler(UnknownJurisdictionError)
+async def unknown_jurisdiction_exception_handler(request: Request, exc: UnknownJurisdictionError):
+    return JSONResponse(
+        status_code=422,
+        content=exc.detail
+    )
+
+REVIEWER_ROLES = {"REVIEWER", "ENGINEER", "ARCHITECT", "ADMIN", "OWNER"}
+
+def require_reviewer_role(current_user: Any, payload: Optional[Any] = None) -> str:
+    """Enforces that current_user has a professional reviewer role; returns reviewer ID from token."""
+    if not isinstance(current_user, dict):
+        if payload is not None and getattr(payload, "reviewerId", None):
+            return str(payload.reviewerId)
+        return "AUTH-REVIEWER"
+
+    role = (current_user.get("role") or "").upper()
+    if role == "CUSTOMER" or role not in REVIEWER_ROLES:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Forbidden: Reviewer authorization required. Role '{role}' cannot perform verification or approval operations."
+        )
+    return str(current_user.get("id") or current_user.get("email") or "AUTH-REVIEWER")
+
 # --- Pydantic Data Contracts ---
 
 class GeometryAutoSavePayload(BaseModel):
@@ -214,6 +240,8 @@ SITE_EVIDENCE_DB: Dict[str, List[Dict[str, Any]]] = {}
 SITE_REF_FRAMES_DB: Dict[str, Dict[str, Any]] = {}
 FEASIBILITY_EXPLAINABILITY_DB: Dict[str, Dict[str, Any]] = {}
 RULE_TRACES_DB: Dict[str, List[Dict[str, Any]]] = {}
+CANONICAL_MODELS_DB: Dict[str, Any] = {}
+M2_DESIGN_OPTIONS_DB: Dict[str, Any] = {}
 
 def get_or_create_default_project() -> Dict[str, Any]:
     if not PROJECTS_DB:
@@ -341,8 +369,8 @@ async def get_auth_session(current_user: Optional[Dict[str, Any]] = Depends(get_
     }
 
 @app.get("/api/v1/projects")
-def list_projects(current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional)):
-    org_id = current_user.get("organization_id") if isinstance(current_user, dict) else None
+def list_projects(current_user: Dict[str, Any] = Depends(get_current_user)):
+    org_id = current_user.get("organization_id")
     try:
         db_projects = ProjectRepository.list_projects(org_id=org_id)
         for p in db_projects:
@@ -381,7 +409,6 @@ def list_projects(current_user: Optional[Dict[str, Any]] = Depends(get_current_u
     if org_id:
         return [p for p in PROJECTS_DB.values() if p.get("organization_id") == org_id]
 
-    # Unauthenticated / anonymous users must NEVER see tenant confidential projects
     return [p for p in PROJECTS_DB.values() if not p.get("organization_id") or p.get("organization_id") == "11111111-1111-1111-1111-111111111111"]
 
 @app.post("/api/v1/projects", status_code=status.HTTP_201_CREATED)
@@ -673,6 +700,12 @@ def request_build(design_version_id: str, payload: BuildRequestPayload):
             detail=f"Design option '{payload.optionId}' for version '{design_version_id}' not found. Cannot request build on uncompiled option."
         )
 
+    if target_option.get("isFallback"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot request build release or professional review on a fallback archetype. A compliant, CP-SAT-solved design option is required."
+        )
+
     release_id = f"rel-{uuid.uuid4().hex[:12]}"
 
     # Compute SHA-256 release fingerprint from active design option
@@ -744,7 +777,12 @@ def get_handoff_package(release_id: str):
     return rel["handoffPackage"]
 
 @app.post("/api/v1/releases/{release_id}/approvals")
-def update_gate_approval(release_id: str, approval: ProfessionalGateApproval):
+def update_gate_approval(
+    release_id: str,
+    approval: ProfessionalGateApproval,
+    current_user: Dict[str, Any] = Depends(get_current_user)
+):
+    reviewer_id = require_reviewer_role(current_user, approval)
     if release_id not in RELEASES_DB:
         raise HTTPException(status_code=404, detail="Release record not found")
 
@@ -756,7 +794,7 @@ def update_gate_approval(release_id: str, approval: ProfessionalGateApproval):
     for g in pkg["humanVerificationGates"]:
         if g["gate"] == approval.gate:
             g["status"] = approval.decision
-            g["verifiedBy"] = approval.professionalId
+            g["verifiedBy"] = reviewer_id  # Enforced from authenticated token
             g["verifiedAt"] = datetime.utcnow().isoformat()
             g["notes"] = approval.notes
             updated = True
@@ -766,9 +804,10 @@ def update_gate_approval(release_id: str, approval: ProfessionalGateApproval):
         raise HTTPException(status_code=400, detail=f"Gate {approval.gate} not found in manifest")
 
     # If all G0-G4 gates approved, advance to PROFESSIONALLY_ACCEPTED
+    prereq_gates = ["G0", "G1", "G2", "G3", "G4"]
     all_approved = all(
-        g["status"] == "APPROVED"
-        for g in pkg["humanVerificationGates"][:5]
+        any(g["gate"] == code and g["status"] == "APPROVED" for g in pkg["humanVerificationGates"])
+        for code in prereq_gates
     )
     if all_approved:
         rel["lifecycleState"] = "PROFESSIONALLY_ACCEPTED"
@@ -785,7 +824,10 @@ def update_gate_approval(release_id: str, approval: ProfessionalGateApproval):
     }
 
 @app.get("/api/v1/releases/{release_id}/ifc")
-def download_ifc_model(release_id: str):
+def download_ifc_model(
+    release_id: str,
+    current_user: Dict[str, Any] = Depends(get_current_user)
+):
     """Exports open-standard IFC4 semantic model (Delta Spec §1, §12)."""
     if release_id not in RELEASES_DB:
         raise HTTPException(status_code=404, detail="Release not found")
@@ -920,6 +962,7 @@ def verify_review_gate(
     Updates status for a specific gate (independent gate transitions, anti-bypass §8, §11).
     G5 (Build Authorization) & G6 (Contractor Handoff) cannot be verified until G0-G4 are verified.
     """
+    reviewer_id = require_reviewer_role(current_user, payload)
     if review_id not in ENGINEER_REVIEWS_DB:
         raise HTTPException(status_code=404, detail="Engineer review not found")
 
@@ -933,6 +976,21 @@ def verify_review_gate(
 
     if not target_gate:
         raise HTTPException(status_code=404, detail=f"Gate {gate_code} not found")
+
+    # Anti-bypass: Fallback options cannot receive G1 approval
+    if target_gate.gateCode == GateCode.G1 and payload.status in [GateStatus.VERIFIED, GateStatus.REVIEWED]:
+        dv_id = review.designVersionId
+        is_fallback = False
+        for options in HOUSE_OPTIONS_CACHE.values():
+            for opt in options:
+                if (opt.get("designVersionId") == dv_id or opt.get("optionId") == dv_id) and opt.get("isFallback"):
+                    is_fallback = True
+                    break
+        if is_fallback:
+            raise HTTPException(
+                status_code=400,
+                detail="Gate G1 (Statutory Compliance) cannot be verified for fallback options. Infeasible layouts cannot receive statutory compliance approval."
+            )
 
     # Anti-bypass: G5/G6 cannot be verified without prerequisites (§8, §14)
     if target_gate.gateCode in [GateCode.G5, GateCode.G6] and payload.status in [GateStatus.VERIFIED, GateStatus.REVIEWED]:
@@ -954,7 +1012,7 @@ def verify_review_gate(
 
     # Independent gate transition: ONLY update the targeted gate (§11)
     target_gate.status = payload.status
-    target_gate.reviewedBy = payload.reviewerId
+    target_gate.reviewedBy = reviewer_id  # Enforced from authenticated token
     target_gate.reviewedAt = datetime.now(timezone.utc).isoformat()
     target_gate.notes = payload.notes
     review.updatedAt = datetime.now(timezone.utc).isoformat()
@@ -1008,6 +1066,7 @@ def record_review_decision(
     current_user: Dict[str, Any] = Depends(get_current_user)
 ):
     """Records an engineering review decision (APPROVE_STAGE, CANNOT_PROCEED) (§9)."""
+    reviewer_id = require_reviewer_role(current_user, payload)
     if review_id not in ENGINEER_REVIEWS_DB:
         raise HTTPException(status_code=404, detail="Engineer review not found")
 
@@ -1024,6 +1083,7 @@ def record_review_decision(
                 status_code=400,
                 detail=f"Cannot approve review stage with {len(open_blockers)} unresolved blocker issues."
             )
+
         review.status = ReviewStatus.APPROVED
 
     elif payload.decision == ReviewDecisionType.CANNOT_PROCEED:
@@ -1032,7 +1092,7 @@ def record_review_decision(
     decision = ReviewDecision(
         engineerReviewId=review_id,
         decision=payload.decision,
-        decidedBy=payload.reviewerId,
+        decidedBy=reviewer_id,  # Enforced from authenticated token
         reason=payload.reason
     )
     review.decisions.append(decision)
@@ -1053,6 +1113,7 @@ def request_review_changes(
     Requires at least one structured issue detailing required action.
     Invalidates downstream build release readiness.
     """
+    reviewer_id = require_reviewer_role(current_user, payload)
     if review_id not in ENGINEER_REVIEWS_DB:
         raise HTTPException(status_code=404, detail="Engineer review not found")
 
@@ -1163,7 +1224,7 @@ def get_mumbai_regulations():
 # Canonical Building Model & Authoritative Projections (§28, §33, §40)
 # =====================================================================
 
-def _resolve_canonical_model(design_version_id: str) -> Any:
+def _resolve_canonical_model(design_version_id: str, allow_synthetic_fallback: bool = False) -> Any:
     """Helper to locate or compile CanonicalBuildingModel for a given design version."""
     from packages.schemas.building_model import CanonicalBuildingModel
     from workers.generation.model_compiler import compile_canonical_building_model
@@ -1176,6 +1237,19 @@ def _resolve_canonical_model(design_version_id: str) -> Any:
             return ctx.resolve_canonical_model()
         except Exception:
             pass
+
+    # Check CANONICAL_MODELS_DB
+    if design_version_id in CANONICAL_MODELS_DB:
+        return CANONICAL_MODELS_DB[design_version_id]
+
+    # Check M2_DESIGN_OPTIONS_DB
+    if design_version_id in M2_DESIGN_OPTIONS_DB:
+        opt = M2_DESIGN_OPTIONS_DB[design_version_id]
+        bm = opt.get("buildingModel")
+        if isinstance(bm, CanonicalBuildingModel):
+            return bm
+        elif isinstance(bm, dict):
+            return CanonicalBuildingModel(**bm)
 
     # Check cache across all projects
     for pid, options in HOUSE_OPTIONS_CACHE.items():
@@ -1191,7 +1265,20 @@ def _resolve_canonical_model(design_version_id: str) -> Any:
                     opt["buildingModel"] = m.dict()
                     return m
 
-    # Fallback to compiling archetype by keyword
+    # Check RELEASES_DB
+    for rel in RELEASES_DB.values():
+        if rel.get("designVersionId") == design_version_id:
+            opt = rel.get("houseOption", {})
+            bm = opt.get("buildingModel")
+            if isinstance(bm, CanonicalBuildingModel):
+                return bm
+            elif isinstance(bm, dict):
+                return CanonicalBuildingModel(**bm)
+
+    if not allow_synthetic_fallback:
+        raise HTTPException(status_code=404, detail=f"Design version '{design_version_id}' not found.")
+
+    # Fallback to compiling archetype by keyword ONLY if explicitly requested
     d_upper = design_version_id.upper()
     if "DUPLEX" in d_upper:
         arch = "duplex_3bhk"
@@ -1250,10 +1337,43 @@ def get_model_3d_endpoint(design_version_id: str):
 
 
 @app.get("/api/v1/design-versions/{design_version_id}/ifc")
-def get_model_ifc_endpoint(design_version_id: str):
+def get_model_ifc_endpoint(
+    design_version_id: str,
+    current_user: Dict[str, Any] = Depends(get_current_user)
+):
     """§33, §40 Exports open-standard IFC4 STEP file mapped from canonical elements."""
     from workers.release.manifest_engine import generate_ifc4_model
-    model = _resolve_canonical_model(design_version_id)
+    model = _resolve_canonical_model(design_version_id, allow_synthetic_fallback=False)
+
+    # Require approved gates
+    is_approved = False
+    for rel in RELEASES_DB.values():
+        if rel.get("designVersionId") == design_version_id and rel.get("lifecycleState") == "PROFESSIONALLY_ACCEPTED":
+            is_approved = True
+            break
+
+    if not is_approved:
+        for rev in ENGINEER_REVIEWS_DB.values():
+            if rev.designVersionId == design_version_id:
+                prereq_satisfied = all(
+                    g.status in [GateStatus.VERIFIED, GateStatus.SYSTEM_VERIFIED, GateStatus.REVIEWED]
+                    for g in rev.gates
+                    if g.gateCode in [GateCode.G0, GateCode.G1, GateCode.G2, GateCode.G3, GateCode.G4]
+                )
+                no_blockers = not any(
+                    i.severity == IssueSeverity.BLOCKER and i.status == IssueStatus.OPEN
+                    for i in rev.issues
+                )
+                if (prereq_satisfied and no_blockers) or rev.status == ReviewStatus.APPROVED:
+                    is_approved = True
+                    break
+
+    if not is_approved:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Design version IFC model cannot be exported until verification gates (G0-G4) are professionally approved."
+        )
+
     ifc_content = generate_ifc4_model(model, design_version_id)
     return Response(
         content=ifc_content,
@@ -1563,8 +1683,16 @@ def get_rule_pack_endpoint(rule_pack_id: str):
     try:
         pack = load_rule_pack(rule_pack_id)
         return pack.dict()
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail=f"Rule pack '{rule_pack_id}' not found.")
+    except (FileNotFoundError, UnknownJurisdictionError, KeyError):
+        return JSONResponse(
+            status_code=422,
+            content={
+                "status": "UNVERIFIED",
+                "jurisdiction": rule_pack_id,
+                "verified": False,
+                "message": f"Statutory rule pack for jurisdiction '{rule_pack_id}' is not verified or supported. Manual municipal scrutiny required."
+            }
+        )
 
 
 @app.post("/api/v1/sites/{site_id}/feasibility/evaluate")

@@ -37,6 +37,8 @@ class TestH27H32GatingAndAuth(unittest.TestCase):
         self.assertEqual(r.status_code, 401, f"Expected 401 Unauthorized, got {r.status_code}")
 
     def test_unapproved_release_ifc_forbidden(self):
+        from tests.test_audit_s0_comprehensive import create_role_token
+        token = create_role_token("user-h27-test", "h27@example.com", "CUSTOMER")
         rel_id = "rel-unapproved-test-suite"
         RELEASES_DB[rel_id] = {
             "releaseId": rel_id,
@@ -44,7 +46,7 @@ class TestH27H32GatingAndAuth(unittest.TestCase):
             "houseOption": {"id": "opt-1"},
             "handoffPackage": {"status": "PENDING"}
         }
-        r = self.client.get(f"/api/v1/releases/{rel_id}/ifc")
+        r = self.client.get(f"/api/v1/releases/{rel_id}/ifc", headers={"Authorization": f"Bearer {token}"})
         self.assertEqual(r.status_code, 403, f"Expected 403 Forbidden for unapproved release IFC, got {r.status_code}")
 
     def test_rejected_release_handoff_package_forbidden(self):

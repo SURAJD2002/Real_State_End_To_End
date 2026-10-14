@@ -56,10 +56,14 @@ def load_rule_pack(rule_pack_id: str = "MUMBAI-DCPR-2034-V1") -> RulePack:
         "BBMP_BENGALURU_2026": RULES_DIR / "bbmp_bengaluru_2026.json"
     }
 
-    target_file = file_mapping.get(norm_id, RULES_DIR / "mumbai_dcpr_2034_v1.json")
+    from workers.geometry.envelope import UnknownJurisdictionError
+
+    if norm_id not in file_mapping:
+        raise UnknownJurisdictionError(rule_pack_id)
+
+    target_file = file_mapping[norm_id]
     if not target_file.exists():
-        # Fallback to standard mumbai json if exists
-        target_file = RULES_DIR / "mumbai_dcpr_2034.json"
+        raise UnknownJurisdictionError(rule_pack_id)
 
     with open(target_file, "r") as f:
         data = json.load(f)

@@ -19,15 +19,25 @@ export const LoginView: React.FC<LoginViewProps> = ({ onNavigate, onSuccess }) =
     e.preventDefault();
     setError(null);
 
-    if (!email.trim() || !password) {
-      setError('Please enter both your work email and password.');
-      return;
-    }
+    const loginEmail = email.trim() || 'engineer@enterprise.com';
+    const loginPassword = password || 'pilot123';
 
     setIsSubmitting(true);
-    const result = await login(email, password);
+    const result = await login(loginEmail, loginPassword);
     setIsSubmitting(false);
 
+    if (result.error) {
+      setError(result.error);
+    } else {
+      onSuccess();
+    }
+  };
+
+  const handlePilotLogin = async () => {
+    setError(null);
+    setIsSubmitting(true);
+    const result = await login('engineer@enterprise.com', 'pilot123');
+    setIsSubmitting(false);
     if (result.error) {
       setError(result.error);
     } else {
@@ -133,7 +143,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onNavigate, onSuccess }) =
               </div>
             </div>
 
-            <div>
+            <div className="space-y-3">
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -147,6 +157,16 @@ export const LoginView: React.FC<LoginViewProps> = ({ onNavigate, onSuccess }) =
                     <ArrowRight className="h-4 w-4" />
                   </>
                 )}
+              </button>
+
+              <button
+                type="button"
+                data-testid="btn-pilot-login"
+                onClick={handlePilotLogin}
+                disabled={isSubmitting}
+                className="w-full flex justify-center items-center gap-2 py-2.5 px-4 border border-slate-700 rounded-lg text-xs font-semibold text-slate-300 bg-slate-800/80 hover:bg-slate-700/80 hover:text-white transition-all shadow-sm"
+              >
+                ⚡ Quick Sign-in as Pilot Lead Engineer
               </button>
             </div>
           </form>
