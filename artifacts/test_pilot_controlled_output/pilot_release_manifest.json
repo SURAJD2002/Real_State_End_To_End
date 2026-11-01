@@ -1,13 +1,13 @@
 {
-  "handoffPackageId": "pkg-rel-pilot-20261008-71e9928d",
+  "handoffPackageId": "pkg-rel-pilot-20261015-6364fa8e",
   "projectId": "proj-mumbai-real-1100",
-  "releaseId": "rel-pilot-20261008-71e9928d",
-  "designVersionId": "DV-OPT-B-0e1dcb16",
+  "releaseId": "rel-pilot-20261015-6364fa8e",
+  "designVersionId": "DV-OPT-B-fadc8cba",
   "declaredPlotAreaSqFt": 1100.0,
-  "releaseFingerprint": "033a69276f5bac575e0b31cd34e4f5e66bb07616d0aa2d5150df760dc9e31818",
+  "releaseFingerprint": "3332bbefcfdb07a67fa0fd80fa9813fa0fc8f220658115beaf4b7d8e6553f614",
   "releaseStatus": "BUILD_REQUESTED",
   "lifecycleState": "PROFESSIONAL_REVIEW",
-  "createdAt": "2026-10-08T04:26:25.842822",
+  "createdAt": "2026-10-15T04:06:35.150840",
   "projectContext": {
     "projectName": "Bandra West Residential Development",
     "jurisdiction": "Municipal Corporation of Greater Mumbai (MCGM)",
@@ -19,18 +19,18 @@
   "designOption": {
     "archetype": "m2_cpsat_opt-B",
     "title": "Planwise M2 Optimized Option B",
-    "totalGrossBUASqm": 98.16,
-    "totalUsableAreaSqm": 85.36,
+    "totalGrossBUASqm": 101.02,
+    "totalUsableAreaSqm": 87.84,
     "floors": 2,
     "roomCount": 12,
     "columnCount": 26
   },
   "financialSummary": {
     "currency": "INR",
-    "baseEstimate": 1318391.34,
-    "lowRange": 1252471.77,
-    "highRange": 1450230.47,
-    "costPerSqFt": 1247.79
+    "baseEstimate": 1332997.3,
+    "lowRange": 1266347.44,
+    "highRange": 1466297.03,
+    "costPerSqFt": 1225.89
   },
   "constructionSummary": {
     "durationWeeks": 26.5,
@@ -104,12 +104,12 @@
     {
       "name": "2D_Architectural_Floor_Plans.json",
       "type": "MODEL_GEOMETRY",
-      "hash": "e5ac1224e58dd729e6de55ba42392d507bc0700c8db692a3d4444ff6a55ad4b2"
+      "hash": "95e308f4e70c7ab2c263798e0bec4d1b5277f614d1d3ba412e992c828cf0ed35"
     },
     {
       "name": "Traceable_Bill_Of_Quantities.csv",
       "type": "COMMERCIAL_BOQ",
-      "hash": "8f4bb7c14e9b7e1c8b0dc9bc9c5d966b46abc30078dd777f48308eba7eab1acd"
+      "hash": "41577ffabcfca2280be1922a80fcbe6f48053221097eece1869b2f9491269597"
     },
     {
       "name": "Construction_CPM_Precedence_Schedule.json",
@@ -119,7 +119,7 @@
     {
       "name": "BIM_IFC4_Coordinated_Model.ifc",
       "type": "BIM_EXCHANGE",
-      "hash": "9ef229bea729b8a4047eebb8c87a1e0523ae755f334db7d28006656f45d47787"
+      "hash": "2cd4d133bdb493d4970222992c76ff7988e44573426d852892041f7f391458c5"
     },
     {
       "name": "Statutory_Compliance_Report_DCPR2034.pdf",

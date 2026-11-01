@@ -5,12 +5,12 @@
     "modelId": "BLDG-COMPACT_2BHK-DV-TEST-",
     "envelope": {
       "widthM": 13.48,
-      "lengthM": 13.21
+      "lengthM": 7.11
     },
     "spaceCount": 9,
-    "elementCount": 29,
+    "elementCount": 21,
     "openingCount": 19,
-    "svgHash": "e762094780c6e883fb0a2b4b09c471200dd32d7d93ddf0d97bb042b662ca6c18"
+    "svgHash": "a0f1fa2a9c952bf88b7fd97d9c185032d31b229ffa44e182e049cf4c968b94d4"
   },
   "project_b": {
     "plotSqFt": 2400,
@@ -18,12 +18,12 @@
     "modelId": "BLDG-FAMILY_3BHK-DV-TEST-",
     "envelope": {
       "widthM": 14.0,
-      "lengthM": 21.35
+      "lengthM": 10.77
     },
     "spaceCount": 12,
-    "elementCount": 40,
+    "elementCount": 28,
     "openingCount": 25,
-    "svgHash": "65829284fff1d96e1b9d8d3310dfe108ac257c7baca8dc85b32140eafe51f331"
+    "svgHash": "2b4a07fbfd08500158660580ee945d5a1390ecb2209736f30fc5da7e79d47915"
   },
   "project_c": {
     "plotSqFt": 10000,
@@ -31,22 +31,22 @@
     "modelId": "BLDG-DUPLEX_3BHK-DV-TEST-",
     "envelope": {
       "widthM": 14.0,
-      "lengthM": 21.23
+      "lengthM": 20.63
     },
     "spaceCount": 13,
     "elementCount": 43,
     "openingCount": 27,
-    "svgHash": "e65dbfc201ae653cab098f1a53d2981deb68e0f77c1e6b171d9a0d5ccdc732e1"
+    "svgHash": "6e2da3c2f79f844703ee7df8e470ef70272f6989d1c7857abfd9c6939b69f468"
   },
   "mutation_2bhk": {
-    "svgHash": "e762094780c6e883fb0a2b4b09c471200dd32d7d93ddf0d97bb042b662ca6c18",
+    "svgHash": "a0f1fa2a9c952bf88b7fd97d9c185032d31b229ffa44e182e049cf4c968b94d4",
     "spaceCount": 9
   },
   "mutation_3bhk": {
-    "svgHash": "bd77d6a2ac806ec9934b3cd448a7b3fae36d58afb097e28d05432f2d84cac077",
+    "svgHash": "58a9c5bd43ecd5602a77d6096cd69b99a0347b697edc09f1370618572d0ad21e",
     "spaceCount": 12
   },
   "mutation_dim": {
-    "svgHash": "5d4e49e51d93fa745f8095ca3d60d862f68f870d205a5adde9c8981436b9f261"
+    "svgHash": "652652c840c7fa1d6d3ad2b25d6a44abd173520e55791f8ba2282b6ae39b6ab8"
   }
 }

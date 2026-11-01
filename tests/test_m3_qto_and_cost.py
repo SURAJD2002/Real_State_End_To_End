@@ -675,6 +675,48 @@ class TestM3QTOAndCostEngine(unittest.TestCase):
         self.assertEqual(len(stair_deductions), 1)
         self.assertGreater(stair_deductions[0].quantity, 1.0)
 
+    def test_20_opening_deduction_threshold_and_no_max_floor(self):
+        """Verify that openings < 0.1 m2 are ignored and net_vol has no max(1.0) floor."""
+        m = make_test_canonical_model("DV-THRESH-01", "Threshold Test", wall_length=2.0, wall_height=1.0)
+        wall_id = m.elements[0].elementId
+
+        # Add one opening < 0.1 m2 and one >= 0.1 m2
+        small_op = Opening(
+            openingId="OP-TINY",
+            name="Tiny Ventilation Slit",
+            openingType=OpeningType.WINDOW,
+            hostWallId=wall_id,
+            levelId="LVL-000",
+            widthM=0.2,
+            heightM=0.4,  # area = 0.08 m2 (< 0.1 m2 threshold)
+            sillHeightM=0.5
+        )
+        large_op = Opening(
+            openingId="OP-LARGE",
+            name="Standard Window",
+            openingType=OpeningType.WINDOW,
+            hostWallId=wall_id,
+            levelId="LVL-000",
+            widthM=0.5,
+            heightM=0.6,  # area = 0.30 m2 (>= 0.1 m2 threshold)
+            sillHeightM=0.3
+        )
+        m.openings = [small_op, large_op]
+
+        qto = ModelLinkedQTOEngine(m)
+        records = qto.run_full_takeoff()
+        wall_rec = next(r for r in records if "TO-WALL-EXT" in r.takeoffId)
+
+        # 1. Verify small opening (< 0.1 m2) is NOT in deductions
+        deducted_ids = {d.elementId for d in wall_rec.deductions}
+        self.assertNotIn("OP-TINY", deducted_ids, "Openings < 0.1 m² must not be deducted")
+        self.assertIn("OP-LARGE", deducted_ids, "Openings >= 0.1 m² must be deducted")
+
+        # 2. Verify gross and net volume calculations
+        ded_vol = 0.5 * 0.6 * 0.23  # large opening deduction
+        self.assertAlmostEqual(wall_rec.netQuantity, wall_rec.grossQuantity - ded_vol, places=2)
+
 
 if __name__ == "__main__":
     unittest.main()
+

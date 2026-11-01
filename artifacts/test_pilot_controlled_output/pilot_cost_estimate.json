@@ -1,26 +1,26 @@
 {
-  "releaseId": "rel-pilot-20261008-71e9928d",
+  "releaseId": "rel-pilot-20261015-6364fa8e",
   "rateSnapshotId": "INDIA-MUMBAI-2026-Q4-V1",
   "qualityTier": "PREMIUM",
   "waterfall": {
-    "grossHardCost": 1166718.0,
-    "directMaterialCost": 744306.69,
-    "directLabourCost": 364954.7,
-    "directEquipmentCost": 57456.61,
-    "materialWastageCost": 29772.27,
-    "overheadAndPrelims": 93337.44,
-    "contingency": 58335.9,
+    "grossHardCost": 1179643.63,
+    "directMaterialCost": 732636.37,
+    "directLabourCost": 360743.65,
+    "directEquipmentCost": 56958.16,
+    "materialWastageCost": 29305.45,
+    "overheadAndPrelims": 94371.49,
+    "contingency": 58982.18,
     "statutoryTaxes": 0.0,
-    "totalConstructionCost": 1318391.34,
-    "costPerSqFtBUA": 1247.79,
-    "costPerSqmBUA": 13431.04,
-    "costPerCarpetSqFt": 1434.9,
-    "costPerCarpetSqm": 15445.07,
+    "totalConstructionCost": 1332997.3,
+    "costPerSqFtBUA": 1225.89,
+    "costPerSqmBUA": 13195.38,
+    "costPerCarpetSqFt": 1409.83,
+    "costPerCarpetSqm": 15175.29,
     "areaBasis": {
-      "grossBUASqm": 98.16,
-      "grossBUASqFt": 1056.58,
-      "carpetAreaSqm": 85.36,
-      "carpetAreaSqFt": 918.81
+      "grossBUASqm": 101.02,
+      "grossBUASqFt": 1087.37,
+      "carpetAreaSqm": 87.84,
+      "carpetAreaSqFt": 945.5
     }
   },
   "disclaimer": "Cost waterfall is a preliminary model-linked estimate based on IS 1200 takeoff and Q4 2026 Mumbai regional rate snapshot. Subject to final structural engineering review and contractor procurement bids."

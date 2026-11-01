@@ -20,6 +20,15 @@ async function capture() {
   const page = await browser.newPage();
   await page.goto(APP_URL, { waitUntil: 'networkidle0' });
 
+  // Authenticate if on login screen
+  await sleep(500);
+  const pilotBtn = await page.$('[data-testid="btn-pilot-login"]');
+  if (pilotBtn) {
+    console.log('Authenticating as Pilot Lead Engineer...');
+    await pilotBtn.click();
+    await sleep(1200);
+  }
+
   // 1. Enter plot & generate
   await page.waitForSelector('[data-testid="input-plot-area"]', { timeout: 10000 });
   const plotInput = await page.$('[data-testid="input-plot-area"]');

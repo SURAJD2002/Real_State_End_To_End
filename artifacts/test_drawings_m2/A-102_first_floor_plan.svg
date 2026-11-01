@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1190.55 841.89" width="1190.55" height="841.89" data-drawing-id="A-102" data-scale="1:100">
 <!-- Planwise Enterprise Professional Architectural Drawing Sheet -->
-<!-- Generated deterministically from Canonical Building Model: sha256:ec57846e2168f7f042040e4a95bfa2db6d5a327f4be5b054c2a5ec31de5983ba -->
+<!-- Generated deterministically from Canonical Building Model: sha256:a158788dff404db024573b699636d3db84f8b47735b89bbb217f5f7f635ef42a -->
 <defs>
   <style>
     text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
@@ -38,36 +38,35 @@
     <text class="grid-text" x="318.24" y="356.68">2</text>
   </g>
   <g id="rooms">
-    <rect data-cbm-id="SPACE-SP-MBED-7" data-element-type="IfcSpace" x="343.75" y="282.69" width="110.55" height="102.05" fill="#818cf81A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="399.02" y="331.72">MASTER BEDROOM SUITE</text>
-    <text class="room-area" x="399.02" y="341.72">14.04 m²</text>
-    <rect data-cbm-id="SPACE-SP-MBATH-8" data-element-type="IfcSpace" x="343.75" y="384.74" width="48.19" height="62.36" fill="#f472b61A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="367.85" y="413.92">MASTER ATTACHED BATH</text>
-    <text class="room-area" x="367.85" y="423.92">3.74 m²</text>
-    <rect data-cbm-id="SPACE-SP-BALC-12" data-element-type="IfcSpace" x="391.94" y="384.74" width="53.86" height="62.36" fill="#4ade801A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="418.87" y="413.92">LIVING BALCONY</text>
-    <text class="room-area" x="418.87" y="423.92">4.18 m²</text>
+    <rect data-cbm-id="SPACE-SP-MBED-7" data-element-type="IfcSpace" x="343.75" y="345.06" width="110.55" height="102.04" fill="#818cf81A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="399.02" y="394.08">MASTER BEDROOM SUITE</text>
+    <text class="room-area" x="399.02" y="404.08">14.04 m²</text>
+    <rect data-cbm-id="SPACE-SP-MBATH-8" data-element-type="IfcSpace" x="391.94" y="220.33" width="42.52" height="124.73" fill="#f472b61A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="413.20" y="280.69">MASTER ATTACHED BATH</text>
+    <text class="room-area" x="413.20" y="290.69">6.60 m²</text>
+    <rect data-cbm-id="SPACE-SP-BALC-12" data-element-type="IfcSpace" x="343.75" y="277.02" width="48.19" height="68.04" fill="#4ade801A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="367.85" y="309.04">LIVING BALCONY</text>
+    <text class="room-area" x="367.85" y="319.04">4.08 m²</text>
   </g>
   <g id="walls">
-    <polygon data-cbm-id="WALL-INT-012" data-element-type="IfcWall" points="343.75,383.32 454.30,383.32 454.30,386.16 343.75,386.16" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
+    <polygon data-cbm-id="WALL-INT-011" data-element-type="IfcWall" points="391.94,343.64 434.46,343.64 434.46,346.47 391.94,346.47" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
+    <polygon data-cbm-id="WALL-INT-012" data-element-type="IfcWall" points="343.75,343.64 391.94,343.64 391.94,346.47 343.75,346.47" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
   </g>
   <g id="columns">
   </g>
   <g id="stairs">
   </g>
   <g id="openings">
-    <circle data-cbm-id="DOOR-011" data-element-type="IfcDoor" cx="399.02" cy="384.74" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="399.02" y="386.74">D13</text>
-    <circle data-cbm-id="DOOR-012" data-element-type="IfcDoor" cx="367.84" cy="447.10" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="367.84" y="449.10">D02</text>
-    <circle data-cbm-id="DOOR-013" data-element-type="IfcDoor" cx="418.87" cy="447.10" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="418.87" y="449.10">D04</text>
-    <circle data-cbm-id="WIN-005" data-element-type="IfcWindow" cx="343.75" cy="333.72" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
-    <text class="tag-text" x="343.75" y="335.72">W05</text>
-    <circle data-cbm-id="WIN-006" data-element-type="IfcWindow" cx="343.75" cy="415.92" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
-    <text class="tag-text" x="343.75" y="417.92">W03</text>
-    <circle data-cbm-id="WIN-007" data-element-type="IfcWindow" cx="418.87" cy="447.10" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
-    <text class="tag-text" x="418.87" y="449.10">W01</text>
+    <circle data-cbm-id="DOOR-011" data-element-type="IfcDoor" cx="399.02" cy="447.10" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="399.02" y="449.10">D03</text>
+    <circle data-cbm-id="DOOR-012" data-element-type="IfcDoor" cx="413.20" cy="345.06" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="413.20" y="347.06">D12</text>
+    <circle data-cbm-id="DOOR-013" data-element-type="IfcDoor" cx="367.84" cy="345.06" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="367.84" y="347.06">D13</text>
+    <circle data-cbm-id="WIN-005" data-element-type="IfcWindow" cx="343.75" cy="396.08" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
+    <text class="tag-text" x="343.75" y="398.08">W04</text>
+    <circle data-cbm-id="WIN-006" data-element-type="IfcWindow" cx="343.75" cy="311.04" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
+    <text class="tag-text" x="343.75" y="313.04">W05</text>
   </g>
   <g id="dimensions">
     <line x1="343.75" y1="498.13" x2="496.25" y2="498.13" stroke="#1E293B" stroke-width="0.35"/>
@@ -105,21 +104,21 @@
   <rect x="802.2" y="254.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="264.0">D02</text>
   <text class="value" x="842.2" y="264.0">FLUSH TIMBER DOOR</text>
-  <text class="value" x="952.2" y="264.0">800 mm</text>
+  <text class="value" x="952.2" y="264.0">900 mm</text>
   <text class="value" x="1042.2" y="264.0">2100 mm</text>
-  <text class="value" x="1102.2" y="264.0">LVL-001</text>
+  <text class="value" x="1102.2" y="264.0">LVL-000</text>
   <rect x="802.2" y="268.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="278.0">D03</text>
   <text class="value" x="842.2" y="278.0">FLUSH TIMBER DOOR</text>
   <text class="value" x="952.2" y="278.0">900 mm</text>
   <text class="value" x="1042.2" y="278.0">2100 mm</text>
-  <text class="value" x="1102.2" y="278.0">LVL-000</text>
+  <text class="value" x="1102.2" y="278.0">LVL-001</text>
   <rect x="802.2" y="282.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="292.0">D04</text>
   <text class="value" x="842.2" y="292.0">FLUSH TIMBER DOOR</text>
   <text class="value" x="952.2" y="292.0">900 mm</text>
   <text class="value" x="1042.2" y="292.0">2100 mm</text>
-  <text class="value" x="1102.2" y="292.0">LVL-001</text>
+  <text class="value" x="1102.2" y="292.0">LVL-000</text>
   <rect x="802.2" y="296.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="306.0">D05</text>
   <text class="value" x="842.2" y="306.0">FLUSH TIMBER DOOR</text>
@@ -137,27 +136,27 @@
   <rect x="802.2" y="348.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="358.0">W01</text>
   <text class="value" x="842.2" y="358.0">ALUMINUM SLIDING</text>
-  <text class="value" x="952.2" y="358.0">1500 mm</text>
-  <text class="value" x="1042.2" y="358.0">1200 mm</text>
-  <text class="value" x="1102.2" y="358.0">LVL-001</text>
+  <text class="value" x="952.2" y="358.0">600 mm</text>
+  <text class="value" x="1042.2" y="358.0">600 mm</text>
+  <text class="value" x="1102.2" y="358.0">LVL-000</text>
   <rect x="802.2" y="362.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="372.0">W02</text>
   <text class="value" x="842.2" y="372.0">ALUMINUM SLIDING</text>
-  <text class="value" x="952.2" y="372.0">1500 mm</text>
-  <text class="value" x="1042.2" y="372.0">1200 mm</text>
+  <text class="value" x="952.2" y="372.0">600 mm</text>
+  <text class="value" x="1042.2" y="372.0">600 mm</text>
   <text class="value" x="1102.2" y="372.0">LVL-000</text>
   <rect x="802.2" y="376.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="386.0">W03</text>
   <text class="value" x="842.2" y="386.0">ALUMINUM SLIDING</text>
   <text class="value" x="952.2" y="386.0">1500 mm</text>
   <text class="value" x="1042.2" y="386.0">1200 mm</text>
-  <text class="value" x="1102.2" y="386.0">LVL-001</text>
+  <text class="value" x="1102.2" y="386.0">LVL-000</text>
   <rect x="802.2" y="390.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="400.0">W04</text>
   <text class="value" x="842.2" y="400.0">ALUMINUM SLIDING</text>
   <text class="value" x="952.2" y="400.0">1500 mm</text>
   <text class="value" x="1042.2" y="400.0">1200 mm</text>
-  <text class="value" x="1102.2" y="400.0">LVL-000</text>
+  <text class="value" x="1102.2" y="400.0">LVL-001</text>
   <rect x="802.2" y="404.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="414.0">W05</text>
   <text class="value" x="842.2" y="414.0">ALUMINUM SLIDING</text>

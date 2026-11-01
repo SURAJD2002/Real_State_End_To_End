@@ -125,32 +125,32 @@
     },
     {
       "claim": "Manifold3D watertight 2-manifold physics",
-      "sourceFile": "workers/generation/manifold_builder.py",
-      "functionOrClass": "build_manifold_solids",
+      "sourceFile": "workers/geometry/solid_engine.py",
+      "functionOrClass": "SolidModelingEngine",
       "testFile": "tests/test_m2_generator_and_solids.py",
       "artifactRef": "Watertight mesh invariant \u03c7=2",
       "status": "VERIFIED"
     },
     {
       "claim": "Mumbai DCPR 2034 setback formulas",
-      "sourceFile": "packages/rules/src/mumbai_dcpr.py",
-      "functionOrClass": "calculate_dcpr_setbacks",
+      "sourceFile": "workers/regulation/rule_engine.py",
+      "functionOrClass": "RuleEngine.evaluate_rules",
       "testFile": "tests/test_m1_site_and_rules.py",
       "artifactRef": "02_1500_feasibility.png",
       "status": "VERIFIED"
     },
     {
       "claim": "BBMP 2026 road width FAR lookup",
-      "sourceFile": "packages/rules/src/bbmp.py",
-      "functionOrClass": "calculate_bbmp_far",
+      "sourceFile": "workers/regulation/rule_engine.py",
+      "functionOrClass": "RuleEngine.evaluate_rules",
       "testFile": "tests/test_m1_site_and_rules.py",
       "artifactRef": "Rule execution traces table",
       "status": "VERIFIED"
     },
     {
       "claim": "IS 1200 masonry opening deductions",
-      "sourceFile": "packages/qto/src/calculator.py",
-      "functionOrClass": "calculate_masonry_volume",
+      "sourceFile": "workers/qto/qto_engine.py",
+      "functionOrClass": "QTOEngine.measure_walls",
       "testFile": "tests/test_m3_qto_and_cost.py",
       "artifactRef": "11_cost_summary.png",
       "status": "VERIFIED"

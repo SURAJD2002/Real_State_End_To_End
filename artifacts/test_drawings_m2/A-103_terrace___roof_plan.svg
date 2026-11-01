@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1190.55 841.89" width="1190.55" height="841.89" data-drawing-id="A-103" data-scale="1:100">
 <!-- Planwise Enterprise Professional Architectural Drawing Sheet -->
-<!-- Generated deterministically from Canonical Building Model: sha256:ec57846e2168f7f042040e4a95bfa2db6d5a327f4be5b054c2a5ec31de5983ba -->
+<!-- Generated deterministically from Canonical Building Model: sha256:a158788dff404db024573b699636d3db84f8b47735b89bbb217f5f7f635ef42a -->
 <defs>
   <style>
     text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
@@ -83,21 +83,21 @@
   <rect x="802.2" y="254.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="264.0">D02</text>
   <text class="value" x="842.2" y="264.0">FLUSH TIMBER DOOR</text>
-  <text class="value" x="952.2" y="264.0">800 mm</text>
+  <text class="value" x="952.2" y="264.0">900 mm</text>
   <text class="value" x="1042.2" y="264.0">2100 mm</text>
-  <text class="value" x="1102.2" y="264.0">LVL-001</text>
+  <text class="value" x="1102.2" y="264.0">LVL-000</text>
   <rect x="802.2" y="268.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="278.0">D03</text>
   <text class="value" x="842.2" y="278.0">FLUSH TIMBER DOOR</text>
   <text class="value" x="952.2" y="278.0">900 mm</text>
   <text class="value" x="1042.2" y="278.0">2100 mm</text>
-  <text class="value" x="1102.2" y="278.0">LVL-000</text>
+  <text class="value" x="1102.2" y="278.0">LVL-001</text>
   <rect x="802.2" y="282.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="292.0">D04</text>
   <text class="value" x="842.2" y="292.0">FLUSH TIMBER DOOR</text>
   <text class="value" x="952.2" y="292.0">900 mm</text>
   <text class="value" x="1042.2" y="292.0">2100 mm</text>
-  <text class="value" x="1102.2" y="292.0">LVL-001</text>
+  <text class="value" x="1102.2" y="292.0">LVL-000</text>
   <rect x="802.2" y="296.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="306.0">D05</text>
   <text class="value" x="842.2" y="306.0">FLUSH TIMBER DOOR</text>
@@ -115,27 +115,27 @@
   <rect x="802.2" y="348.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="358.0">W01</text>
   <text class="value" x="842.2" y="358.0">ALUMINUM SLIDING</text>
-  <text class="value" x="952.2" y="358.0">1500 mm</text>
-  <text class="value" x="1042.2" y="358.0">1200 mm</text>
-  <text class="value" x="1102.2" y="358.0">LVL-001</text>
+  <text class="value" x="952.2" y="358.0">600 mm</text>
+  <text class="value" x="1042.2" y="358.0">600 mm</text>
+  <text class="value" x="1102.2" y="358.0">LVL-000</text>
   <rect x="802.2" y="362.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="372.0">W02</text>
   <text class="value" x="842.2" y="372.0">ALUMINUM SLIDING</text>
-  <text class="value" x="952.2" y="372.0">1500 mm</text>
-  <text class="value" x="1042.2" y="372.0">1200 mm</text>
+  <text class="value" x="952.2" y="372.0">600 mm</text>
+  <text class="value" x="1042.2" y="372.0">600 mm</text>
   <text class="value" x="1102.2" y="372.0">LVL-000</text>
   <rect x="802.2" y="376.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="386.0">W03</text>
   <text class="value" x="842.2" y="386.0">ALUMINUM SLIDING</text>
   <text class="value" x="952.2" y="386.0">1500 mm</text>
   <text class="value" x="1042.2" y="386.0">1200 mm</text>
-  <text class="value" x="1102.2" y="386.0">LVL-001</text>
+  <text class="value" x="1102.2" y="386.0">LVL-000</text>
   <rect x="802.2" y="390.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="400.0">W04</text>
   <text class="value" x="842.2" y="400.0">ALUMINUM SLIDING</text>
   <text class="value" x="952.2" y="400.0">1500 mm</text>
   <text class="value" x="1042.2" y="400.0">1200 mm</text>
-  <text class="value" x="1102.2" y="400.0">LVL-000</text>
+  <text class="value" x="1102.2" y="400.0">LVL-001</text>
   <rect x="802.2" y="404.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="414.0">W05</text>
   <text class="value" x="842.2" y="414.0">ALUMINUM SLIDING</text>

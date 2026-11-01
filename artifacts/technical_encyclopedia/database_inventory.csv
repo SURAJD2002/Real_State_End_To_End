@@ -1,0 +1,15 @@
+directory,filename,tables_created,rls_enabled_tables,lines,size_bytes
+supabase/migrations,20261010010000_init_postgis_schema.sql,projects; parcels; parcel_roads; parcel_constraints; feasibility_runs,,146,5619
+supabase/migrations,20261010020000_canonical_building_model.sql,design_versions; building_models; building_levels; spaces; space_adjacencies; materials; building_elements; openings; structural_grids; building_systems; model_validations,,233,9610
+supabase/migrations,20261010030000_site_evidence_and_rule_engine.sql,site_reference_frames; site_evidence; site_confidence_evaluations; regulation_rule_packs; rule_execution_traces,,188,6956
+supabase/migrations,20261010040000_qto_boq_and_cost_engine.sql,qto_measurement_rules; construction_assemblies; material_catalog; cost_rate_snapshots; qto_takeoff_records; cost_estimates,,111,4038
+supabase/migrations,20261010050000_engineer_review_and_releases.sql,releases; build_requests; engineer_reviews; engineer_review_gates; engineer_review_issues; engineer_review_decisions,,104,4972
+supabase/migrations,20261010060000_generated_reports.sql,generated_reports,,27,1313
+supabase/migrations,20261010070000_security_and_rls_policies.sql,,projects; parcels; parcel_roads; parcel_constraints; feasibility_runs; design_versions; building_models; building_levels; spaces; space_adjacencies; materials; building_elements; openings; structural_grids; building_systems; model_validations; site_reference_frames; site_evidence; site_confidence_evaluations; regulation_rule_packs; rule_execution_traces; qto_measurement_rules; construction_assemblies; material_catalog; cost_rate_snapshots; qto_takeoff_records; cost_estimates; releases; build_requests; engineer_reviews; engineer_review_gates; engineer_review_issues; engineer_review_decisions; generated_reports,169,7709
+supabase/migrations,20261010080000_organization_membership_mapping.sql,public.organizations; public.organization_memberships,public.organizations; public.organization_memberships,106,4457
+database/migrations,01_init_postgis_schema.sql,projects; parcels; parcel_roads; parcel_constraints; feasibility_runs,,140,5412
+database/migrations,02_canonical_building_model.sql,design_versions; building_models; building_levels; spaces; space_adjacencies; materials; building_elements; openings; structural_grids; building_systems; model_validations,,233,9610
+database/migrations,03_site_evidence_and_rule_engine.sql,site_reference_frames; site_evidence; site_confidence_evaluations; regulation_rule_packs; rule_execution_traces,,188,6956
+database/migrations,04_qto_boq_and_cost_engine.sql,qto_measurement_rules; construction_assemblies; material_catalog; cost_rate_snapshots; qto_takeoff_records; cost_estimates,,111,4038
+database/migrations,05_engineer_review_and_releases.sql,releases; build_requests; engineer_reviews; engineer_review_gates; engineer_review_issues; engineer_review_decisions,,104,4972
+database/migrations,06_generated_reports.sql,generated_reports,,27,1313

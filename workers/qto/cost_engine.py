@@ -223,6 +223,7 @@ class DeterministicCostEngine:
 
             # Material wastage allowance (standard 4%)
             wastage_amt = round(mat_amt * 0.04, 2)
+            amount = round(mat_amt + wastage_amt + lab_amt + eqp_amt, 2)
 
             boq_line = BOQLineItem(
                 boqItemId=f"BOQ-{rec.takeoffId}",
@@ -255,11 +256,11 @@ class DeterministicCostEngine:
         # -------------------------------------------------------------
         # Cost Waterfall Calculation
         # -------------------------------------------------------------
-        gross_hard_cost = round(sum(l.amount for l in boq_lines), 2)
         direct_mat_cost = round(sum(l.materialAmount for l in boq_lines), 2)
         direct_lab_cost = round(sum(l.labourAmount for l in boq_lines), 2)
         direct_eqp_cost = round(sum(l.equipmentAmount for l in boq_lines), 2)
         mat_wastage_cost = round(sum(l.wastageAmount for l in boq_lines), 2)
+        gross_hard_cost = round(direct_mat_cost + mat_wastage_cost + direct_lab_cost + direct_eqp_cost, 2)
 
         prelims = round(gross_hard_cost * 0.08, 2)    # 8% Contractor Prelims & Site Overheads
         contingency = round(gross_hard_cost * 0.05, 2) # 5% Physical Contingency Buffer

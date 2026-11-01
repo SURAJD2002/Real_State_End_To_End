@@ -1,0 +1,22 @@
+{
+  "documentTitle": "PLANWISE ENTERPRISE Complete Technical Encyclopedia",
+  "volumesCount": 23,
+  "generatedAt": "2026-10-13T02:34:23.036700Z",
+  "gitCommit": "80a70773635287ec0f9025cb95d512cea38d2f93",
+  "gitBranch": "feature/complete-project-documentation",
+  "pdfPageCount": 119,
+  "testCount": 230,
+  "apiEndpointCount": 73,
+  "migrationCount": 14,
+  "databaseTablesCount": 34,
+  "artifacts": {
+    "readme": "/Users/surajkumar/Desktop/Real_state_dev/artifacts/technical_encyclopedia/README.md",
+    "masterHtml": "/Users/surajkumar/Desktop/Real_state_dev/artifacts/technical_encyclopedia/Planwise_Enterprise_Complete_Technical_Encyclopedia.html",
+    "masterPdf": "/Users/surajkumar/Desktop/Real_state_dev/artifacts/technical_encyclopedia/Planwise_Enterprise_Complete_Technical_Encyclopedia.pdf",
+    "evidenceMatrix": "/Users/surajkumar/Desktop/Real_state_dev/artifacts/technical_encyclopedia/evidence_matrix.csv",
+    "endpointInventory": "/Users/surajkumar/Desktop/Real_state_dev/artifacts/technical_encyclopedia/endpoint_inventory.csv",
+    "databaseInventory": "/Users/surajkumar/Desktop/Real_state_dev/artifacts/technical_encyclopedia/database_inventory.csv",
+    "testInventory": "/Users/surajkumar/Desktop/Real_state_dev/artifacts/technical_encyclopedia/test_inventory.csv",
+    "configurationInventory": "/Users/surajkumar/Desktop/Real_state_dev/artifacts/technical_encyclopedia/configuration_inventory.csv"
+  }
+}

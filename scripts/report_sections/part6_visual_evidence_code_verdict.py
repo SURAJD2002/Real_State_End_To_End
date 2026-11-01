@@ -162,7 +162,7 @@ def render_part6_html() -> str:
 
       <h3>39.1 Canonical Building Model (CBM) Root Schema</h3>
     ''')
-    html.append(code_block('''# packages/schemas/src/canonical_building_model.py:L18-L45
+    html.append(code_block('''# packages/schemas/building_model.py:L18-L45
 class CanonicalBuildingModel(BaseModel):
     """Authoritative digital representation of a building design."""
     modelId: str = Field(default_factory=lambda: f"CBM-{uuid.uuid4().hex[:8]}")
@@ -204,7 +204,7 @@ for i in range(n):
     html.append('''
       <h3>39.3 IS 1200 Concrete & Shuttering Takeoff Calculation</h3>
     ''')
-    html.append(code_block('''# packages/qto/src/calculator.py:L52-L78
+    html.append(code_block('''# workers/qto/qto_engine.py:L52-L78
 def calculate_slab_concrete_and_shuttering(level: BuildingLevel) -> Dict[str, float]:
     """Calculates IS 1200 concrete volume and formwork contact area."""
     slab_thickness_m = 0.150  # 150mm structural slab
@@ -244,18 +244,18 @@ def calculate_slab_concrete_and_shuttering(level: BuildingLevel) -> Dict[str, fl
 
     symbols_data = [
         ["$A_{\\text{declared}}$", "Declared plot area input by customer", "sq ft", "packages/schemas/customer_brief.py", "$A_{\\text{sqm}} = A_{\\text{declared}} \\times 0.09290304$"],
-        ["$A_{\\text{sqm}}$", "Metric plot area in square meters", "m²", "packages/schemas/site.py", "$A_{\\text{sqm}} = W_{\\text{plot}} \\times L_{\\text{plot}}$"],
-        ["$W_{\\text{plot}}, L_{\\text{plot}}$", "Plot width and length dimensions", "meters", "packages/schemas/site.py", "Derived from survey polygon or $\\alpha$ aspect ratio"],
-        ["$\\alpha$", "Site aspect ratio parameter ($L/W$)", "dimensionless", "packages/schemas/site.py", "Default $\\alpha = 1.394$ for rectangular residential plots"],
-        ["$\\text{FAR}$", "Floor Area Ratio statutory coefficient", "dimensionless", "packages/rules/mumbai_dcpr.py", "$GFA_{\\text{max}} = A_{\\text{sqm}} \\times \\text{FAR}$"],
-        ["$C_{\\text{max}}$", "Maximum ground coverage statutory ratio", "fraction (0-1)", "packages/rules/mumbai_dcpr.py", "$A_{\\text{footprint}} \\le A_{\\text{sqm}} \\times C_{\\text{max}}$"],
-        ["$s_{\\text{front}}, s_{\\text{rear}}$", "Statutory setback buffer distances", "meters", "packages/rules/setbacks.py", "$\\mathcal{P}_{\\text{buildable}} = \\mathcal{P}_{\\text{site}} \\ominus s$"],
+        ["$A_{\\text{sqm}}$", "Metric plot area in square meters", "m²", "packages/schemas/coordinates.py", "$A_{\\text{sqm}} = W_{\\text{plot}} \\times L_{\\text{plot}}$"],
+        ["$W_{\\text{plot}}, L_{\\text{plot}}$", "Plot width and length dimensions", "meters", "packages/schemas/coordinates.py", "Derived from survey polygon or $\\alpha$ aspect ratio"],
+        ["$\\alpha$", "Site aspect ratio parameter ($L/W$)", "dimensionless", "packages/schemas/coordinates.py", "Default $\\alpha = 1.394$ for rectangular residential plots"],
+        ["$\\text{FAR}$", "Floor Area Ratio statutory coefficient", "dimensionless", "workers/regulation/rule_engine.py", "$GFA_{\\text{max}} = A_{\\text{sqm}} \\times \\text{FAR}$"],
+        ["$C_{\\text{max}}$", "Maximum ground coverage statutory ratio", "fraction (0-1)", "workers/regulation/rule_engine.py", "$A_{\\text{footprint}} \\le A_{\\text{sqm}} \\times C_{\\text{max}}$"],
+        ["$s_{\\text{front}}, s_{\\text{rear}}$", "Statutory setback buffer distances", "meters", "workers/geometry/envelope.py", "$\\mathcal{P}_{\\text{buildable}} = \\mathcal{P}_{\\text{site}} \\ominus s$"],
         ["$x_r, y_r$", "Room integer grid origin coordinates", "integer (50mm)", "workers/generation/cpsat_solver.py", "$0 \\le x_r \\le W_{\\text{env}} - w_r$"],
         ["$w_r, l_r$", "Room width and length dimensions", "integer (50mm)", "workers/generation/cpsat_solver.py", "$w_{\\min} \\le w_r \\le w_{\\max}$"],
-        ["$V_{\\text{concrete}}$", "Structural concrete volume", "m³ (cum)", "packages/qto/calculator.py", "$V = \\sum A_{\\text{slab}} \\times t_{\\text{slab}} + \\sum A_{\\text{col}} \\times h$"],
-        ["$Q_i, R_i$", "Quantity and Unit Rate for item $i$", "units, INR ₹", "packages/cost/engine.py", "$\\text{Subtotal} = \\sum_{i} Q_i \\times R_i$"],
-        ["$\\chi$", "Euler characteristic of solid boundary mesh", "integer", "workers/generation/manifold_builder.py", "$\\chi = V - E + F = 2 - 2g = 2$"],
-        ["$g$", "Topological genus of solid manifold", "integer", "workers/generation/manifold_builder.py", "$g = 0$ for watertight single-connected solid"]
+        ["$V_{\\text{concrete}}$", "Structural concrete volume", "m³ (cum)", "workers/qto/qto_engine.py", "$V = \\sum A_{\\text{slab}} \\times t_{\\text{slab}} + \\sum A_{\\text{col}} \\times h$"],
+        ["$Q_i, R_i$", "Quantity and Unit Rate for item $i$", "units, INR ₹", "workers/qto/cost_engine.py", "$\\text{Subtotal} = \\sum_{i} Q_i \\times R_i$"],
+        ["$\\chi$", "Euler characteristic of solid boundary mesh", "integer", "workers/geometry/solid_engine.py", "$\\chi = V - E + F = 2 - 2g = 2$"],
+        ["$g$", "Topological genus of solid manifold", "integer", "workers/geometry/solid_engine.py", "$g = 0$ for watertight single-connected solid"]
     ]
     html.append(table(["Symbol", "Definition & Semantic Meaning", "Unit", "Source Code File", "Formula Context"], symbols_data))
 
@@ -290,12 +290,12 @@ def calculate_slab_concrete_and_shuttering(level: BuildingLevel) -> Dict[str, fl
     ''')
 
     conversions_data = [
-        ["1 Square Foot (sq ft) → Square Meters (m²)", "0.09290304", "Exact international definition (0.3048 m × 0.3048 m)", "packages/schemas/site.py:L14"],
-        ["1 Square Meter (m²) → Square Feet (sq ft)", "10.763910416709722", "Analytical reciprocal ($1 / 0.09290304$)", "packages/schemas/site.py:L15"],
+        ["1 Square Foot (sq ft) → Square Meters (m²)", "0.09290304", "Exact international definition (0.3048 m × 0.3048 m)", "packages/schemas/coordinates.py:L22"],
+        ["1 Square Meter (m²) → Square Feet (sq ft)", "10.763910416709722", "Analytical reciprocal ($1 / 0.09290304$)", "packages/schemas/coordinates.py:L25"],
         ["1 Meter (m) → Millimeters (mm)", "1000.0", "Exact SI decimal prefix", "workers/generation/drawing_compiler.py:L45"],
-        ["1 Meter (m) → Feet (ft)", "3.280839895013123", "Exact international definition ($1 / 0.3048$)", "apps/web/src/utils/units.ts:L22"],
-        ["1 Lakh INR (₹)", "100,000.00", "Indian numbering standard ($10^5$)", "apps/web/src/utils/currency.ts:L12"],
-        ["1 Crore INR (₹)", "10,000,000.00", "Indian numbering standard ($10^7$)", "apps/web/src/utils/currency.ts:L18"]
+        ["1 Meter (m) → Feet (ft)", "3.280839895013123", "Exact international definition ($1 / 0.3048$)", "workers/geometry/crs_engine.py:L20"],
+        ["1 Lakh INR (₹)", "100,000.00", "Indian numbering standard ($10^5$)", "apps/web/src/components/CostSummaryView.tsx:L15"],
+        ["1 Crore INR (₹)", "10,000,000.00", "Indian numbering standard ($10^7$)", "apps/web/src/components/CostSummaryView.tsx:L18"]
     ]
     html.append(table(["Conversion Operation", "Numerical Factor", "Standard Basis", "Source Implementation"], conversions_data))
 
@@ -323,10 +323,10 @@ def calculate_slab_concrete_and_shuttering(level: BuildingLevel) -> Dict[str, fl
     ''')
 
     hash_table_data = [
-        ["CBM Model Hash", "Canonical JSON serialization of room program, bounds, levels, and declaredPlotAreaSqFt", "CHAR(64) SHA-256", "packages/schemas/src/canonical_building_model.py:L95", "Guarantees digital model immutability"],
-        ["Geometry Mesh Hash", "Vertex float coordinate buffer + index face array sorted lexicographically", "CHAR(64) SHA-256", "workers/generation/manifold_builder.py:L185", "Detects any subtle geometric or vertex drift"],
-        ["Rate Snapshot Hash", "Sorted JSON of regional unit labor/material rates with effective date", "CHAR(64) SHA-256", "packages/cost/src/engine.py:L112", "Freezes commercial pricing baseline"],
-        ["Release Fingerprint", "SHA-256 of concatenated CBM hash, Geometry hash, Rate hash, and Gate reviews", "CHAR(64) SHA-256", "packages/schemas/src/release_ledger.py:L58", "Cryptographic proof of release integrity"]
+        ["CBM Model Hash", "Canonical JSON serialization of room program, bounds, levels, and declaredPlotAreaSqFt", "CHAR(64) SHA-256", "packages/schemas/building_model.py:L95", "Guarantees digital model immutability"],
+        ["Geometry Mesh Hash", "Vertex float coordinate buffer + index face array sorted lexicographically", "CHAR(64) SHA-256", "workers/geometry/solid_engine.py:L185", "Detects any subtle geometric or vertex drift"],
+        ["Rate Snapshot Hash", "Sorted JSON of regional unit labor/material rates with effective date", "CHAR(64) SHA-256", "workers/qto/cost_engine.py:L112", "Freezes commercial pricing baseline"],
+        ["Release Fingerprint", "SHA-256 of concatenated CBM hash, Geometry hash, Rate hash, and Gate reviews", "CHAR(64) SHA-256", "packages/schemas/engineer_review.py:L58", "Cryptographic proof of release integrity"]
     ]
     html.append(table(["Hash Identifier", "Input Payload Canonicalization", "Digest Format", "Source File Reference", "Integrity Invariant"], hash_table_data))
 
@@ -405,8 +405,8 @@ def calculate_slab_concrete_and_shuttering(level: BuildingLevel) -> Dict[str, fl
 
     limitations_data = [
         ["Single-Floor Multi-Room Focus", "Current CP-SAT solver prioritizes single-level residential layouts; multi-floor duplex generation uses vertical replication of floor envelope rather than simultaneous 3D space stacking.", "Medium", "workers/generation/cpsat_solver.py:L140"],
-        ["Rectangular Survey Approximation", "Non-rectangular survey boundaries are approximated via minimum bounding oriented bounding boxes (OBB) prior to CP-SAT solving.", "Medium", "packages/gis/src/envelope.py:L82"],
-        ["Regional Rate Catalog Breadth", "Material and labor rate databases are localized specifically to Mumbai Metropolitan Region (MMR) and Bengaluru Urban; other tier-2 Indian cities require manual rate override.", "Low", "packages/cost/src/engine.py:L54"],
+        ["Rectangular Survey Approximation", "Non-rectangular survey boundaries are approximated via minimum bounding oriented bounding boxes (OBB) prior to CP-SAT solving.", "Medium", "workers/geometry/envelope.py:L82"],
+        ["Regional Rate Catalog Breadth", "Material and labor rate databases are localized specifically to Mumbai Metropolitan Region (MMR) and Bengaluru Urban; other tier-2 Indian cities require manual rate override.", "Low", "workers/qto/cost_engine.py:L54"],
         ["Absence of Database RLS", "PostgreSQL database migrations lack native Row-Level Security policies; multitenant isolation relies solely on API gateway middleware.", "High", "database/migrations/01_init_postgis_schema.sql"]
     ]
     html.append(table(["Limitation / Constraint", "Technical Nature & Engineering Impact", "Severity", "Source Code Reference"], limitations_data))
@@ -543,13 +543,13 @@ node scripts/live_frontend_e2e.js''', "bash", "Step 3: Verification and test exe
         ["1,500 sq ft plot preservation in CBM", "packages/schemas/customer_brief.py:L18", "build_room_program_from_brief()", "tests/test_plot_area_regression.py:L43", "05_1500_my_project_modal.png"],
         ["Elimination of 1,100 sq ft fallbacks", "apps/web/src/components/DesignOptionsView.tsx:L82", "renderTopRightBadge()", "tests/test_plot_area_regression.py:L131", "04_1500_design_options.png"],
         ["CP-SAT non-overlapping layout solve", "workers/generation/cpsat_solver.py:L260", "CPSATLayoutSolver.solve()", "tests/test_m2_generator_and_solids.py:L45", "06_1500_floor_plan_detail.png"],
-        ["Watertight 2-manifold solid physics", "workers/generation/manifold_builder.py:L115", "build_manifold_solids()", "tests/benchmarks/m2_generation_benchmark.py:L40", "Watertight mesh invariant χ=2"],
-        ["Mumbai DCPR 2034 setback formulas", "packages/rules/src/mumbai_dcpr.py:L64", "calculate_dcpr_setbacks()", "tests/test_m1_site_and_rules.py:L22", "02_1500_feasibility.png"],
-        ["BBMP 2026 road width FAR lookup", "packages/rules/src/bbmp.py:L58", "calculate_bbmp_far()", "tests/test_m1_site_and_rules.py:L78", "Rule execution traces table"],
-        ["IS 1200 masonry opening deduction", "packages/qto/src/calculator.py:L94", "calculate_masonry_volume()", "tests/test_m3_qto_and_cost.py:L35", "11_cost_summary.png"],
-        ["Immutable cost rate snapshot freeze", "packages/cost/src/engine.py:L112", "create_rate_snapshot()", "tests/test_controlled_pilot.py:L55", "cost_rate_snapshots SQL table"],
+        ["Watertight 2-manifold solid physics", "workers/geometry/solid_engine.py:L115", "SolidModelingEngine.create_room_solid()", "tests/benchmarks/m2_generation_benchmark.py:L40", "Watertight mesh invariant χ=2"],
+        ["Mumbai DCPR 2034 setback formulas", "workers/regulation/rule_engine.py:L64", "RuleEngine.evaluate_rules()", "tests/test_m1_site_and_rules.py:L22", "02_1500_feasibility.png"],
+        ["BBMP 2026 road width FAR lookup", "workers/regulation/rule_engine.py:L90", "RuleEngine.evaluate_rules()", "tests/test_m1_site_and_rules.py:L78", "Rule execution traces table"],
+        ["IS 1200 masonry opening deduction", "workers/qto/qto_engine.py:L94", "QTOEngine.measure_walls()", "tests/test_m3_qto_and_cost.py:L35", "11_cost_summary.png"],
+        ["Immutable cost rate snapshot freeze", "workers/qto/rate_snapshot_engine.py:L112", "create_rate_snapshot()", "tests/test_controlled_pilot.py:L55", "cost_rate_snapshots SQL table"],
         ["Review Gates G0-G6 release locks", "apps/api-gateway/main.py:L934", "verify_gate_authorization()", "tests/test_phase7_engineer_review.py:L48", "13_engineer_review.png"],
-        ["IFC4 STEP export coordinate tagging", "workers/generation/ifc_exporter.py:L65", "export_ifc4_coordination()", "tests/test_ifc_georeferencing.py:L32", "IfcSite WGS84 local placement"],
+        ["IFC4 STEP export coordinate tagging", "workers/release/manifest_engine.py:L65", "generate_ifc4_model()", "tests/test_ifc_georeferencing.py:L32", "IfcSite WGS84 local placement"],
         ["Exported CAD SVG floor plan", "apps/web/src/components/CadBlueprintView.tsx:L210", "exportSvgDrawing()", "scripts/live_frontend_e2e.js (Phase 12)", "exported_cad_drawing.svg (20KB)"]
     ]
     html.append(table(["Technical Claim", "Source File", "Function / Component", "Test Evidence", "Verification Artifact"], evidence_index_data))
@@ -642,9 +642,9 @@ def render_part6_markdown() -> str:
     md.append("Exported vector artifact: `artifacts/e2e_live_test/exported_cad_drawing.svg` (20,738 bytes). Features double-line walls, 90-degree swing doors, mullioned windows, dimension ticks, and room labels.\n\n")
 
     md.append("## Section 39: Source Code Evidence: Core Implementation Excerpts `[IMPLEMENTED]` `[TESTED]`\n")
-    md.append("- Canonical Building Model: `packages/schemas/src/canonical_building_model.py:L18-L45`\n")
+    md.append("- Canonical Building Model: `packages/schemas/building_model.py:L18-L45`\n")
     md.append("- CP-SAT Layout Constraints: `workers/generation/cpsat_solver.py:L260-L285`\n")
-    md.append("- IS 1200 Concrete & Shuttering: `packages/qto/src/calculator.py:L52-L78`\n\n")
+    md.append("- IS 1200 Concrete & Shuttering: `workers/qto/qto_engine.py:L52-L78`\n\n")
 
     md.append("## Section 40: Mathematical Symbol Glossary `[IMPLEMENTED]`\n")
     md.append("Comprehensive index of all mathematical variables ($A_{\\text{declared}}$, $\\text{FAR}$, $s_{\\text{front}}$, $x_r$, $y_r$, $V_{\\text{concrete}}$, $\\chi$, $g$).\n\n")

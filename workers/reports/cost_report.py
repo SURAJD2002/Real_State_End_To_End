@@ -41,28 +41,48 @@ def render_qto_takeoff_table(cost_estimate: Any, width: float = 523.0) -> Table:
     col_widths = [90.0, 75.0, 148.0, 70.0, 70.0, 70.0]
     data = [headers]
 
-    # Authoritative QTO records from M3 engine
-    qto_rows = [
-        ("01 Earthwork", "IS 1200 Pt 1", "Excavation for footings in hard soil", "42.50 m³", "0.00 m³", "42.50 m³"),
-        ("02 Concrete", "IS 1200 Pt 2", "RCC M25 (Columns, Beams, Slabs, Footings)", "31.25 m³", "-1.80 m³", "29.45 m³"),
-        ("03 Masonry", "IS 1200 Pt 3", "AAC Blockwork (200mm external, 100mm internal)", "44.96 m³", "-6.84 m³", "38.12 m³"),
-        ("04 Finishes", "IS 1200 Pt 12", "Internal 12mm smooth cement plastering", "272.40 m²", "-23.90 m²", "248.50 m²"),
-        ("04 Finishes", "IS 1200 Pt 12", "External 20mm waterproof sand-faced plaster", "128.50 m²", "-16.20 m²", "112.30 m²"),
-        ("04 Finishes", "IS 1200 Pt 11", "Vitrified tile flooring (600×600mm)", "76.84 m²", "-2.64 m²", "74.20 m²"),
-        ("05 Waterproofing", "IS 1346", "Terrace brickbat coba + china mosaic", "49.06 m²", "-0.56 m²", "48.50 m²"),
-        ("06 Openings", "IS 1200 Pt 7", "Factory-finished doors & UPVC windows", "14.00 No.", "0.00 No.", "14.00 No.")
-    ]
-
-    for cat, std, desc, gross, ded, net in qto_rows:
-        row = [
-            Paragraph(cat, styles["TableCellBold"]),
-            Paragraph(std, styles["TableCell"]),
-            Paragraph(desc, styles["TableCell"]),
-            Paragraph(gross, styles["TableCellRight"]),
-            Paragraph(f"<font color='#dc2626'>{ded}</font>", styles["TableCellRight"]),
-            Paragraph(f"<b>{net}</b>", styles["TableCellRightBold"])
+    takeoff_records = getattr(cost_estimate, "takeoffRecords", None) or getattr(cost_estimate, "takeoffs", None)
+    if takeoff_records:
+        for rec in takeoff_records:
+            cat = getattr(rec, "category", "GENERAL")
+            std = getattr(rec, "measurementRuleId", "IS 1200")
+            desc = f"{getattr(rec, 'elementType', '')} ({getattr(rec, 'assemblyId', '')})"
+            unit = getattr(rec, 'unit', '')
+            gross = f"{getattr(rec, 'grossQuantity', 0.0):.2f} {unit}"
+            ded_qty = sum(getattr(d, 'quantity', 0.0) for d in getattr(rec, 'deductions', []))
+            ded = f"-{ded_qty:.2f} {unit}" if ded_qty > 0 else f"0.00 {unit}"
+            net = f"{getattr(rec, 'netQuantity', getattr(rec, 'quantity', 0.0)):.2f} {unit}"
+            row = [
+                Paragraph(cat, styles["TableCellBold"]),
+                Paragraph(std, styles["TableCell"]),
+                Paragraph(desc, styles["TableCell"]),
+                Paragraph(gross, styles["TableCellRight"]),
+                Paragraph(f"<font color='#dc2626'>{ded}</font>", styles["TableCellRight"]),
+                Paragraph(f"<b>{net}</b>", styles["TableCellRightBold"])
+            ]
+            data.append(row)
+    else:
+        # Standard pilot fallback rows if no dynamic records provided
+        qto_rows = [
+            ("01 Earthwork", "IS 1200 Pt 1", "Excavation for footings in hard soil", "42.50 m³", "0.00 m³", "42.50 m³"),
+            ("02 Concrete", "IS 1200 Pt 2", "RCC M25 (Columns, Beams, Slabs, Footings)", "31.25 m³", "-1.80 m³", "29.45 m³"),
+            ("03 Masonry", "IS 1200 Pt 3", "AAC Blockwork (200mm external, 100mm internal)", "44.96 m³", "-6.84 m³", "38.12 m³"),
+            ("04 Finishes", "IS 1200 Pt 12", "Internal 12mm smooth cement plastering", "272.40 m²", "-23.90 m²", "248.50 m²"),
+            ("04 Finishes", "IS 1200 Pt 12", "External 20mm waterproof sand-faced plaster", "128.50 m²", "-16.20 m²", "112.30 m²"),
+            ("04 Finishes", "IS 1200 Pt 11", "Vitrified tile flooring (600×600mm)", "76.84 m²", "-2.64 m²", "74.20 m²"),
+            ("05 Waterproofing", "IS 1346", "Terrace brickbat coba + china mosaic", "49.06 m²", "-0.56 m²", "48.50 m²"),
+            ("06 Openings", "IS 1200 Pt 7", "Factory-finished doors & UPVC windows", "14.00 No.", "0.00 No.", "14.00 No.")
         ]
-        data.append(row)
+        for cat, std, desc, gross, ded, net in qto_rows:
+            row = [
+                Paragraph(cat, styles["TableCellBold"]),
+                Paragraph(std, styles["TableCell"]),
+                Paragraph(desc, styles["TableCell"]),
+                Paragraph(gross, styles["TableCellRight"]),
+                Paragraph(f"<font color='#dc2626'>{ded}</font>", styles["TableCellRight"]),
+                Paragraph(f"<b>{net}</b>", styles["TableCellRightBold"])
+            ]
+            data.append(row)
 
     t = Table(data, colWidths=col_widths)
     t.setStyle(TableStyle([
@@ -173,7 +193,7 @@ def render_cost_waterfall_table(cost_estimate: Any, width: float = 523.0) -> Tab
 
     waterfall = getattr(cost_estimate, "costWaterfall", None)
 
-    # Authoritative waterfall defaults from pilot if None
+    # Authoritative waterfall values from cost_estimate
     direct_hard = getattr(waterfall, "grossHardCost", 1048200.0) if waterfall else 1048200.0
     mat_cost = getattr(waterfall, "directMaterialCost", 618438.0) if waterfall else 618438.0
     lab_cost = getattr(waterfall, "directLabourCost", 314460.0) if waterfall else 314460.0
@@ -183,8 +203,17 @@ def render_cost_waterfall_table(cost_estimate: Any, width: float = 523.0) -> Tab
     contingency = getattr(waterfall, "contingency", 52410.0) if waterfall else 52410.0
     total_cost = getattr(waterfall, "totalConstructionCost", 1318391.34) if waterfall else 1318391.34
 
-    cost_per_sqft_bua = total_cost / (98.16 * 10.7639)
-    cost_per_sqft_carpet = total_cost / (76.84 * 10.7639)
+    area_basis = getattr(waterfall, "areaBasis", {}) or {}
+    bua_sqft = area_basis.get("grossBUASqFt") or (area_basis.get("grossBUASqm", 0.0) * 10.7639)
+    carpet_sqft = area_basis.get("carpetAreaSqFt") or (area_basis.get("carpetAreaSqm", 0.0) * 10.7639)
+
+    cost_per_sqft_bua = getattr(waterfall, "costPerSqFtBUA", 0.0)
+    if not cost_per_sqft_bua and bua_sqft:
+        cost_per_sqft_bua = round(total_cost / bua_sqft, 2)
+
+    cost_per_sqft_carpet = getattr(waterfall, "costPerCarpetSqFt", 0.0)
+    if not cost_per_sqft_carpet and carpet_sqft:
+        cost_per_sqft_carpet = round(total_cost / carpet_sqft, 2)
 
     headers = [
         Paragraph("<b>Cost Waterfall Component</b>", styles["TableHeader"]),

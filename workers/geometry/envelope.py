@@ -211,8 +211,13 @@ def compute_statutory_envelope(
     # Verify containment inside plot minus setbacks
     is_inside = plot_minus_setbacks.buffer(1e-5).contains(envelope_poly)
 
+    # Check if rule pack has licensed professional statutory certification
+    is_rule_pack_certified = bool(rule_data.get("isStatutoryCertified", False) or rule_data.get("legallyVerified", False))
+    verification_status = "VERIFIED" if is_rule_pack_certified else "RULES_UNVERIFIED"
+
     return {
-        "status": "VERIFIED",
+        "status": verification_status,
+        "verificationStatus": verification_status,
         "jurisdiction": jurisdiction,
         "rulePackId": rule_data.get("rulePackId", jurisdiction),
         "plotAreaSqm": round(plot_area_sqm, 2),

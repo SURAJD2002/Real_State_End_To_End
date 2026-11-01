@@ -296,7 +296,7 @@ class ModelLinkedQTOEngine:
                 )
             )
 
-        net_vol = max(1.0, round(total_gross_vol - deduction_vol, 3))
+        net_vol = max(0.0, round(total_gross_vol - deduction_vol, 3))
         gross_vol = round(total_gross_vol, 3)
 
         rule = get_measurement_rule("QTO-SLAB-001")
@@ -399,7 +399,10 @@ class ModelLinkedQTOEngine:
             # Check hosted openings for this wall
             openings = self.openings_by_wall.get(w.elementId, [])
             for op in openings:
-                op_vol = round(op.widthM * op.heightM * thk, 3)
+                op_face_area = round(op.widthM * op.heightM, 3)
+                if op_face_area < 0.1:
+                    continue  # IS 1200 / SMM7: openings < 0.1 m² are not deducted from masonry
+                op_vol = round(op_face_area * thk, 3)
                 deductions.append(
                     DeductionItem(
                         elementId=op.openingId,
@@ -416,7 +419,7 @@ class ModelLinkedQTOEngine:
 
         gross_vol = round(gross_vol, 3)
         total_deduction = sum(d.quantity for d in deductions)
-        net_vol = max(1.0, round(gross_vol - total_deduction, 3))
+        net_vol = max(0.0, round(gross_vol - total_deduction, 3))
 
         rule = get_measurement_rule("QTO-WALL-001")
         rec = TakeoffRecord(
@@ -463,6 +466,8 @@ class ModelLinkedQTOEngine:
             openings = self.openings_by_wall.get(w.elementId, [])
             for op in openings:
                 op_area = round(op.widthM * op.heightM, 3)
+                if op_area < 0.1:
+                    continue  # IS 1200: openings < 0.1 m² not deducted from masonry
                 deductions.append(
                     DeductionItem(
                         elementId=op.openingId,
@@ -479,7 +484,7 @@ class ModelLinkedQTOEngine:
 
         gross_area = round(gross_area, 3)
         total_deduction = sum(d.quantity for d in deductions)
-        net_area = max(1.0, round(gross_area - total_deduction, 3))
+        net_area = max(0.0, round(gross_area - total_deduction, 3))
 
         rule = get_measurement_rule("QTO-WALL-002")
         rec = TakeoffRecord(
@@ -618,7 +623,7 @@ class ModelLinkedQTOEngine:
 
         gross_ext = round(gross_ext, 2)
         total_ded = sum(d.quantity for d in deductions)
-        net_ext = max(5.0, round(gross_ext - total_ded, 2))
+        net_ext = max(0.0, round(gross_ext - total_ded, 2))
 
         rule = get_measurement_rule("QTO-PLASTER-EXT-001")
         rec = TakeoffRecord(

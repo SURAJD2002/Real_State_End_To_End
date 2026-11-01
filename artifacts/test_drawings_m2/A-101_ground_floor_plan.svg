@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1190.55 841.89" width="1190.55" height="841.89" data-drawing-id="A-101" data-scale="1:100">
 <!-- Planwise Enterprise Professional Architectural Drawing Sheet -->
-<!-- Generated deterministically from Canonical Building Model: sha256:ec57846e2168f7f042040e4a95bfa2db6d5a327f4be5b054c2a5ec31de5983ba -->
+<!-- Generated deterministically from Canonical Building Model: sha256:a158788dff404db024573b699636d3db84f8b47735b89bbb217f5f7f635ef42a -->
 <defs>
   <style>
     text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
@@ -38,46 +38,45 @@
     <text class="grid-text" x="318.24" y="356.68">2</text>
   </g>
   <g id="rooms">
-    <rect data-cbm-id="SPACE-SP-ENTRY-1" data-element-type="IfcSpace" x="502.49" y="299.70" width="68.03" height="42.52" fill="#93c5fd1A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="536.50" y="318.96">ENTRANCE FOYER</text>
-    <text class="room-area" x="536.50" y="328.96">3.60 m²</text>
-    <rect data-cbm-id="SPACE-SP-LIVING-2" data-element-type="IfcSpace" x="445.80" y="342.22" width="124.72" height="104.88" fill="#38bdf81A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="508.16" y="392.66">LIVING ROOM</text>
-    <text class="room-area" x="508.16" y="402.66">16.28 m²</text>
-    <rect data-cbm-id="SPACE-SP-DINING-3" data-element-type="IfcSpace" x="411.78" y="220.33" width="90.71" height="85.04" fill="#06b6d41A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="457.13" y="260.85">DINING AREA</text>
-    <text class="room-area" x="457.13" y="270.85">9.60 m²</text>
-    <rect data-cbm-id="SPACE-SP-KITCHEN-4" data-element-type="IfcSpace" x="343.75" y="220.33" width="68.03" height="82.21" fill="#fb923c1A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="377.76" y="259.44">MODULAR KITCHEN</text>
-    <text class="room-area" x="377.76" y="269.44">6.96 m²</text>
-    <rect data-cbm-id="SPACE-SP-UTILITY-5" data-element-type="IfcSpace" x="343.75" y="302.54" width="45.35" height="53.85" fill="#fdba741A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="366.43" y="327.47">UTILITY / YARD</text>
-    <text class="room-area" x="366.43" y="337.47">3.04 m²</text>
-    <rect data-cbm-id="SPACE-SP-PUJA-6" data-element-type="IfcSpace" x="448.63" y="305.37" width="45.35" height="36.85" fill="#facc151A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="471.31" y="321.80">PUJA ROOM</text>
-    <text class="room-area" x="471.31" y="331.80">2.08 m²</text>
-    <rect data-cbm-id="SPACE-SP-BED-9" data-element-type="IfcSpace" x="343.75" y="356.39" width="102.05" height="90.71" fill="#a78bfa1A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="394.77" y="399.75">BEDROOM 2</text>
-    <text class="room-area" x="394.77" y="409.75">11.52 m²</text>
-    <rect data-cbm-id="SPACE-SP-BATH-10" data-element-type="IfcSpace" x="389.10" y="305.37" width="56.70" height="51.02" fill="#f472b61A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="417.45" y="328.88">BATHROOM 2</text>
-    <text class="room-area" x="417.45" y="338.88">3.60 m²</text>
-    <rect data-cbm-id="SPACE-SP-STAIR-11" data-element-type="IfcSpace" x="502.49" y="220.33" width="68.03" height="79.37" fill="#94a3b81A" stroke="#E2E8F0" stroke-width="0.5"/>
-    <text class="room-name" x="536.50" y="258.01">STAIRCASE CORE</text>
-    <text class="room-area" x="536.50" y="268.01">6.72 m²</text>
+    <rect data-cbm-id="SPACE-SP-ENTRY-1" data-element-type="IfcSpace" x="448.63" y="220.33" width="42.52" height="68.03" fill="#93c5fd1A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="469.89" y="252.35">ENTRANCE FOYER</text>
+    <text class="room-area" x="469.89" y="262.35">3.60 m²</text>
+    <rect data-cbm-id="SPACE-SP-LIVING-2" data-element-type="IfcSpace" x="343.75" y="220.33" width="104.88" height="124.73" fill="#38bdf81A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="396.19" y="280.69">LIVING ROOM</text>
+    <text class="room-area" x="396.19" y="290.69">16.28 m²</text>
+    <rect data-cbm-id="SPACE-SP-DINING-3" data-element-type="IfcSpace" x="485.48" y="288.36" width="85.04" height="90.71" fill="#06b6d41A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="528.00" y="331.72">DINING AREA</text>
+    <text class="room-area" x="528.00" y="341.72">9.60 m²</text>
+    <rect data-cbm-id="SPACE-SP-KITCHEN-4" data-element-type="IfcSpace" x="488.32" y="379.07" width="79.37" height="68.03" fill="#fb923c1A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="528.00" y="411.09">MODULAR KITCHEN</text>
+    <text class="room-area" x="528.00" y="421.09">6.72 m²</text>
+    <rect data-cbm-id="SPACE-SP-UTILITY-5" data-element-type="IfcSpace" x="434.46" y="401.75" width="53.86" height="45.35" fill="#fdba741A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="461.39" y="422.43">UTILITY / YARD</text>
+    <text class="room-area" x="461.39" y="432.43">3.04 m²</text>
+    <rect data-cbm-id="SPACE-SP-PUJA-6" data-element-type="IfcSpace" x="448.63" y="294.03" width="34.02" height="48.19" fill="#facc151A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="465.64" y="316.12">PUJA ROOM</text>
+    <text class="room-area" x="465.64" y="326.12">2.04 m²</text>
+    <rect data-cbm-id="SPACE-SP-BED-9" data-element-type="IfcSpace" x="343.75" y="345.06" width="90.71" height="102.04" fill="#a78bfa1A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="389.11" y="394.08">BEDROOM 2</text>
+    <text class="room-area" x="389.11" y="404.08">11.52 m²</text>
+    <rect data-cbm-id="SPACE-SP-BATH-10" data-element-type="IfcSpace" x="434.46" y="345.06" width="51.02" height="56.69" fill="#f472b61A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="459.97" y="371.40">BATHROOM 2</text>
+    <text class="room-area" x="459.97" y="381.40">3.60 m²</text>
+    <rect data-cbm-id="SPACE-SP-STAIR-11" data-element-type="IfcSpace" x="491.15" y="220.33" width="79.37" height="68.03" fill="#94a3b81A" stroke="#E2E8F0" stroke-width="0.5"/>
+    <text class="room-name" x="530.84" y="252.35">STAIRCASE CORE</text>
+    <text class="room-area" x="530.84" y="262.35">6.72 m²</text>
   </g>
   <g id="walls">
     <polygon data-cbm-id="WALL-EXT-001" data-element-type="IfcWall" points="343.75,444.27 496.25,444.27 496.25,449.94 343.75,449.94" fill="#1E293B" stroke="#0F172A" stroke-width="1.42"/>
     <polygon data-cbm-id="WALL-EXT-002" data-element-type="IfcWall" points="493.42,447.10 493.42,356.68 499.09,356.68 499.09,447.10" fill="#1E293B" stroke="#0F172A" stroke-width="1.42"/>
     <polygon data-cbm-id="WALL-EXT-003" data-element-type="IfcWall" points="496.25,359.51 343.75,359.51 343.75,353.84 496.25,353.84" fill="#1E293B" stroke="#0F172A" stroke-width="1.42"/>
     <polygon data-cbm-id="WALL-EXT-004" data-element-type="IfcWall" points="346.58,356.68 346.58,447.10 340.91,447.10 340.91,356.68" fill="#1E293B" stroke="#0F172A" stroke-width="1.42"/>
-    <polygon data-cbm-id="WALL-INT-005" data-element-type="IfcWall" points="502.49,340.80 570.52,340.80 570.52,343.64 502.49,343.64" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
-    <polygon data-cbm-id="WALL-INT-006" data-element-type="IfcWall" points="411.78,303.95 502.49,303.95 502.49,306.79 411.78,306.79" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
-    <polygon data-cbm-id="WALL-INT-007" data-element-type="IfcWall" points="343.75,301.12 411.78,301.12 411.78,303.95 343.75,303.95" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
-    <polygon data-cbm-id="WALL-INT-008" data-element-type="IfcWall" points="343.75,354.98 389.10,354.98 389.10,357.81 343.75,357.81" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
-    <polygon data-cbm-id="WALL-INT-009" data-element-type="IfcWall" points="448.63,340.80 493.98,340.80 493.98,343.64 448.63,343.64" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
-    <polygon data-cbm-id="WALL-INT-010" data-element-type="IfcWall" points="389.10,354.98 445.80,354.98 445.80,357.81 389.10,357.81" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
-    <polygon data-cbm-id="WALL-INT-011" data-element-type="IfcWall" points="502.49,298.28 570.52,298.28 570.52,301.12 502.49,301.12" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
+    <polygon data-cbm-id="WALL-INT-005" data-element-type="IfcWall" points="448.63,286.94 491.15,286.94 491.15,289.78 448.63,289.78" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
+    <polygon data-cbm-id="WALL-INT-006" data-element-type="IfcWall" points="343.75,343.64 448.63,343.64 448.63,346.47 343.75,346.47" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
+    <polygon data-cbm-id="WALL-INT-007" data-element-type="IfcWall" points="485.48,377.65 570.52,377.65 570.52,380.49 485.48,380.49" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
+    <polygon data-cbm-id="WALL-INT-008" data-element-type="IfcWall" points="448.63,340.80 482.65,340.80 482.65,343.64 448.63,343.64" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
+    <polygon data-cbm-id="WALL-INT-009" data-element-type="IfcWall" points="434.46,400.33 485.48,400.33 485.48,403.17 434.46,403.17" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
+    <polygon data-cbm-id="WALL-INT-010" data-element-type="IfcWall" points="491.15,286.94 570.52,286.94 570.52,289.78 491.15,289.78" fill="#334155" stroke="#0F172A" stroke-width="0.99"/>
   </g>
   <g id="columns">
     <rect data-cbm-id="COL-A1" data-element-type="IfcColumn" x="339.50" y="440.72" width="8.50" height="12.76" fill="#0F172A" stroke="#0F172A" stroke-width="0.99"/>
@@ -102,32 +101,32 @@
   <g id="openings">
     <circle data-cbm-id="DOOR-001" data-element-type="IfcDoor" cx="400.44" cy="447.10" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
     <text class="tag-text" x="400.44" y="449.10">D01</text>
-    <circle data-cbm-id="DOOR-002" data-element-type="IfcDoor" cx="536.50" cy="342.22" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="536.50" y="344.22">D06</text>
-    <circle data-cbm-id="DOOR-003" data-element-type="IfcDoor" cx="508.16" cy="447.10" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="508.16" y="449.10">D05</text>
-    <circle data-cbm-id="DOOR-004" data-element-type="IfcDoor" cx="457.13" cy="305.37" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="457.13" y="307.37">D07</text>
-    <circle data-cbm-id="DOOR-005" data-element-type="IfcDoor" cx="377.76" cy="302.54" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="377.76" y="304.54">D08</text>
-    <circle data-cbm-id="DOOR-006" data-element-type="IfcDoor" cx="366.43" cy="356.39" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="366.43" y="358.39">D09</text>
-    <circle data-cbm-id="DOOR-007" data-element-type="IfcDoor" cx="471.31" cy="342.22" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="471.31" y="344.22">D10</text>
-    <circle data-cbm-id="DOOR-008" data-element-type="IfcDoor" cx="394.77" cy="447.10" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="394.77" y="449.10">D03</text>
-    <circle data-cbm-id="DOOR-009" data-element-type="IfcDoor" cx="417.45" cy="356.39" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="417.45" y="358.39">D11</text>
-    <circle data-cbm-id="DOOR-010" data-element-type="IfcDoor" cx="536.50" cy="299.70" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
-    <text class="tag-text" x="536.50" y="301.70">D12</text>
-    <circle data-cbm-id="WIN-001" data-element-type="IfcWindow" cx="508.16" cy="447.10" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
-    <text class="tag-text" x="508.16" y="449.10">W02</text>
-    <circle data-cbm-id="WIN-002" data-element-type="IfcWindow" cx="343.75" cy="261.43" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
-    <text class="tag-text" x="343.75" y="263.43">W07</text>
-    <circle data-cbm-id="WIN-003" data-element-type="IfcWindow" cx="343.75" cy="329.46" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
-    <text class="tag-text" x="343.75" y="331.46">W06</text>
-    <circle data-cbm-id="WIN-004" data-element-type="IfcWindow" cx="343.75" cy="401.75" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
-    <text class="tag-text" x="343.75" y="403.75">W04</text>
+    <circle data-cbm-id="DOOR-002" data-element-type="IfcDoor" cx="469.89" cy="288.36" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="469.89" y="290.36">D05</text>
+    <circle data-cbm-id="DOOR-003" data-element-type="IfcDoor" cx="396.19" cy="345.06" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="396.19" y="347.06">D07</text>
+    <circle data-cbm-id="DOOR-004" data-element-type="IfcDoor" cx="528.00" cy="379.07" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="528.00" y="381.07">D08</text>
+    <circle data-cbm-id="DOOR-005" data-element-type="IfcDoor" cx="528.00" cy="447.10" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="528.00" y="449.10">D06</text>
+    <circle data-cbm-id="DOOR-006" data-element-type="IfcDoor" cx="461.39" cy="447.10" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="461.39" y="449.10">D04</text>
+    <circle data-cbm-id="DOOR-007" data-element-type="IfcDoor" cx="465.64" cy="342.22" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="465.64" y="344.22">D09</text>
+    <circle data-cbm-id="DOOR-008" data-element-type="IfcDoor" cx="389.10" cy="447.10" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="389.10" y="449.10">D02</text>
+    <circle data-cbm-id="DOOR-009" data-element-type="IfcDoor" cx="459.97" cy="401.75" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="459.97" y="403.75">D10</text>
+    <circle data-cbm-id="DOOR-010" data-element-type="IfcDoor" cx="530.83" cy="288.36" r="6" fill="#EFF6FF" stroke="#2563EB" stroke-width="0.8"/>
+    <text class="tag-text" x="530.83" y="290.36">D11</text>
+    <circle data-cbm-id="WIN-001" data-element-type="IfcWindow" cx="343.75" cy="282.69" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
+    <text class="tag-text" x="343.75" y="284.69">W06</text>
+    <circle data-cbm-id="WIN-002" data-element-type="IfcWindow" cx="528.00" cy="447.10" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
+    <text class="tag-text" x="528.00" y="449.10">W02</text>
+    <circle data-cbm-id="WIN-003" data-element-type="IfcWindow" cx="461.39" cy="447.10" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
+    <text class="tag-text" x="461.39" y="449.10">W01</text>
+    <circle data-cbm-id="WIN-004" data-element-type="IfcWindow" cx="343.75" cy="396.08" r="6" fill="#F0F9FF" stroke="#0284C7" stroke-width="0.8"/>
+    <text class="tag-text" x="343.75" y="398.08">W03</text>
   </g>
   <g id="dimensions">
     <line x1="343.75" y1="498.13" x2="496.25" y2="498.13" stroke="#1E293B" stroke-width="0.35"/>
@@ -165,21 +164,21 @@
   <rect x="802.2" y="254.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="264.0">D02</text>
   <text class="value" x="842.2" y="264.0">FLUSH TIMBER DOOR</text>
-  <text class="value" x="952.2" y="264.0">800 mm</text>
+  <text class="value" x="952.2" y="264.0">900 mm</text>
   <text class="value" x="1042.2" y="264.0">2100 mm</text>
-  <text class="value" x="1102.2" y="264.0">LVL-001</text>
+  <text class="value" x="1102.2" y="264.0">LVL-000</text>
   <rect x="802.2" y="268.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="278.0">D03</text>
   <text class="value" x="842.2" y="278.0">FLUSH TIMBER DOOR</text>
   <text class="value" x="952.2" y="278.0">900 mm</text>
   <text class="value" x="1042.2" y="278.0">2100 mm</text>
-  <text class="value" x="1102.2" y="278.0">LVL-000</text>
+  <text class="value" x="1102.2" y="278.0">LVL-001</text>
   <rect x="802.2" y="282.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="292.0">D04</text>
   <text class="value" x="842.2" y="292.0">FLUSH TIMBER DOOR</text>
   <text class="value" x="952.2" y="292.0">900 mm</text>
   <text class="value" x="1042.2" y="292.0">2100 mm</text>
-  <text class="value" x="1102.2" y="292.0">LVL-001</text>
+  <text class="value" x="1102.2" y="292.0">LVL-000</text>
   <rect x="802.2" y="296.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="306.0">D05</text>
   <text class="value" x="842.2" y="306.0">FLUSH TIMBER DOOR</text>
@@ -197,27 +196,27 @@
   <rect x="802.2" y="348.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="358.0">W01</text>
   <text class="value" x="842.2" y="358.0">ALUMINUM SLIDING</text>
-  <text class="value" x="952.2" y="358.0">1500 mm</text>
-  <text class="value" x="1042.2" y="358.0">1200 mm</text>
-  <text class="value" x="1102.2" y="358.0">LVL-001</text>
+  <text class="value" x="952.2" y="358.0">600 mm</text>
+  <text class="value" x="1042.2" y="358.0">600 mm</text>
+  <text class="value" x="1102.2" y="358.0">LVL-000</text>
   <rect x="802.2" y="362.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="372.0">W02</text>
   <text class="value" x="842.2" y="372.0">ALUMINUM SLIDING</text>
-  <text class="value" x="952.2" y="372.0">1500 mm</text>
-  <text class="value" x="1042.2" y="372.0">1200 mm</text>
+  <text class="value" x="952.2" y="372.0">600 mm</text>
+  <text class="value" x="1042.2" y="372.0">600 mm</text>
   <text class="value" x="1102.2" y="372.0">LVL-000</text>
   <rect x="802.2" y="376.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="386.0">W03</text>
   <text class="value" x="842.2" y="386.0">ALUMINUM SLIDING</text>
   <text class="value" x="952.2" y="386.0">1500 mm</text>
   <text class="value" x="1042.2" y="386.0">1200 mm</text>
-  <text class="value" x="1102.2" y="386.0">LVL-001</text>
+  <text class="value" x="1102.2" y="386.0">LVL-000</text>
   <rect x="802.2" y="390.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="400.0">W04</text>
   <text class="value" x="842.2" y="400.0">ALUMINUM SLIDING</text>
   <text class="value" x="952.2" y="400.0">1500 mm</text>
   <text class="value" x="1042.2" y="400.0">1200 mm</text>
-  <text class="value" x="1102.2" y="400.0">LVL-000</text>
+  <text class="value" x="1102.2" y="400.0">LVL-001</text>
   <rect x="802.2" y="404.0" width="360.0" height="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="0.5"/>
   <text class="value" x="808.2" y="414.0">W05</text>
   <text class="value" x="842.2" y="414.0">ALUMINUM SLIDING</text>

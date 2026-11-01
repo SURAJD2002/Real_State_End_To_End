@@ -57,7 +57,7 @@ This index provides direct navigation to the authoritative engineering documenta
 
 ## 6. Architecture & Reference Blueprints (PDF)
 
-- `docs/Real Estate Feasibility Platform Architecture.pdf`: Institutional architecture topology and data contract definitions.
-- `docs/Land Feasibility Platform Blueprint.pdf`: High-level platform functional blueprint.
-- `docs/real-estate-platform-engineering-masterplan_260923_072638.pdf`: Engineering master plan and lifecycle milestone gates.
-- `docs/Planwise Site Development Masterclass.pdf`: Standard operating procedures for plot intake and zoning compliance.
+- `Real Estate Feasibility Platform Architecture.pdf`: Institutional architecture topology and data contract definitions.
+- `Land Feasibility Platform Blueprint.pdf`: High-level platform functional blueprint.
+- `real-estate-platform-engineering-masterplan_260923_072638.pdf`: Engineering master plan and lifecycle milestone gates.
+- `Planwise Site Development Masterclass.pdf`: Standard operating procedures for plot intake and zoning compliance.

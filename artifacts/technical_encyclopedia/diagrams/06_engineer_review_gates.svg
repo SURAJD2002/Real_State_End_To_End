@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 140" width="100%" height="140px" class="svg-diagram" style="max-height:140px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#2563eb" />
+  </marker>
+  <marker id="arr-gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#64748b" />
+  </marker>
+</defs>
+
+<text x="350" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">DIAGRAM 6: ENGINEER REVIEW GATES (G0 - G6) & STATUTORY BYPASS PROTECTION</text>
+<rect x="25" y="45" width="85" height="75" rx="3" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+<text x="67" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#1e40af">G0: SITE</text>
+<text x="67" y="80" text-anchor="middle" font-size="7" fill="#334155">Statutory Rules</text>
+<text x="67" y="92" text-anchor="middle" font-size="7" fill="#334155">Setback Check</text>
+<text x="67" y="106" text-anchor="middle" font-size="7" font-weight="bold" fill="#059669">AUTOMATED</text>
+
+<line x1="110" y1="82" x2="122" y2="82" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+
+<rect x="122" y="45" width="85" height="75" rx="3" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+<text x="164" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#1e40af">G1: ARCH</text>
+<text x="164" y="80" text-anchor="middle" font-size="7" fill="#334155">NBC 2016 Rooms</text>
+<text x="164" y="92" text-anchor="middle" font-size="7" fill="#334155">Lighting & Vent</text>
+<text x="164" y="106" text-anchor="middle" font-size="7" font-weight="bold" fill="#059669">AUTOMATED</text>
+
+<line x1="207" y1="82" x2="219" y2="82" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+
+<rect x="219" y="45" width="85" height="75" rx="3" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+<text x="261" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#1e40af">G2: STRUCT</text>
+<text x="261" y="80" text-anchor="middle" font-size="7" fill="#334155">Grid Alignment</text>
+<text x="261" y="92" text-anchor="middle" font-size="7" fill="#334155">Span Checks</text>
+<text x="261" y="106" text-anchor="middle" font-size="7" font-weight="bold" fill="#059669">AUTOMATED</text>
+
+<line x1="304" y1="82" x2="316" y2="82" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+
+<rect x="316" y="45" width="85" height="75" rx="3" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+<text x="358" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#1e40af">G3: MEP</text>
+<text x="358" y="80" text-anchor="middle" font-size="7" fill="#334155">Shaft Verticality</text>
+<text x="358" y="92" text-anchor="middle" font-size="7" fill="#334155">Wet Wall Drops</text>
+<text x="358" y="106" text-anchor="middle" font-size="7" font-weight="bold" fill="#059669">AUTOMATED</text>
+
+<line x1="401" y1="82" x2="413" y2="82" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+
+<rect x="413" y="45" width="85" height="75" rx="3" fill="#ffffff" stroke="#3b82f6" stroke-width="1.2"/>
+<text x="455" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#1e40af">G4: COST</text>
+<text x="455" y="80" text-anchor="middle" font-size="7" fill="#334155">IS 1200 QTO</text>
+<text x="455" y="92" text-anchor="middle" font-size="7" fill="#334155">Rate Lock</text>
+<text x="455" y="106" text-anchor="middle" font-size="7" font-weight="bold" fill="#059669">AUTOMATED</text>
+
+<line x1="498" y1="82" x2="510" y2="82" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+
+<rect x="510" y="45" width="85" height="75" rx="3" fill="#ffffff" stroke="#d97706" stroke-width="1.5"/>
+<text x="552" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#b45309">G5: SANCTION</text>
+<text x="552" y="80" text-anchor="middle" font-size="7" fill="#334155">Architect Signoff</text>
+<text x="552" y="92" text-anchor="middle" font-size="7" fill="#334155">Licensed Survey</text>
+<text x="552" y="106" text-anchor="middle" font-size="7" font-weight="bold" fill="#b45309">PROFESSIONAL</text>
+
+<line x1="595" y1="82" x2="607" y2="82" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+
+<rect x="607" y="45" width="70" height="75" rx="3" fill="#ffffff" stroke="#059669" stroke-width="1.5"/>
+<text x="642" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#047857">G6: BUILD</text>
+<text x="642" y="80" text-anchor="middle" font-size="7" fill="#334155">Immutable</text>
+<text x="642" y="92" text-anchor="middle" font-size="7" fill="#334155">Release Lock</text>
+<text x="642" y="106" text-anchor="middle" font-size="7" font-weight="bold" fill="#047857">CERTIFIED</text>
+
+</svg>

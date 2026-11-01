@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 465" width="100%" height="465px" class="svg-diagram" style="max-height:465px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#2563eb" />
+  </marker>
+  <marker id="arr-gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#64748b" />
+  </marker>
+</defs>
+
+<text x="350" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">DIAGRAM 1: PLANWISE ENTERPRISE — THREE-TIER DECOUPLED ARCHITECTURE</text>
+<!-- Presentation Layer -->
+<rect x="30" y="45" width="640" height="70" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.2"/>
+<text x="45" y="65" font-size="11" font-weight="bold" fill="#1e40af">1. PRESENTATION LAYER (apps/web)</text>
+<text x="45" y="82" font-size="9" fill="#334155">React 18.3 • TypeScript • Vite • TailwindCSS • Lucide Icons • Canvas CAD Blueprint Engine (CadBlueprintView)</text>
+<text x="45" y="98" font-size="9" fill="#64748b">Customer Workflow (Land → Feasibility → Design → Cost → Review) | Professional Reviewer Workflow (EngineerReviewView)</text>
+
+<!-- Gateway & Orchestration Layer -->
+<rect x="30" y="145" width="640" height="75" rx="4" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.2"/>
+<text x="45" y="165" font-size="11" font-weight="bold" fill="#15803d">2. API GATEWAY & ORCHESTRATION LAYER (apps/api-gateway)</text>
+<text x="45" y="182" font-size="9" fill="#334155">FastAPI 0.142 • Pydantic 2.13 • Uvicorn • 65 Validated REST Endpoints • In-Memory Mock/Ledger & Postgres Repository</text>
+<text x="45" y="198" font-size="9" fill="#64748b">Route Handlers: /api/v1/projects • /calculate-feasibility • /design-options • /qto • /cost • /engineer-reviews • /releases</text>
+
+<!-- Computational Core & Workers Layer -->
+<rect x="30" y="250" width="640" height="120" rx="4" fill="#faf5ff" stroke="#a855f7" stroke-width="1.2"/>
+<text x="45" y="270" font-size="11" font-weight="bold" fill="#7e22ce">3. COMPUTATIONAL WORKERS & SCHEMAS (workers/ & packages/)</text>
+<rect x="45" y="282" width="135" height="75" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="52" y="298" font-size="8.5" font-weight="bold" fill="#0f172a">Regulation (M1)</text>
+<text x="52" y="312" font-size="7.5" fill="#475569">rule_engine.py</text>
+<text x="52" y="324" font-size="7.5" fill="#475569">MUMBAI_DCPR_2034</text>
+<text x="52" y="336" font-size="7.5" fill="#475569">BBMP_2026</text>
+<text x="52" y="348" font-size="7.5" fill="#059669">Shapely 2.1.2</text>
+
+<rect x="195" y="282" width="145" height="75" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="202" y="298" font-size="8.5" font-weight="bold" fill="#0f172a">Generation (M2)</text>
+<text x="202" y="312" font-size="7.5" fill="#475569">cpsat_solver.py</text>
+<text x="202" y="324" font-size="7.5" fill="#475569">Google OR-Tools CP-SAT</text>
+<text x="202" y="336" font-size="7.5" fill="#475569">model_compiler.py</text>
+<text x="202" y="348" font-size="7.5" fill="#059669">Manifold3D 3.5.4</text>
+
+<rect x="355" y="282" width="145" height="75" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="362" y="298" font-size="8.5" font-weight="bold" fill="#0f172a">QTO & Cost (M3)</text>
+<text x="362" y="312" font-size="7.5" fill="#475569">measurement_engine.py</text>
+<text x="362" y="324" font-size="7.5" fill="#475569">IS 1200 Part 1,2,3,12</text>
+<text x="362" y="336" font-size="7.5" fill="#475569">cost_engine.py</text>
+<text x="362" y="348" font-size="7.5" fill="#059669">Rate Snapshots</text>
+
+<rect x="515" y="282" width="140" height="75" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="522" y="298" font-size="8.5" font-weight="bold" fill="#0f172a">Review & Release</text>
+<text x="522" y="312" font-size="7.5" fill="#475569">G0-G6 Review Gates</text>
+<text x="522" y="324" font-size="7.5" fill="#475569">IFC4 STEP Exporter</text>
+<text x="522" y="336" font-size="7.5" fill="#475569">Manifest Engine</text>
+<text x="522" y="348" font-size="7.5" fill="#059669">ReportLab PDF</text>
+
+<!-- Persistence Layer -->
+<rect x="30" y="395" width="640" height="55" rx="4" fill="#f8fafc" stroke="#64748b" stroke-width="1.2"/>
+<text x="45" y="415" font-size="11" font-weight="bold" fill="#334155">4. PERSISTENCE LAYER (PostgreSQL 15+ & PostGIS 3.3)</text>
+<text x="45" y="432" font-size="8.5" fill="#475569">Migrations 01-06 • PostGIS Polygons • CBM Relational Tables • QTO Measurement Rules • Release Ledger • Audit Hashes</text>
+
+<!-- Connectors -->
+<line x1="350" y1="115" x2="350" y2="145" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="350" y1="220" x2="350" y2="250" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="350" y1="370" x2="350" y2="395" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr)"/>
+
+</svg>

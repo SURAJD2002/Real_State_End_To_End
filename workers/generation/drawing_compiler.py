@@ -845,7 +845,7 @@ def generate_svg_sheet(
     svg_parts.append(f'  <text class="label" x="{tb_x + 12}" y="{tb_y + 38}">PROJECT</text>')
     svg_parts.append(f'  <text class="value" x="{tb_x + 12}" y="{tb_y + 51}">{project_meta.get("projectName", "Bandra West Residential Development")}</text>')
     svg_parts.append(f'  <text class="label" x="{tb_x + 240}" y="{tb_y + 38}">PROJECT ID</text>')
-    svg_parts.append(f'  <text class="value" x="{tb_x + 240}" y="{tb_y + 51}">{project_meta.get("projectId", "proj-mumbai-real-1100")}</text>')
+    svg_parts.append(f'  <text class="value" x="{tb_x + 240}" y="{tb_y + 51}">{project_meta.get("projectId", "PROJ-DEFAULT")}</text>')
 
     # Drawing Title
     svg_parts.append(f'  <line x1="{tb_x}" y1="{tb_y + 96}" x2="{tb_x + tb_w}" y2="{tb_y + 96}" stroke="{COLORS["BORDER"]}" stroke-width="0.5"/>')
@@ -1428,7 +1428,7 @@ def generate_pdf_sheet(
     c.drawString(tb_x + 240, tb_y + tb_h - 38, "PROJECT ID")
     c.setFont("Helvetica-Bold", 8.5)
     c.setFillColor(HexColor("#0F172A"))
-    c.drawString(tb_x + 240, tb_y + tb_h - 50, project_meta.get("projectId", "proj-mumbai-real-1100"))
+    c.drawString(tb_x + 240, tb_y + tb_h - 50, project_meta.get("projectId", "PROJ-DEFAULT"))
 
     # Drawing Title
     c.line(tb_x, tb_y + tb_h - 96, tb_x + tb_w, tb_y + tb_h - 96)
@@ -1502,8 +1502,8 @@ class DrawingCompiler:
     def __init__(self, cbm: CanonicalBuildingModel, project_meta: Optional[Dict[str, Any]] = None):
         self.cbm = cbm
         self.project_meta = project_meta or {
-            "projectName": "Bandra West Residential Development",
-            "projectId": "proj-mumbai-real-1100",
+            "projectName": "Residential Development",
+            "projectId": "PROJ-DEFAULT",
             "releaseId": "rel-pilot-20261002-aedf9830",
             "designVersionId": "DV-OPT-B-9be0a983"
         }
@@ -1602,7 +1602,7 @@ class DrawingCompiler:
 
         # Generate drawing manifest
         manifest_data = {
-            "projectId": self.project_meta.get("projectId", "proj-mumbai-real-1100"),
+            "projectId": self.project_meta.get("projectId", "PROJ-DEFAULT"),
             "releaseId": self.project_meta.get("releaseId", "rel-pilot-20261002-aedf9830"),
             "designVersionId": self.project_meta.get("designVersionId", "DV-OPT-B-9be0a983"),
             "cbmHash": self.cbm.metadata.modelHash,

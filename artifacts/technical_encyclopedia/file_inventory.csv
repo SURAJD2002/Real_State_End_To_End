@@ -1,0 +1,416 @@
+path,category,extension,size_bytes,lines
+real-estate-platform-engineering-masterplan_260923_072638.pdf,Root / Miscellaneous,.pdf,261204,2712
+PILOT_VS_REAL_DATA_INTEGRITY_REPORT.md,Documentation,.md,6677,110
+M3_DEVELOPMENT_REPORT.md,Documentation,.md,19424,356
+PLANWISE_MIGRATION_PLAN.md,Documentation,.md,2628,37
+PLANWISE_BUSINESS_PITCH_DECK.pptx,Root / Miscellaneous,.pptx,1791575,12818
+SUPABASE_MIGRATION_AUDIT.md,Documentation,.md,5903,62
+build_deck.py,Root / Miscellaneous,.py,69881,1645
+PHASE_7_ENGINEER_REVIEW_REPORT.md,Documentation,.md,10258,185
+ARCHITECTURAL_RENDERER_V2_REPORT.md,Documentation,.md,7297,136
+SUPABASE_MIGRATION_RECONCILIATION.md,Documentation,.md,4245,26
+.DS_Store,Root / Miscellaneous,,12292,3
+PLANWISE_PILOT_READINESS_REPORT.md,Documentation,.md,15116,205
+requirements.txt,Documentation,.txt,355,19
+PHASE_7_ENGINEER_REVIEW_REPORT.pdf,Root / Miscellaneous,.pdf,1920839,25314
+PLANWISE_INTEGRATION_TEST_REPORT.md,Documentation,.md,5965,118
+PLANWISE_NEXT_PHASE_GAP_MATRIX.md,Documentation,.md,19658,51
+FORMULA_AUDIT_REPORT.md,Documentation,.md,22082,259
+Land Feasibility Platform Blueprint.pdf,Root / Miscellaneous,.pdf,541771,16664
+PLANWISE_USER_GUIDE_QA_REPORT.md,Documentation,.md,6589,71
+PLANWISE_QUICK_START.pdf,Root / Miscellaneous,.pdf,821585,13743
+SUPABASE_POST_MIGRATION_VALIDATION.md,Documentation,.md,11292,144
+ARCHITECTURAL_FLOOR_PLAN_RENDERER_AUDIT.md,Documentation,.md,3541,51
+PLANWISE_CAD_VISUAL_QA_REPORT.md,Documentation,.md,9084,138
+FORMULA_VERIFICATION_MATRIX.md,Documentation,.md,30591,60
+PLANWISE_NEXT_PHASE_ARCHITECTURE.md,Documentation,.md,17829,268
+REAL_WORLD_DATA_TEST_REPORT.md,Documentation,.md,19956,357
+PLANWISE_ENTERPRISE_USER_GUIDE.pdf,Root / Miscellaneous,.pdf,2147406,36226
+Real Estate Feasibility Platform Architecture.pdf,Root / Miscellaneous,.pdf,739738,13934
+README.md,Documentation,.md,27528,424
+FRONTEND_2_0_API_REQUIREMENTS_AUDIT.md,Documentation,.md,18180,309
+PHASE_8_PILOT_HANDOFF_QA.md,Documentation,.md,14366,114
+PLANWISE_ENTERPRISE_MASTER_REPORT_50_PAGES.pdf,Root / Miscellaneous,.pdf,5988530,151099
+FRONTEND_2_0_CUSTOMER_UX_REPORT.md,Documentation,.md,14117,260
+.gitignore,Root / Miscellaneous,,711,71
+package-lock.json,Configuration / Manifest,.json,112789,3239
+package.json,Configuration / Manifest,.json,1111,29
+PHASE_9_M1_IFC_PROFESSIONALIZATION_REPORT.md,Documentation,.md,12909,233
+M2_DEVELOPMENT_REPORT.md,Documentation,.md,26015,355
+.env,Configuration / Manifest,,1550,42
+CONTRIBUTING.md,Documentation,.md,4906,152
+PLANWISE_IMPLEMENTATION_PLAN.md,Documentation,.md,7590,101
+PLANWISE_PERSISTENCE_MAPPING.md,Documentation,.md,6217,89
+.gitattributes,Root / Miscellaneous,,128,8
+PLANWISE_USER_GUIDE_EVIDENCE_MATRIX.md,Documentation,.md,14705,64
+SUPABASE_SECURITY_RLS_AUDIT.md,Documentation,.md,5431,113
+PLANWISE_ENTERPRISE_USER_GUIDE.md,Documentation,.md,36354,450
+M3_GAP_ANALYSIS.md,Documentation,.md,8428,38
+PHASE_8_PREMIUM_UI_UX_REPORT.md,Documentation,.md,14890,229
+PHASE_8_CONTROLLED_PILOT_REPORT.md,Documentation,.md,12747,228
+BUSINESS_DECK_README.md,Documentation,.md,11714,103
+.env.example,Configuration / Manifest,.example,1748,46
+PHASE_9_M2_PROFESSIONAL_DRAWING_PIPELINE_REPORT.md,Documentation,.md,20039,394
+M2_GAP_ANALYSIS.md,Documentation,.md,8984,75
+PHASE_HOME_PDF_REPORT.md,Documentation,.md,21735,259
+PHASE_8_PILOT_READINESS_AUDIT.md,Documentation,.md,22697,349
+PLANWISE_BUSINESS_PITCH_DECK.pdf,Root / Miscellaneous,.pdf,935896,16873
+PLANWISE_AUTHENTICATION_AND_AUTHORIZATION.md,Documentation,.md,6055,132
+Planwise Site Development Masterclass.pdf,Root / Miscellaneous,.pdf,1236674,20747
+PHASE_8_PILOT_HANDOFF_QA_V2.md,Documentation,.md,11336,129
+SECURITY.md,Documentation,.md,3840,67
+PHASE_8_1_PERSISTENT_LEDGER_REPORT.md,Documentation,.md,10573,188
+database/migrations/04_qto_boq_and_cost_engine.sql,Database Migration,.sql,4038,111
+database/migrations/05_engineer_review_and_releases.sql,Database Migration,.sql,4972,104
+database/migrations/06_generated_reports.sql,Database Migration,.sql,1313,27
+database/migrations/03_site_evidence_and_rule_engine.sql,Database Migration,.sql,6956,188
+database/migrations/01_init_postgis_schema.sql,Database Migration,.sql,5412,140
+database/migrations/02_canonical_building_model.sql,Database Migration,.sql,9610,233
+database/seeds/golden_mumbai_10000sqm.json,Configuration / Manifest,.json,1086,41
+artifacts/planwise_quick_start.html,Verification Artifact,.html,675526,270
+artifacts/.DS_Store,Verification Artifact,,8196,8
+artifacts/planwise_enterprise_forensic_technical_master_report.md,Verification Artifact,.md,2340864,3250
+artifacts/planwise_enterprise_forensic_technical_master_report.html,Verification Artifact,.html,2385201,2937
+artifacts/planwise_enterprise_user_guide.html,Verification Artifact,.html,1562003,939
+artifacts/planwise_enterprise_report_metadata.json,Verification Artifact,.json,1527,53
+artifacts/planwise_enterprise_forensic_technical_master_report.pdf,Verification Artifact,.pdf,5988530,151099
+artifacts/planwise_enterprise_evidence_manifest.json,Verification Artifact,.json,7370,175
+artifacts/pilot_handoff.zip,Verification Artifact,.zip,13531,109
+artifacts/pilot_handoff/pilot_validation_report.json,Verification Artifact,.json,3777,115
+artifacts/pilot_handoff/pilot_cost_estimate.json,Verification Artifact,.json,1089,29
+artifacts/pilot_handoff/pilot_release_manifest.json,Verification Artifact,.json,4290,135
+artifacts/pilot_handoff/pilot_model_ifc4.ifc,Verification Artifact,.ifc,7633,90
+artifacts/pilot_handoff/pilot_boq_export.json,Verification Artifact,.json,17564,555
+artifacts/pilot_handoff/pilot_engineer_review.json,Verification Artifact,.json,3469,97
+artifacts/pitch/Planwise_Enterprise_Investor_Pitch_One_Slide.pdf,Verification Artifact,.pdf,243640,3195
+artifacts/pitch/Planwise_Enterprise_Investor_Pitch_One_Slide_preview.png,Verification Artifact,.png,196419,1288
+artifacts/pitch/product_showcase.png,Verification Artifact,.png,112457,756
+artifacts/pitch/Planwise_Enterprise_Investor_Pitch_One_Slide.pptx,Verification Artifact,.pptx,138543,988
+artifacts/test_renderer_v2/validation_metadata.json,Verification Artifact,.json,1397,52
+artifacts/test_renderer_v2/project_b_2400sqft.svg,Verification Artifact,.svg,27516,340
+artifacts/test_renderer_v2/mutation_2bhk.svg,Verification Artifact,.svg,21450,271
+artifacts/test_renderer_v2/project_c_10000sqft.svg,Verification Artifact,.svg,20266,243
+artifacts/test_renderer_v2/mutation_dimension.svg,Verification Artifact,.svg,21056,265
+artifacts/test_renderer_v2/project_a_1100sqft.svg,Verification Artifact,.svg,21450,271
+artifacts/test_renderer_v2/mutation_3bhk.svg,Verification Artifact,.svg,27512,340
+artifacts/test_drawings_m2/A-301_longitudinal_section_a-a.svg,Verification Artifact,.svg,7608,96
+artifacts/test_drawings_m2/A-102_first_floor_plan.svg,Verification Artifact,.svg,14979,205
+artifacts/test_drawings_m2/A-301_longitudinal_section_a-a.pdf,Verification Artifact,.pdf,3255,71
+artifacts/test_drawings_m2/A-102_first_floor_plan.pdf,Verification Artifact,.pdf,5080,71
+artifacts/test_drawings_m2/A-204_right_elevation_east.pdf,Verification Artifact,.pdf,3015,71
+artifacts/test_drawings_m2/A-103_terrace___roof_plan.pdf,Verification Artifact,.pdf,4282,71
+artifacts/test_drawings_m2/A-202_rear_elevation_north.svg,Verification Artifact,.svg,6567,85
+artifacts/test_drawings_m2/A-203_left_elevation_west.pdf,Verification Artifact,.pdf,3085,71
+artifacts/test_drawings_m2/A-201_front_elevation_south.svg,Verification Artifact,.svg,6063,82
+artifacts/test_drawings_m2/A-302_cross_section_b-b.pdf,Verification Artifact,.pdf,3171,71
+artifacts/test_drawings_m2/A-101_ground_floor_plan.pdf,Verification Artifact,.pdf,6693,71
+artifacts/test_drawings_m2/A-203_left_elevation_west.svg,Verification Artifact,.svg,6897,87
+artifacts/test_drawings_m2/A-201_front_elevation_south.pdf,Verification Artifact,.pdf,3000,71
+artifacts/test_drawings_m2/A-302_cross_section_b-b.svg,Verification Artifact,.svg,6957,91
+artifacts/test_drawings_m2/A-101_ground_floor_plan.svg,Verification Artifact,.svg,22217,265
+artifacts/test_drawings_m2/A-204_right_elevation_east.svg,Verification Artifact,.svg,6058,82
+artifacts/test_drawings_m2/drawing_manifest.json,Verification Artifact,.json,7692,246
+artifacts/test_drawings_m2/A-202_rear_elevation_north.pdf,Verification Artifact,.pdf,3100,71
+artifacts/test_drawings_m2/A-103_terrace___roof_plan.svg,Verification Artifact,.svg,12600,183
+artifacts/test_ifc_m1/rel-pilot-20261002-aedf9830.ifc,Verification Artifact,.ifc,26859,331
+artifacts/e2e_live_test/04_1500_design_options.png,Verification Artifact,.png,143758,1055
+artifacts/e2e_live_test/rendered_sheet_preview_v2.png,Verification Artifact,.png,427956,2732
+artifacts/e2e_live_test/02_1500_feasibility.png,Verification Artifact,.png,101305,701
+artifacts/e2e_live_test/13_engineer_review.png,Verification Artifact,.png,152589,1071
+artifacts/e2e_live_test/12_build_review.png,Verification Artifact,.png,81288,551
+artifacts/e2e_live_test/rendered_sheet_preview.png,Verification Artifact,.png,450284,2769
+artifacts/e2e_live_test/10_10000_floor_plan.png,Verification Artifact,.png,135805,974
+artifacts/e2e_live_test/03_1500_design_intake.png,Verification Artifact,.png,74527,550
+artifacts/e2e_live_test/01_1500_land_input.png,Verification Artifact,.png,85866,614
+artifacts/e2e_live_test/07_3bhk_mutation_floor_plan.png,Verification Artifact,.png,139291,1051
+artifacts/e2e_live_test/08_room_dimension_mutation.png,Verification Artifact,.png,139714,981
+artifacts/e2e_live_test/11_cost_summary.png,Verification Artifact,.png,81288,551
+artifacts/e2e_live_test/06_1500_floor_plan_detail.png,Verification Artifact,.png,139911,998
+artifacts/e2e_live_test/05_1500_my_project_modal.png,Verification Artifact,.png,92301,582
+artifacts/e2e_live_test/failure_screenshot.png,Verification Artifact,.png,38253,192
+artifacts/e2e_live_test/09_2400_floor_plan.png,Verification Artifact,.png,137498,1017
+artifacts/e2e_live_test/exported_cad_drawing.svg,Verification Artifact,.svg,83047,1
+artifacts/test_reports/TEST_CUSTOMER_HOME_REPORT.pdf,Verification Artifact,.pdf,2216484,400
+artifacts/test_reports/failure.txt,Verification Artifact,.txt,29655,6
+artifacts/test_reports/TEST_PROFESSIONAL_REPORT.pdf,Verification Artifact,.pdf,4655,74
+artifacts/test_reports/TEST_COST_BOQ_REPORT.pdf,Verification Artifact,.pdf,10219,118
+artifacts/test_reports/TEST_TECHNICAL_REPORT.pdf,Verification Artifact,.pdf,15686,150
+artifacts/test_reports/complete_pkg/PLANWISE_COMPLETE_HOME_PACKAGE_1100SQFT.zip,Verification Artifact,.zip,7165778,47474
+artifacts/test_reports/complete_pkg/07_Cost_Estimate.pdf,Verification Artifact,.pdf,3660,80
+artifacts/test_reports/complete_pkg/03_Floor_Plans.pdf,Verification Artifact,.pdf,10543,143
+artifacts/test_reports/complete_pkg/09_Engineer_Review.pdf,Verification Artifact,.pdf,3624,74
+artifacts/test_reports/complete_pkg/01_Home_Report.pdf,Verification Artifact,.pdf,2216484,400
+artifacts/test_reports/complete_pkg/02_Technical_Report.pdf,Verification Artifact,.pdf,15686,150
+artifacts/test_reports/complete_pkg/04_3D_Views.pdf,Verification Artifact,.pdf,2168864,100
+artifacts/test_reports/complete_pkg/05_QTO.pdf,Verification Artifact,.pdf,3698,74
+artifacts/test_reports/complete_pkg/08_Validation_Report.pdf,Verification Artifact,.pdf,4090,74
+artifacts/test_reports/complete_pkg/10_Release_Manifest.pdf,Verification Artifact,.pdf,3420,74
+artifacts/test_reports/complete_pkg/06_BOQ.pdf,Verification Artifact,.pdf,5295,80
+artifacts/test_reports/complete_pkg/PLANWISE_COMPLETE_HOME_PACKAGE_1100SQFT.pdf,Verification Artifact,.pdf,4427432,521
+artifacts/test_pilot_controlled_output/pilot_validation_report.json,Verification Artifact,.json,3630,113
+artifacts/test_pilot_controlled_output/pilot_cost_estimate.json,Verification Artifact,.json,949,27
+artifacts/test_pilot_controlled_output/pilot_release_manifest.json,Verification Artifact,.json,4198,130
+artifacts/test_pilot_controlled_output/pilot_model_ifc4.ifc,Verification Artifact,.ifc,23630,291
+artifacts/test_pilot_controlled_output/pilot_boq_export.json,Verification Artifact,.json,17535,554
+artifacts/test_pilot_controlled_output/pilot_engineer_review.json,Verification Artifact,.json,3475,97
+artifacts/reports/PLANWISE_COMPLETE_HOME_PACKAGE_1100SQFT.zip,Verification Artifact,.zip,7165779,47407
+artifacts/reports/07_Cost_Estimate.pdf,Verification Artifact,.pdf,3660,80
+artifacts/reports/03_Floor_Plans.pdf,Verification Artifact,.pdf,10543,143
+artifacts/reports/page_2_site.png,Verification Artifact,.png,207606,1232
+artifacts/reports/09_Engineer_Review.pdf,Verification Artifact,.pdf,3624,74
+artifacts/reports/01_Home_Report.pdf,Verification Artifact,.pdf,2216483,400
+artifacts/reports/02_Technical_Report.pdf,Verification Artifact,.pdf,15686,150
+artifacts/reports/page_1_cover.png,Verification Artifact,.png,1087649,7976
+artifacts/reports/04_3D_Views.pdf,Verification Artifact,.pdf,2168864,100
+artifacts/reports/PLANWISE_HOME_REPORT_DV-OPT-B-9be0a983.pdf,Verification Artifact,.pdf,2216271,400
+artifacts/reports/05_QTO.pdf,Verification Artifact,.pdf,3698,74
+artifacts/reports/08_Validation_Report.pdf,Verification Artifact,.pdf,4090,74
+artifacts/reports/10_Release_Manifest.pdf,Verification Artifact,.pdf,3420,74
+artifacts/reports/PLANWISE_HOME_REPORT_1100SQFT.pdf,Verification Artifact,.pdf,2216483,400
+artifacts/reports/page_5_ground_plan.png,Verification Artifact,.png,153393,855
+artifacts/reports/06_BOQ.pdf,Verification Artifact,.pdf,5295,80
+artifacts/reports/PLANWISE_COMPLETE_HOME_PACKAGE_1100SQFT.pdf,Verification Artifact,.pdf,4427431,521
+artifacts/reports/pkg_DV-OPT-B-9be0a983/PLANWISE_COMPLETE_HOME_PACKAGE_1100SQFT.zip,Verification Artifact,.zip,7165208,47311
+artifacts/reports/pkg_DV-OPT-B-9be0a983/07_Cost_Estimate.pdf,Verification Artifact,.pdf,3660,80
+artifacts/reports/pkg_DV-OPT-B-9be0a983/03_Floor_Plans.pdf,Verification Artifact,.pdf,10543,143
+artifacts/reports/pkg_DV-OPT-B-9be0a983/09_Engineer_Review.pdf,Verification Artifact,.pdf,3624,74
+artifacts/reports/pkg_DV-OPT-B-9be0a983/01_Home_Report.pdf,Verification Artifact,.pdf,2216271,400
+artifacts/reports/pkg_DV-OPT-B-9be0a983/02_Technical_Report.pdf,Verification Artifact,.pdf,15671,150
+artifacts/reports/pkg_DV-OPT-B-9be0a983/04_3D_Views.pdf,Verification Artifact,.pdf,2168864,100
+artifacts/reports/pkg_DV-OPT-B-9be0a983/05_QTO.pdf,Verification Artifact,.pdf,3698,74
+artifacts/reports/pkg_DV-OPT-B-9be0a983/08_Validation_Report.pdf,Verification Artifact,.pdf,4090,74
+artifacts/reports/pkg_DV-OPT-B-9be0a983/10_Release_Manifest.pdf,Verification Artifact,.pdf,3322,74
+artifacts/reports/pkg_DV-OPT-B-9be0a983/06_BOQ.pdf,Verification Artifact,.pdf,5295,80
+artifacts/reports/pkg_DV-OPT-B-9be0a983/PLANWISE_COMPLETE_HOME_PACKAGE_1100SQFT.pdf,Verification Artifact,.pdf,4427106,521
+tests/test_phase8_1_persistence.py,Automated Test Suite,.py,15607,358
+tests/test_m1_site_and_rules.py,Automated Test Suite,.py,14456,366
+tests/test_drawing_compiler.py,Automated Test Suite,.py,13662,269
+tests/test_supabase_migration_integration.py,Automated Test Suite,.py,4788,100
+tests/test_plot_area_regression.py,Automated Test Suite,.py,6465,149
+tests/test_controlled_pilot.py,Automated Test Suite,.py,7806,175
+tests/test_cross_tenant_isolation.py,Automated Test Suite,.py,9889,249
+tests/test_real_plot_end_to_end.py,Automated Test Suite,.py,21000,478
+tests/test_m3_qto_and_cost.py,Automated Test Suite,.py,25971,680
+tests/test_auth_security_negative.py,Automated Test Suite,.py,12783,302
+tests/test_phase7_engineer_review.py,Automated Test Suite,.py,13187,301
+tests/test_pilot_handoff_integrity.py,Automated Test Suite,.py,13563,254
+tests/test_gis_integration.py,Automated Test Suite,.py,4680,113
+tests/test_canonical_building_model.py,Automated Test Suite,.py,17840,396
+tests/test_m2_generator_and_solids.py,Automated Test Suite,.py,14407,312
+tests/test_persistence_and_auth_workflow.py,Automated Test Suite,.py,11278,287
+tests/test_architectural_renderer_v2.py,Automated Test Suite,.py,40680,785
+tests/test_ifc_georeferencing.py,Automated Test Suite,.py,10217,223
+tests/test_home_report_pdf.py,Automated Test Suite,.py,11245,257
+tests/benchmarks/m2_generation_benchmark.py,Automated Test Suite,.py,7816,183
+tests/fixtures/controlled_pilot_1100sqft.json,Automated Test Suite,.json,2911,80
+docs/README.md,Documentation,.md,5686,63
+supabase/.gitignore,Root / Miscellaneous,,72,8
+supabase/config.toml,Configuration / Manifest,.toml,15025,408
+supabase/migrations/20261010060000_generated_reports.sql,Database Migration,.sql,1313,27
+supabase/migrations/20261010010000_init_postgis_schema.sql,Database Migration,.sql,5619,146
+supabase/migrations/20261010030000_site_evidence_and_rule_engine.sql,Database Migration,.sql,6956,188
+supabase/migrations/20261010080000_organization_membership_mapping.sql,Database Migration,.sql,4457,106
+supabase/migrations/20261010050000_engineer_review_and_releases.sql,Database Migration,.sql,4972,104
+supabase/migrations/20261010020000_canonical_building_model.sql,Database Migration,.sql,9610,233
+supabase/migrations/20261010070000_security_and_rls_policies.sql,Database Migration,.sql,7709,169
+supabase/migrations/20261010040000_qto_boq_and_cost_engine.sql,Database Migration,.sql,4038,111
+supabase/.temp/postgres-version,Root / Miscellaneous,,11,1
+supabase/.temp/project-ref,Root / Miscellaneous,,20,1
+supabase/.temp/rest-version,Root / Miscellaneous,,6,1
+supabase/.temp/storage-version,Root / Miscellaneous,,7,1
+supabase/.temp/remote_schema_snapshot.sql,Root / Miscellaneous,.sql,0,0
+supabase/.temp/linked-project.json,Configuration / Manifest,.json,154,1
+supabase/.temp/gotrue-version,Root / Miscellaneous,,8,1
+supabase/.temp/pooler-url,Root / Miscellaneous,,97,1
+supabase/.temp/storage-migration,Root / Miscellaneous,,27,1
+supabase/.temp/cli-latest,Root / Miscellaneous,,8,1
+scratch/rebuild_cad_view.py,Root / Miscellaneous,.py,15920,309
+scratch/generate_pdf_report.cjs,Root / Miscellaneous,.cjs,37045,984
+scratch/capture_screenshots.cjs,Root / Miscellaneous,.cjs,4990,136
+scratch/screenshots/fig7_review_issues.png,Root / Miscellaneous,.png,79173,464
+scratch/screenshots/fig4_site_boundary.png,Root / Miscellaneous,.png,159803,979
+scratch/screenshots/fig6_mep_review.png,Root / Miscellaneous,.png,138530,912
+scratch/screenshots/fig2_engineer_customer.png,Root / Miscellaneous,.png,221470,1375
+scratch/screenshots/fig8_review_decision.png,Root / Miscellaneous,.png,54311,400
+scratch/screenshots/fig1_build_review.png,Root / Miscellaneous,.png,229840,1453
+scratch/screenshots/fig1_build_review_cropped.png,Root / Miscellaneous,.png,217621,1259
+scratch/screenshots/fig5_structural_review.png,Root / Miscellaneous,.png,202131,1341
+scratch/screenshots/fig3_engineer_matrix.png,Root / Miscellaneous,.png,212674,1369
+scratch/pdf_pages/page_2.png,Root / Miscellaneous,.png,799023,4643
+scratch/pdf_pages/page_3.png,Root / Miscellaneous,.png,560879,3661
+scratch/pdf_pages/page_1.png,Root / Miscellaneous,.png,303467,1501
+scratch/pdf_pages/page_4.png,Root / Miscellaneous,.png,724268,4272
+scratch/pdf_pages/page_5.png,Root / Miscellaneous,.png,500628,2750
+scratch/pdf_pages/page_7.png,Root / Miscellaneous,.png,491718,2924
+scratch/pdf_pages/page_6.png,Root / Miscellaneous,.png,622794,3559
+scratch/pdf_pages/page_10.png,Root / Miscellaneous,.png,474340,2818
+scratch/pdf_pages/page_11.png,Root / Miscellaneous,.png,411122,2206
+scratch/pdf_pages/page_12.png,Root / Miscellaneous,.png,579785,3444
+scratch/pdf_pages/page_8.png,Root / Miscellaneous,.png,489746,2821
+scratch/pdf_pages/page_9.png,Root / Miscellaneous,.png,481603,2890
+scratch/deck_inspect/slide_06.png,Root / Miscellaneous,.png,265442,1770
+scratch/deck_inspect/slide_12.png,Root / Miscellaneous,.png,237456,1549
+scratch/deck_inspect/slide_13.png,Root / Miscellaneous,.png,246817,1583
+scratch/deck_inspect/slide_07.png,Root / Miscellaneous,.png,295541,1968
+scratch/deck_inspect/slide_11.png,Root / Miscellaneous,.png,245343,1610
+scratch/deck_inspect/slide_05.png,Root / Miscellaneous,.png,187482,1245
+scratch/deck_inspect/slide_04.png,Root / Miscellaneous,.png,207481,1255
+scratch/deck_inspect/slide_10.png,Root / Miscellaneous,.png,230739,1461
+scratch/deck_inspect/slide_14.png,Root / Miscellaneous,.png,229901,1615
+scratch/deck_inspect/slide_01.png,Root / Miscellaneous,.png,1112602,7937
+scratch/deck_inspect/slide_15.png,Root / Miscellaneous,.png,232676,1579
+scratch/deck_inspect/slide_03.png,Root / Miscellaneous,.png,549465,4139
+scratch/deck_inspect/slide_16.png,Root / Miscellaneous,.png,204565,1316
+scratch/deck_inspect/slide_02.png,Root / Miscellaneous,.png,233591,1512
+scratch/deck_inspect/slide_09.png,Root / Miscellaneous,.png,209535,1325
+scratch/deck_inspect/slide_08.png,Root / Miscellaneous,.png,224034,1373
+scripts/build_user_guide_pdf.py,Automation / Build Script,.py,52987,1076
+scripts/build_quick_start_pdf.py,Automation / Build Script,.py,16276,380
+scripts/capture_remaining_screenshots.js,Automation / Build Script,.js,3170,84
+scripts/inspect_full_codebase.py,Automation / Build Script,.py,9126,226
+scripts/expand_forensic_sections.py,Automation / Build Script,.py,5987,146
+scripts/live_frontend_e2e.js,Automation / Build Script,.js,18878,395
+scripts/generate_investor_pitch_slide.py,Automation / Build Script,.py,18040,451
+scripts/render_user_guide_pdf.js,Automation / Build Script,.js,2146,37
+scripts/build_master_report.py,Automation / Build Script,.py,19005,362
+scripts/fix_report_parts.py,Automation / Build Script,.py,2566,54
+scripts/render_quick_start_pdf.js,Automation / Build Script,.js,2080,37
+scripts/render_report_pdf.js,Automation / Build Script,.js,2281,39
+scripts/report_sections/part6_visual_evidence_code_verdict.py,Automation / Build Script,.py,48012,683
+scripts/report_sections/part1_executive_architecture.py,Automation / Build Script,.py,40130,486
+scripts/report_sections/part2_site_statutory_cpsat.py,Automation / Build Script,.py,20248,341
+scripts/report_sections/common.py,Automation / Build Script,.py,12050,495
+scripts/report_sections/diagrams.py,Automation / Build Script,.py,26518,366
+scripts/report_sections/part5_database_testing_audit.py,Automation / Build Script,.py,92341,557
+scripts/report_sections/part3_geometry_cad_qto.py,Automation / Build Script,.py,21172,384
+scripts/report_sections/part4_review_release_ifc.py,Automation / Build Script,.py,32723,297
+packages/shared-types/index.ts,Shared Core Package,.ts,6346,286
+packages/schemas/engineer_review.py,Shared Core Package,.py,5981,179
+packages/schemas/room_graph.py,Shared Core Package,.py,9293,211
+packages/schemas/building_model.py,Shared Core Package,.py,16804,376
+packages/schemas/room_program.py,Shared Core Package,.py,20139,547
+packages/schemas/customer_brief.py,Shared Core Package,.py,6561,167
+packages/schemas/real_plot_input.py,Shared Core Package,.py,7430,128
+packages/schemas/regulation_rules.py,Shared Core Package,.py,5856,168
+packages/schemas/cost_model.py,Shared Core Package,.py,9362,161
+packages/schemas/qto_model.py,Shared Core Package,.py,6030,112
+packages/schemas/coordinates.py,Shared Core Package,.py,4670,94
+packages/schemas/assembly_model.py,Shared Core Package,.py,1996,32
+packages/schemas/site_evidence.py,Shared Core Package,.py,4915,118
+packages/rules/mumbai_dcpr_2034_v1.json,Shared Core Package,.json,4597,111
+packages/rules/mumbai_dcpr_2034.json,Shared Core Package,.json,2837,101
+packages/rules/bbmp_bengaluru_2026.json,Shared Core Package,.json,3752,94
+packages/rules/golden_benchmarks.json,Shared Core Package,.json,9444,317
+workers/schedule/cpm_engine.py,Computational Worker,.py,6951,201
+workers/evidence/evidence_engine.py,Computational Worker,.py,5193,102
+workers/financial/proforma.py,Computational Worker,.py,2781,68
+workers/release/ifc_georeference.py,Computational Worker,.py,6534,178
+workers/release/manifest_engine.py,Computational Worker,.py,18417,375
+workers/release/ifc_properties.py,Computational Worker,.py,9286,231
+workers/release/release_context.py,Computational Worker,.py,25290,577
+workers/release/ifc_classification.py,Computational Worker,.py,3488,100
+workers/release/ifc_guid.py,Computational Worker,.py,2713,75
+workers/qto/rate_snapshot_engine.py,Computational Worker,.py,15207,406
+workers/qto/assembly_engine.py,Computational Worker,.py,13351,325
+workers/qto/change_propagation.py,Computational Worker,.py,4569,118
+workers/qto/boq_engine.py,Computational Worker,.py,5497,123
+workers/qto/dag_pipeline.py,Computational Worker,.py,8590,231
+workers/qto/measurement_engine.py,Computational Worker,.py,12980,282
+workers/qto/cost_engine.py,Computational Worker,.py,16918,418
+workers/qto/qto_engine.py,Computational Worker,.py,38933,942
+workers/qto/export_engine.py,Computational Worker,.py,11642,255
+workers/intake/controlled_pilot_runner.py,Computational Worker,.py,20625,469
+workers/intake/real_plot_runner.py,Computational Worker,.py,27967,624
+workers/geometry/crs_engine.py,Computational Worker,.py,9590,289
+workers/geometry/engine.py,Computational Worker,.py,5587,138
+workers/geometry/solid_engine.py,Computational Worker,.py,13168,356
+workers/regulation/rule_engine.py,Computational Worker,.py,28715,688
+workers/regulation/benchmark_runner.py,Computational Worker,.py,4882,118
+workers/regulation/evaluator.py,Computational Worker,.py,2281,70
+workers/generation/drawing_styles.py,Computational Worker,.py,5013,128
+workers/generation/pareto_filter.py,Computational Worker,.py,12010,274
+workers/generation/validation_engine.py,Computational Worker,.py,27433,638
+workers/generation/house_generator.py,Computational Worker,.py,25229,545
+workers/generation/cpsat_solver.py,Computational Worker,.py,24346,574
+workers/generation/model_compiler.py,Computational Worker,.py,27161,745
+workers/generation/projections.py,Computational Worker,.py,23870,634
+workers/generation/drawing_compiler.py,Computational Worker,.py,77333,1621
+workers/reports/professional_report.py,Computational Worker,.py,7092,114
+workers/reports/pdf_engine.py,Computational Worker,.py,10370,334
+workers/reports/package_builder.py,Computational Worker,.py,40155,923
+workers/reports/validation_report.py,Computational Worker,.py,4061,77
+workers/reports/home_report.py,Computational Worker,.py,33508,549
+workers/reports/cost_report.py,Computational Worker,.py,13263,221
+workers/reports/schedule_renderer.py,Computational Worker,.py,18756,317
+workers/reports/floor_plan_renderer.py,Computational Worker,.py,17885,425
+infrastructure/docker/docker-compose.dev.yml,Configuration / Manifest,.yml,1507,59
+assets/pitch_deck/cbm_bim.jpg,Root / Miscellaneous,.jpg,804347,5899
+assets/pitch_deck/fig7_review_issues.png,Root / Miscellaneous,.png,79173,464
+assets/pitch_deck/fig4_site_boundary.png,Root / Miscellaneous,.png,159803,979
+assets/pitch_deck/fig6_mep_review.png,Root / Miscellaneous,.png,138530,912
+assets/pitch_deck/fig2_engineer_customer.png,Root / Miscellaneous,.png,221470,1375
+assets/pitch_deck/cover_hero.jpg,Root / Miscellaneous,.jpg,928328,6431
+assets/pitch_deck/fig8_review_decision.png,Root / Miscellaneous,.png,54311,400
+assets/pitch_deck/fig1_build_review.png,Root / Miscellaneous,.png,229840,1453
+assets/pitch_deck/fig1_build_review_cropped.png,Root / Miscellaneous,.png,217621,1259
+assets/pitch_deck/fig5_structural_review.png,Root / Miscellaneous,.png,202131,1341
+assets/pitch_deck/fig3_engineer_matrix.png,Root / Miscellaneous,.png,212674,1369
+apps/api-gateway/auth.py,Backend API Gateway,.py,12570,307
+apps/api-gateway/ledger_repository.py,Backend API Gateway,.py,35406,850
+apps/api-gateway/postgres_repository.py,Backend API Gateway,.py,20363,483
+apps/api-gateway/main.py,Backend API Gateway,.py,105344,2499
+apps/web/index.html,Frontend (React),.html,1262,19
+apps/web/package-lock.json,Frontend (React),.json,105854,3025
+apps/web/package.json,Frontend (React),.json,828,34
+apps/web/.env,Frontend (React),,712,12
+apps/web/tsconfig.json,Frontend (React),.json,508,20
+apps/web/vite.config.ts,Frontend (React),.ts,411,21
+apps/web/src/App.tsx,Frontend (React),.tsx,35290,875
+apps/web/src/main.tsx,Frontend (React),.tsx,345,13
+apps/web/src/index.css,Frontend (React),.css,23169,783
+apps/web/src/types.ts,Frontend (React),.ts,12747,590
+apps/web/src/vite-env.d.ts,Frontend (React),.ts,419,15
+apps/web/src/context/AuthContext.tsx,Frontend (React),.tsx,7493,255
+apps/web/src/components/HomeReportDownloadModal.tsx,Frontend (React),.tsx,20557,417
+apps/web/src/components/Navbar.tsx,Frontend (React),.tsx,9139,233
+apps/web/src/components/FeasibilityHUD.tsx,Frontend (React),.tsx,16111,314
+apps/web/src/components/BuildLockModal.tsx,Frontend (React),.tsx,9144,199
+apps/web/src/components/CostSummaryView.tsx,Frontend (React),.tsx,12637,315
+apps/web/src/components/BOQTableModal.tsx,Frontend (React),.tsx,7458,150
+apps/web/src/components/CADToolbar.tsx,Frontend (React),.tsx,4188,107
+apps/web/src/components/cadBlueprint.test.ts,Frontend (React),.ts,8594,243
+apps/web/src/components/EngineerDashboard.tsx,Frontend (React),.tsx,13187,283
+apps/web/src/components/DrawingSheetsModal.tsx,Frontend (React),.tsx,16785,375
+apps/web/src/components/FloorPlanViewer.tsx,Frontend (React),.tsx,64276,1323
+apps/web/src/components/BuildReviewView.tsx,Frontend (React),.tsx,14618,359
+apps/web/src/components/DesignIntakeView.tsx,Frontend (React),.tsx,14018,371
+apps/web/src/components/CadBlueprintView.tsx,Frontend (React),.tsx,47139,950
+apps/web/src/components/MapCanvas.tsx,Frontend (React),.tsx,7788,270
+apps/web/src/components/CostExperienceView.tsx,Frontend (React),.tsx,23279,448
+apps/web/src/components/EngineerReviewView.tsx,Frontend (React),.tsx,80338,1468
+apps/web/src/components/BuildReleaseView.tsx,Frontend (React),.tsx,11775,254
+apps/web/src/components/SiteEvidencePanel.tsx,Frontend (React),.tsx,15005,346
+apps/web/src/components/cadStyles.ts,Frontend (React),.ts,3798,151
+apps/web/src/components/HouseOptionsCarousel.tsx,Frontend (React),.tsx,30487,644
+apps/web/src/components/DesignOptionsView.tsx,Frontend (React),.tsx,29420,628
+apps/web/src/components/FeasibilitySummaryView.tsx,Frontend (React),.tsx,16219,387
+apps/web/src/components/LandIntakeView.tsx,Frontend (React),.tsx,31072,692
+apps/web/src/components/MyProjectModal.tsx,Frontend (React),.tsx,6651,160
+apps/web/src/components/RuleExplainabilityModal.tsx,Frontend (React),.tsx,12686,245
+apps/web/src/components/auth/ResetPasswordView.tsx,Frontend (React),.tsx,7490,170
+apps/web/src/components/auth/RegisterView.tsx,Frontend (React),.tsx,13035,287
+apps/web/src/components/auth/LoginView.tsx,Frontend (React),.tsx,7941,183
+apps/web/src/components/auth/ForgotPasswordView.tsx,Frontend (React),.tsx,5994,133
+apps/web/src/components/map/MeasurementOverlay.tsx,Frontend (React),.tsx,3763,97
+apps/web/src/components/map/useCadHistory.ts,Frontend (React),.ts,2533,88
+apps/web/src/components/map/PlanwiseMap.tsx,Frontend (React),.tsx,50245,1463
+apps/web/src/components/map/MapInspector.tsx,Frontend (React),.tsx,14081,304
+apps/web/src/components/map/cadGeometry.ts,Frontend (React),.ts,18784,651
+apps/web/src/components/map/LayerControl.tsx,Frontend (React),.tsx,4053,129
+apps/web/src/components/map/types.ts,Frontend (React),.ts,1637,53
+apps/web/src/components/map/MapToolbar.tsx,Frontend (React),.tsx,14212,362
+apps/web/src/components/map/NorthScaleIndicator.tsx,Frontend (React),.tsx,2706,62
+apps/web/src/components/map/cadGeometry.test.ts,Frontend (React),.ts,8481,228
+apps/web/src/components/map/LocationSearch.tsx,Frontend (React),.tsx,10843,270
+apps/web/src/components/map/CadModals.tsx,Frontend (React),.tsx,14834,378
+apps/web/src/lib/supabaseClient.ts,Frontend (React),.ts,742,14

@@ -1,0 +1,40 @@
+file,components,hooks,lines
+apps/web/src/App.tsx,App,useState; useRef; useAuth; useEffect; useCallback,875
+apps/web/src/main.tsx,,,13
+apps/web/src/context/AuthContext.tsx,AuthProvider,useContext; useAuth; useEffect; useState,255
+apps/web/src/components/HomeReportDownloadModal.tsx,HomeReportDownloadModal,useState; useEffect,417
+apps/web/src/components/Navbar.tsx,Navbar,useAuth,233
+apps/web/src/components/FeasibilityHUD.tsx,FeasibilityHUD,useState,314
+apps/web/src/components/BuildLockModal.tsx,BuildLockModal,useState,199
+apps/web/src/components/CostSummaryView.tsx,CostSummaryView,useState; useMemo,315
+apps/web/src/components/BOQTableModal.tsx,BOQTableModal,,150
+apps/web/src/components/CADToolbar.tsx,CADToolbar,,107
+apps/web/src/components/EngineerDashboard.tsx,EngineerDashboard,useState,283
+apps/web/src/components/DrawingSheetsModal.tsx,DrawingSheetsModal,useState; useEffect,375
+apps/web/src/components/FloorPlanViewer.tsx,FloorPlanViewer,useState; useEffect,1323
+apps/web/src/components/BuildReviewView.tsx,BuildReviewView,useState,359
+apps/web/src/components/DesignIntakeView.tsx,DesignIntakeView,useState,371
+apps/web/src/components/CadBlueprintView.tsx,CadBlueprintView,,950
+apps/web/src/components/MapCanvas.tsx,MapCanvas,useState; useEffect; useRef,270
+apps/web/src/components/CostExperienceView.tsx,CostExperienceView,useState,448
+apps/web/src/components/EngineerReviewView.tsx,EngineerReviewView,useState; useEffect,1468
+apps/web/src/components/BuildReleaseView.tsx,BuildReleaseView,useState,254
+apps/web/src/components/SiteEvidencePanel.tsx,SiteEvidencePanel,useState; useEffect,346
+apps/web/src/components/HouseOptionsCarousel.tsx,HouseOptionsCarousel,useState,644
+apps/web/src/components/DesignOptionsView.tsx,DesignOptionsView,useState,628
+apps/web/src/components/FeasibilitySummaryView.tsx,FeasibilitySummaryView,useState,387
+apps/web/src/components/LandIntakeView.tsx,LandIntakeView,useState; useMemo,692
+apps/web/src/components/MyProjectModal.tsx,MyProjectModal,,160
+apps/web/src/components/RuleExplainabilityModal.tsx,RuleExplainabilityModal,useState,245
+apps/web/src/components/auth/ResetPasswordView.tsx,ResetPasswordView,useState; useAuth,170
+apps/web/src/components/auth/RegisterView.tsx,RegisterView,useState; useAuth,287
+apps/web/src/components/auth/LoginView.tsx,LoginView,useState; useAuth,183
+apps/web/src/components/auth/ForgotPasswordView.tsx,ForgotPasswordView,useState; useAuth,133
+apps/web/src/components/map/MeasurementOverlay.tsx,MeasurementOverlay,,97
+apps/web/src/components/map/PlanwiseMap.tsx,PlanwiseMap,useCadHistory; useMemo; useState; useRef; useEffect; useCallback,1463
+apps/web/src/components/map/MapInspector.tsx,MapInspector,,304
+apps/web/src/components/map/LayerControl.tsx,LayerControl,,129
+apps/web/src/components/map/MapToolbar.tsx,MapToolbar,,362
+apps/web/src/components/map/NorthScaleIndicator.tsx,NorthScaleIndicator,,62
+apps/web/src/components/map/LocationSearch.tsx,LocationSearch,useState; useEffect; useRef,270
+apps/web/src/components/map/CadModals.tsx,CoordinateEditorModal; EdgeEditorModal; KeyboardShortcutsModal,useState; useEffect,378

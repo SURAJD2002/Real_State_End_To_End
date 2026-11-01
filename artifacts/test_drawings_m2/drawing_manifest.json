@@ -2,7 +2,7 @@
   "projectId": "proj-mumbai-real-1100",
   "releaseId": "rel-pilot-20261002-aedf9830",
   "designVersionId": "DV-OPT-B-9be0a983",
-  "cbmHash": "sha256:ec57846e2168f7f042040e4a95bfa2db6d5a327f4be5b054c2a5ec31de5983ba",
+  "cbmHash": "sha256:a158788dff404db024573b699636d3db84f8b47735b89bbb217f5f7f635ef42a",
   "compilerVersion": "1.0.0",
   "generationTimestamp": "2026-10-02T12:00:00Z",
   "totalSheets": 9,
@@ -16,8 +16,8 @@
       "sheetSize": "A3_LANDSCAPE",
       "svgArtifact": "A-101_ground_floor_plan.svg",
       "pdfArtifact": "A-101_ground_floor_plan.pdf",
-      "svgHash": "sha256:5ff9b52877be387c30669d992bc9e8af38562155431ab5027f8f8f67f1a4eee4",
-      "pdfHash": "sha256:f3123c82fce8dda3a59f1c6d2dae82fba0315a08abc10e1b09a13775aeed0d85",
+      "svgHash": "sha256:a5bf9a540d1a7256795266986d232b3284dfea2ce926908ee2a6a177c478bdf4",
+      "pdfHash": "sha256:2363139a4a06c74c93d9610ac5ce6cfb631b6131a0b06874b4683c96570c6bbf",
       "sourceElementIds": [
         "WALL-EXT-001",
         "WALL-EXT-002",
@@ -29,11 +29,11 @@
         "WALL-INT-008",
         "WALL-INT-009",
         "WALL-INT-010",
-        "WALL-INT-011",
         "COL-A1",
         "COL-A2",
         "COL-B1",
-        "COL-B2"
+        "COL-B2",
+        "SLAB-PLINTH"
       ]
     },
     {
@@ -45,9 +45,10 @@
       "sheetSize": "A3_LANDSCAPE",
       "svgArtifact": "A-102_first_floor_plan.svg",
       "pdfArtifact": "A-102_first_floor_plan.pdf",
-      "svgHash": "sha256:e0d30b0d02e7407eb53a5d9175794182cd0d1a78a3f0e5e6530ea13c7e40c474",
-      "pdfHash": "sha256:38cb5b54a6fe3ede37decb3064fb821d5ce766e993697d1c0bdd419151008b13",
+      "svgHash": "sha256:1669a2c9779bc39aabc026488c2c0a1dbb1be48079891ffb6ef580250244b886",
+      "pdfHash": "sha256:8a0cebd6fb5e24c0e8ca7c1356cf7307b0e5c9f4fb449d19e1e8dc1b5bdb4a43",
       "sourceElementIds": [
+        "WALL-INT-011",
         "WALL-INT-012",
         "SLAB-L1"
       ]
@@ -61,8 +62,8 @@
       "sheetSize": "A3_LANDSCAPE",
       "svgArtifact": "A-103_terrace___roof_plan.svg",
       "pdfArtifact": "A-103_terrace___roof_plan.pdf",
-      "svgHash": "sha256:f9ec53cf758899eb41ed3fda328bcb4f913ce24656c34cf445d2aeb76938347e",
-      "pdfHash": "sha256:5711c06b1a4dc37a89eff67bf8834c1661b02754f21dfb414fa5ba8f1bc92a8f",
+      "svgHash": "sha256:61976aa1086335cea5cf357c8522118b99372230ed06cae195cf981ffa2c5bce",
+      "pdfHash": "sha256:882967a697cb4b14be94fcb6cff2d437510ffd9e467d7a1eab786aca08ee0d2a",
       "sourceElementIds": [
         "SLAB-ROOF"
       ]
@@ -76,8 +77,8 @@
       "sheetSize": "A3_LANDSCAPE",
       "svgArtifact": "A-201_front_elevation_south.svg",
       "pdfArtifact": "A-201_front_elevation_south.pdf",
-      "svgHash": "sha256:a6b83e406dcf2889f89d99e27982fbb6960a97ffe70529121b1bc084d933ad1d",
-      "pdfHash": "sha256:c28aa3619a742740ce08754067c1713dac092852ad7799645c82ce8c91b27b96",
+      "svgHash": "sha256:afe2ddb3ba271989b639fd65fd9b8db1aba74a1d6bce2adbfd4f03c650b6b718",
+      "pdfHash": "sha256:458aeb70fd64956f9ae0f972127fdb89a5af61e2b0b2576d7230e2e6b04b6b0c",
       "sourceElementIds": [
         "WALL-EXT-001",
         "WALL-EXT-002",
@@ -105,8 +106,8 @@
       "sheetSize": "A3_LANDSCAPE",
       "svgArtifact": "A-202_rear_elevation_north.svg",
       "pdfArtifact": "A-202_rear_elevation_north.pdf",
-      "svgHash": "sha256:02e6d38ebde2707ce866223476c0ba79a0b1f17030870fbc17ac13dc33e63dc3",
-      "pdfHash": "sha256:3b48e0baae854fa1b2208a610633fc7c13a102264e752e31fc4bc111b6629c53",
+      "svgHash": "sha256:cef3530966e95c5801d5927d45d029f2283ef311ba3179d84cd8e4a76f6e8f59",
+      "pdfHash": "sha256:32606c69b35d1378c35c5082dffbfe6b8c929468a0d1678d6b8f724263a6947e",
       "sourceElementIds": [
         "WALL-EXT-001",
         "WALL-EXT-002",
@@ -134,8 +135,8 @@
       "sheetSize": "A3_LANDSCAPE",
       "svgArtifact": "A-203_left_elevation_west.svg",
       "pdfArtifact": "A-203_left_elevation_west.pdf",
-      "svgHash": "sha256:c5d7165189e9d955da254d5835c25bdbc5be51b6b90f6af2bc2f17eccdebdde5",
-      "pdfHash": "sha256:0247993e24373eb90346a4950926a2bc97ccc8e36f92050f2888f2d4799979b8",
+      "svgHash": "sha256:47ccf78d00c0ddd2976efc416a67acad02941e4c7e258e67f0f81b1931457a4e",
+      "pdfHash": "sha256:41ff6c0d8bbd0503d211a1490083beaad7c2fb52307c03fa090faf315077fe54",
       "sourceElementIds": [
         "WALL-EXT-001",
         "WALL-EXT-002",
@@ -163,8 +164,8 @@
       "sheetSize": "A3_LANDSCAPE",
       "svgArtifact": "A-204_right_elevation_east.svg",
       "pdfArtifact": "A-204_right_elevation_east.pdf",
-      "svgHash": "sha256:aa7ea1dc6b72e4efebb42727355fa4d1c14811cfc64c5e9766e8cd4c8d35cd43",
-      "pdfHash": "sha256:a6d7ad5f40318c66cc8209733c64ee7753345f01337355aa06133b3294dc7cb9",
+      "svgHash": "sha256:ad8d1e13b709817781cf689ccd889536dd23fdb1983e57519e334c7d444ea5fe",
+      "pdfHash": "sha256:6ebad008523c4b4ad127ac358142413c9ca041e8deca93b8e17ddcf0ad735499",
       "sourceElementIds": [
         "WALL-EXT-001",
         "WALL-EXT-002",
@@ -192,8 +193,8 @@
       "sheetSize": "A3_LANDSCAPE",
       "svgArtifact": "A-301_longitudinal_section_a-a.svg",
       "pdfArtifact": "A-301_longitudinal_section_a-a.pdf",
-      "svgHash": "sha256:7f4c8facb1d4c671858efe5121cb0a1f28beff42ca92aab3ba6f5b5cf75e836f",
-      "pdfHash": "sha256:b21385cc69a09b352435f8cbd89b62b1c626ae6d320725c93e5108c1947a7ff4",
+      "svgHash": "sha256:314632ab6de13e254416362d6351d40a5ca1880f114a62588508a65ac0c21f66",
+      "pdfHash": "sha256:8418ab7d79eeac54f92ad76412716e0c293f49cd9aa3cdfc4f078671840a8740",
       "sourceElementIds": [
         "WALL-EXT-001",
         "WALL-EXT-002",
@@ -221,8 +222,8 @@
       "sheetSize": "A3_LANDSCAPE",
       "svgArtifact": "A-302_cross_section_b-b.svg",
       "pdfArtifact": "A-302_cross_section_b-b.pdf",
-      "svgHash": "sha256:16d0d53423b963b774e15897c9d7ec1d2d97d8abfa0b7d93bf0ad40d4b6127f8",
-      "pdfHash": "sha256:77346d280b2ccedecbc901594ec5e4e731d6777bb6d7d7203b4e79e75a9fe39e",
+      "svgHash": "sha256:28bc0af61e36f2a1d6b9c83ef2e20d373566c3a251b4a74365432a6cfedb6958",
+      "pdfHash": "sha256:c1e361f9372df5e7e4aa3f5ff27dc60dfcbf9b00e776d78991d0346e7997a506",
       "sourceElementIds": [
         "WALL-EXT-001",
         "WALL-EXT-002",
@@ -242,5 +243,5 @@
       ]
     }
   ],
-  "manifestHash": "sha256:ce050908adf4bda6724c03db3b03abb8ddfe41f8490c7da6b3eda8c0ce09e201"
+  "manifestHash": "sha256:dc0828b012e0c35f79d0a44476f25a8b6cafcd7cbaae22ab29eda90b576a2d89"
 }

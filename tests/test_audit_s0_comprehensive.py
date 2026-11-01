@@ -74,7 +74,7 @@ class TestAuditS0Comprehensive(unittest.TestCase):
             plot_input={"width_ft": 28.0, "length_ft": 46.0},
             jurisdiction="MUMBAI_DCPR_2034_V1"
         )
-        self.assertEqual(res["status"], "VERIFIED")
+        self.assertEqual(res["status"], "RULES_UNVERIFIED", "Status must be RULES_UNVERIFIED when rule pack lacks licensed professional sign-off")
         self.assertTrue(res["isFullyInsidePlotMinusSetbacks"], "Envelope must be strictly contained inside plot minus setbacks")
         self.assertLessEqual(res["actualCoveragePercent"], res["maxGroundCoveragePercent"] + 1e-4)
         self.assertGreater(res["envelopeWidthM"], 0.0)
@@ -86,7 +86,7 @@ class TestAuditS0Comprehensive(unittest.TestCase):
             plot_input={"width_ft": 27.5, "length_ft": 40.0},
             jurisdiction="MUMBAI_DCPR_2034_V1"
         )
-        self.assertEqual(res["status"], "VERIFIED")
+        self.assertEqual(res["status"], "RULES_UNVERIFIED", "Status must be RULES_UNVERIFIED when rule pack lacks licensed professional sign-off")
         self.assertTrue(res["isFullyInsidePlotMinusSetbacks"], "Envelope must be strictly contained inside plot minus setbacks")
         self.assertLessEqual(res["actualCoveragePercent"], res["maxGroundCoveragePercent"] + 1e-4)
         # Footprint must be bounded by setbacks (front=3.0, rear=2.0, sides=1.5) and 50% coverage
@@ -268,6 +268,50 @@ class TestAuditS0Comprehensive(unittest.TestCase):
         )
         self.assertEqual(resp.status_code, 400)
         self.assertIn("Gate G1 (Statutory Compliance) cannot be verified for fallback options", resp.json()["detail"])
+
+    def test_brief_floors_never_silently_upgraded(self):
+        """brief.floors must never be changed silently; pipeline returns PROGRAM_DOES_NOT_FIT offering G+1."""
+        from workers.intake.real_plot_runner import RealPlotPipelineRunner
+        from packages.schemas.real_plot_input import RealPlotIntakePayload, SiteInput, CustomerRequirementsInput, SiteShape, PlotDimensions, BuildingUse
+        from packages.schemas.customer_brief import CustomerBrief, ArchitecturalStyle
+        from workers.generation.house_generator import generate_m2_house_options
+        
+        brief = CustomerBrief(
+            briefId="BRIEF-FLOORS-TEST",
+            projectId="proj-floors-test",
+            bedrooms=3,
+            bathrooms=2,
+            floors=1,
+            preferredStyle=ArchitecturalStyle.CONTEMPORARY
+        )
+        initial_floors = brief.floors
+        # Running M2 options must never mutate brief.floors in-place
+        opts = generate_m2_house_options(site_width_m=9.19, site_length_m=9.29, brief=brief)
+        self.assertEqual(brief.floors, initial_floors, "brief.floors must remain exactly 1 and never be mutated silently")
+        
+        # Real plot intake pipeline must return structured PROGRAM_DOES_NOT_FIT offering G+1 instead of silently upgrading
+        runner = RealPlotPipelineRunner()
+        payload = RealPlotIntakePayload(
+            site=SiteInput(
+                location="Bandra West, Mumbai",
+                jurisdiction="MUMBAI-DCPR-2034-V1",
+                road_width_ft=40.0,
+                shape=SiteShape.REGULAR,
+                dimensions=PlotDimensions(front_width_ft=40.0, left_length_ft=60.0)
+            ),
+            requirements=CustomerRequirementsInput(
+                use=BuildingUse.RESIDENTIAL,
+                floors=1,
+                bedrooms=3,
+                bathrooms=2,
+                parking=1
+            )
+        )
+        res = runner.run_e2e_pipeline(payload)
+        self.assertEqual(res["status"], "PROGRAM_DOES_NOT_FIT")
+        self.assertEqual(res["requestedFloors"], 1)
+        self.assertEqual(res["suggestedFloors"], 2)
+        self.assertIn("G+1", res["resolution"])
 
 
 if __name__ == "__main__":

@@ -512,6 +512,22 @@ class RealPlotPipelineRunner:
         # -------------------------------------------------------------
         customer_brief = self.convert_to_customer_brief(req, project_id=project_id)
 
+        # Statutory spatial feasibility check: program must physically fit on requested floors
+        from packages.schemas.room_program import build_room_program_from_brief
+        prog = build_room_program_from_brief(customer_brief)
+        min_program_carpet = sum(r.minAreaSqm for r in prog.rooms)
+        env_area = round(envelope_width_m * envelope_length_m, 2)
+        if customer_brief.floors == 1 and customer_brief.bedrooms >= 3 and min_program_carpet > env_area:
+            return {
+                "status": "PROGRAM_DOES_NOT_FIT",
+                "message": f"Requested spatial program ({customer_brief.bedrooms} BHK) requires minimum {round(min_program_carpet, 1)} m² carpet area, which exceeds the {env_area} m² single-floor buildable envelope.",
+                "requestedFloors": 1,
+                "suggestedFloors": 2,
+                "minRequiredCarpetAreaSqm": round(min_program_carpet, 1),
+                "buildableEnvelopeAreaSqm": env_area,
+                "resolution": "Choose G+1 (2 floors) to accommodate this spatial program within statutory setbacks."
+            }
+
         # -------------------------------------------------------------
         # STEP 4: M2 Generation
         # -------------------------------------------------------------
@@ -526,7 +542,15 @@ class RealPlotPipelineRunner:
         )
 
         if not house_options:
-            raise RuntimeError(f"M2 solver failed to find feasible layout within envelope {envelope_width_m}m x {envelope_length_m}m")
+            return {
+                "status": "PROGRAM_DOES_NOT_FIT",
+                "message": f"Requested spatial program ({customer_brief.bedrooms} BHK) cannot fit within envelope {envelope_width_m}m x {envelope_length_m}m on {customer_brief.floors} floor(s).",
+                "requestedFloors": customer_brief.floors,
+                "suggestedFloors": customer_brief.floors + 1,
+                "minRequiredCarpetAreaSqm": round(min_program_carpet, 1),
+                "buildableEnvelopeAreaSqm": env_area,
+                "resolution": f"Choose G+{customer_brief.floors} ({customer_brief.floors + 1} floors) to accommodate this spatial program within statutory setbacks."
+            }
 
         # -------------------------------------------------------------
         # STEP 5: 3D / Canonical Model Selection
@@ -608,6 +632,17 @@ class RealPlotPipelineRunner:
             reference_style_description=base_payload.reference_style_description
         )
         updated_res = self.run_e2e_pipeline(mutated_payload, project_id="PROJ-MUTATED-002")
+        if updated_res.get("status") == "PROGRAM_DOES_NOT_FIT":
+            # User chooses suggested resolution: G+1 (2 floors)
+            suggested = updated_res["suggestedFloors"]
+            user_chosen_req = mutated_requirements.model_copy(update={"floors": suggested}) if hasattr(mutated_requirements, "model_copy") else mutated_requirements.copy(update={"floors": suggested})
+            mutated_payload = RealPlotIntakePayload(
+                site=base_payload.site,
+                requirements=user_chosen_req,
+                reference_style_description=base_payload.reference_style_description
+            )
+            updated_res = self.run_e2e_pipeline(mutated_payload, project_id="PROJ-MUTATED-002")
+
         updated_model: CanonicalBuildingModel = updated_res["canonical_model"]
         updated_cost: CostEstimate = updated_res["cost_estimate"]
 

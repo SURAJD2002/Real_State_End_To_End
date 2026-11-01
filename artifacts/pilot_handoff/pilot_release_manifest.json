@@ -104,27 +104,32 @@
     {
       "name": "pilot_model_ifc4.ifc",
       "type": "BIM_IFC4_MODEL",
-      "hash": "6eefded2185b239d540e21d7c47b55b1f8b4c9eae7723813e3361480e2b52461"
+      "hash": "6eefded2185b239d540e21d7c47b55b1f8b4c9eae7723813e3361480e2b52461",
+      "sizeBytes": 7633
     },
     {
       "name": "pilot_boq_export.json",
       "type": "COMMERCIAL_BOQ",
-      "hash": "01fc271571409a2ac593e309d9cb03183b2050b9fe12f17dbaebe95c30af7248"
+      "hash": "5978424606ddb949f1a3abdf2fb9de6a3e93143459d4f69b93724c511b1f1a82",
+      "sizeBytes": 17564
     },
     {
       "name": "pilot_cost_estimate.json",
       "type": "FINANCIAL_WATERFALL",
-      "hash": "35effa0d3917e4adf29a0b93d6c3e1b75e144d4272368e3462bdaf70fa1804be"
+      "hash": "0d9bb20f3b9115839094402e4401a3fc07d8f7794eacb33e98985a9d3037f18d",
+      "sizeBytes": 1089
     },
     {
       "name": "pilot_validation_report.json",
       "type": "VALIDATION_REPORT",
-      "hash": "1da713ce52b9d95636768cccf5463a50a07cee37c7baa8d885c1dafaa3e25a4d"
+      "hash": "347a5fc8a351323e01f2bdf2a531d48fd53637efd29ab62f2914263e9ba6dac8",
+      "sizeBytes": 3777
     },
     {
       "name": "pilot_engineer_review.json",
       "type": "ENGINEER_REVIEW_LEDGER",
-      "hash": "d5812063a889a375bb1a3b84a2f31c83eff7c2c5c5146297c81b6207d3eb3204"
+      "hash": "77c7cb7ae282cbdff219d65b003865b0aa8cf879f789cdfcea2fba3844865af4",
+      "sizeBytes": 3469
     }
   ]
 }

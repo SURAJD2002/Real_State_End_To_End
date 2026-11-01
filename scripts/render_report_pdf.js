@@ -19,8 +19,9 @@ const path = require('path');
         path: 'artifacts/planwise_enterprise_forensic_technical_master_report.pdf',
         format: 'A4',
         printBackground: true,
+        scale: 0.915,
         displayHeaderFooter: true,
-        headerTemplate: '<div style="font-size: 8px; color: #64748b; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; width: 100%; border-bottom: 1px solid #cbd5e1; padding: 0 15mm 4px 15mm; display: flex; justify-content: space-between;"><span>PLANWISE ENTERPRISE — FORENSIC TECHNICAL & MATHEMATICAL MASTER REPORT</span><span>VERSION: 2.0.0 • COMMIT: d678846</span></div>',
+        headerTemplate: '<div style="font-size: 8px; color: #64748b; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; width: 100%; border-bottom: 1px solid #cbd5e1; padding: 0 15mm 4px 15mm; display: flex; justify-content: space-between;"><span>PLANWISE ENTERPRISE — FORENSIC TECHNICAL & MATHEMATICAL MASTER REPORT</span><span>VERSION: 2.0.0 • BRANCH: audit/final-review • COMMIT: d72768c</span></div>',
         footerTemplate: '<div style="font-size: 8px; color: #64748b; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; width: 100%; border-top: 1px solid #cbd5e1; padding: 4px 15mm 0 15mm; display: flex; justify-content: space-between;"><span>CONFIDENTIAL & PROPRIETARY — ZERO FABRICATION FORENSIC AUDIT</span><span>Page <span class="pageNumber"></span> of <span class="totalPages"></span></span></div>',
         margin: {
             top: '18mm',

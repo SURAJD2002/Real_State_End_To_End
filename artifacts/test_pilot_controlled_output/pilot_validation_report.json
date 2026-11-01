@@ -1,12 +1,12 @@
 {
-  "designVersionId": "DV-OPT-B-0e1dcb16",
-  "modelHash": "sha256:87c60cecc5549d86b81605dfe04b6071f254ea4a311349c581d621972f395015",
+  "designVersionId": "DV-OPT-B-fadc8cba",
+  "modelHash": "sha256:ce800bf51e85ba2b6cbc04dbc0b1460250fcb6394c913873fbdf72fe9407277e",
   "validation": {
     "isValid": true,
-    "totalIssues": 10,
+    "totalIssues": 9,
     "blockersCount": 0,
     "errorsCount": 0,
-    "warningsCount": 9,
+    "warningsCount": 8,
     "infoCount": 1,
     "issues": [
       {
@@ -54,29 +54,9 @@
         "category": "GEOMETRY",
         "severity": "WARNING",
         "status": "FAIL",
-        "message": "Space 'SPACE-SP-UTILITY-5' extends outside declared building envelope (5.38m x 3.19m).",
-        "objectIds": [
-          "SPACE-SP-UTILITY-5"
-        ]
-      },
-      {
-        "ruleId": "GEOM-BOUNDS-001",
-        "category": "GEOMETRY",
-        "severity": "WARNING",
-        "status": "FAIL",
         "message": "Space 'SPACE-SP-PUJA-6' extends outside declared building envelope (5.38m x 3.19m).",
         "objectIds": [
           "SPACE-SP-PUJA-6"
-        ]
-      },
-      {
-        "ruleId": "GEOM-BOUNDS-001",
-        "category": "GEOMETRY",
-        "severity": "WARNING",
-        "status": "FAIL",
-        "message": "Space 'SPACE-SP-BATH-10' extends outside declared building envelope (5.38m x 3.19m).",
-        "objectIds": [
-          "SPACE-SP-BATH-10"
         ]
       },
       {
@@ -94,9 +74,19 @@
         "category": "GEOMETRY",
         "severity": "WARNING",
         "status": "FAIL",
-        "message": "Space 'SPACE-SP-MBED-7' extends outside declared building envelope (5.38m x 3.19m).",
+        "message": "Space 'SPACE-SP-MBATH-8' extends outside declared building envelope (5.38m x 3.19m).",
         "objectIds": [
-          "SPACE-SP-MBED-7"
+          "SPACE-SP-MBATH-8"
+        ]
+      },
+      {
+        "ruleId": "GEOM-BOUNDS-001",
+        "category": "GEOMETRY",
+        "severity": "WARNING",
+        "status": "FAIL",
+        "message": "Space 'SPACE-SP-BALC-12' extends outside declared building envelope (5.38m x 3.19m).",
+        "objectIds": [
+          "SPACE-SP-BALC-12"
         ]
       },
       {

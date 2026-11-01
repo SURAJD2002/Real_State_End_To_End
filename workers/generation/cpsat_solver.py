@@ -257,6 +257,16 @@ class CPSATLayoutSolver:
                     "area": area_var
                 }
 
+        # Multi-Floor Constraint: Exact vertical alignment for stair core across floors
+        stair_vars = [v for v in room_vars.values() if v["item"].roomType == RoomType.STAIR]
+        if len(stair_vars) > 1:
+            base_stair = stair_vars[0]
+            for other_stair in stair_vars[1:]:
+                model.Add(other_stair["x"] == base_stair["x"])
+                model.Add(other_stair["y"] == base_stair["y"])
+                model.Add(other_stair["w"] == base_stair["w"])
+                model.Add(other_stair["d"] == base_stair["d"])
+
         # Hard Constraint 2: Non-overlapping rooms per floor
         for floor_key in floor_assignments:
             if no_overlap_intervals_x[floor_key]:
@@ -278,25 +288,69 @@ class CPSATLayoutSolver:
                     if fa["floor"] != fb["floor"] or fa["item"].specId == fb["item"].specId:
                         continue
 
-                    # Adjacency indicators
-                    touch_right = model.NewBoolVar(f"touch_r_{fa['item'].specId}_{fb['item'].specId}")
-                    touch_left = model.NewBoolVar(f"touch_l_{fa['item'].specId}_{fb['item'].specId}")
-                    touch_top = model.NewBoolVar(f"touch_t_{fa['item'].specId}_{fb['item'].specId}")
-                    touch_bot = model.NewBoolVar(f"touch_b_{fa['item'].specId}_{fb['item'].specId}")
+                    pair_id = f"{fa['item'].specId}_{fb['item'].specId}"
 
-                    model.Add(fa["x_end"] == fb["x"]).OnlyEnforceIf(touch_right)
-                    model.Add(fa["x_end"] != fb["x"]).OnlyEnforceIf(touch_right.Not())
+                    # Y interval overlap indicators
+                    a_bel_b = model.NewBoolVar(f"a_bel_b_{pair_id}")
+                    model.Add(fa["y_end"] <= fb["y"]).OnlyEnforceIf(a_bel_b)
+                    model.Add(fa["y_end"] > fb["y"]).OnlyEnforceIf(a_bel_b.Not())
 
-                    model.Add(fb["x_end"] == fa["x"]).OnlyEnforceIf(touch_left)
-                    model.Add(fb["x_end"] != fa["x"]).OnlyEnforceIf(touch_left.Not())
+                    b_bel_a = model.NewBoolVar(f"b_bel_a_{pair_id}")
+                    model.Add(fb["y_end"] <= fa["y"]).OnlyEnforceIf(b_bel_a)
+                    model.Add(fb["y_end"] > fa["y"]).OnlyEnforceIf(b_bel_a.Not())
 
-                    model.Add(fa["y_end"] == fb["y"]).OnlyEnforceIf(touch_top)
-                    model.Add(fa["y_end"] != fb["y"]).OnlyEnforceIf(touch_top.Not())
+                    y_overlap = model.NewBoolVar(f"y_ov_{pair_id}")
+                    model.AddBoolAnd([a_bel_b.Not(), b_bel_a.Not()]).OnlyEnforceIf(y_overlap)
+                    model.AddBoolOr([a_bel_b, b_bel_a]).OnlyEnforceIf(y_overlap.Not())
 
-                    model.Add(fb["y_end"] == fa["y"]).OnlyEnforceIf(touch_bot)
-                    model.Add(fb["y_end"] != fa["y"]).OnlyEnforceIf(touch_bot.Not())
+                    # X interval overlap indicators
+                    a_left_b = model.NewBoolVar(f"a_lft_b_{pair_id}")
+                    model.Add(fa["x_end"] <= fb["x"]).OnlyEnforceIf(a_left_b)
+                    model.Add(fa["x_end"] > fb["x"]).OnlyEnforceIf(a_left_b.Not())
 
-                    are_touching = model.NewBoolVar(f"adj_{fa['item'].specId}_{fb['item'].specId}")
+                    b_left_a = model.NewBoolVar(f"b_lft_a_{pair_id}")
+                    model.Add(fb["x_end"] <= fa["x"]).OnlyEnforceIf(b_left_a)
+                    model.Add(fb["x_end"] > fa["x"]).OnlyEnforceIf(b_left_a.Not())
+
+                    x_overlap = model.NewBoolVar(f"x_ov_{pair_id}")
+                    model.AddBoolAnd([a_left_b.Not(), b_left_a.Not()]).OnlyEnforceIf(x_overlap)
+                    model.AddBoolOr([a_left_b, b_left_a]).OnlyEnforceIf(x_overlap.Not())
+
+                    # Collinear edge touch indicators
+                    x_touch_r = model.NewBoolVar(f"x_touch_r_{pair_id}")
+                    model.Add(fa["x_end"] == fb["x"]).OnlyEnforceIf(x_touch_r)
+                    model.Add(fa["x_end"] != fb["x"]).OnlyEnforceIf(x_touch_r.Not())
+
+                    x_touch_l = model.NewBoolVar(f"x_touch_l_{pair_id}")
+                    model.Add(fb["x_end"] == fa["x"]).OnlyEnforceIf(x_touch_l)
+                    model.Add(fb["x_end"] != fa["x"]).OnlyEnforceIf(x_touch_l.Not())
+
+                    y_touch_t = model.NewBoolVar(f"y_touch_t_{pair_id}")
+                    model.Add(fa["y_end"] == fb["y"]).OnlyEnforceIf(y_touch_t)
+                    model.Add(fa["y_end"] != fb["y"]).OnlyEnforceIf(y_touch_t.Not())
+
+                    y_touch_b = model.NewBoolVar(f"y_touch_b_{pair_id}")
+                    model.Add(fb["y_end"] == fa["y"]).OnlyEnforceIf(y_touch_b)
+                    model.Add(fb["y_end"] != fa["y"]).OnlyEnforceIf(y_touch_b.Not())
+
+                    # True Wall Adjacency (edge contact + positive interval overlap)
+                    touch_right = model.NewBoolVar(f"touch_r_{pair_id}")
+                    model.AddBoolAnd([x_touch_r, y_overlap]).OnlyEnforceIf(touch_right)
+                    model.AddBoolOr([x_touch_r.Not(), y_overlap.Not()]).OnlyEnforceIf(touch_right.Not())
+
+                    touch_left = model.NewBoolVar(f"touch_l_{pair_id}")
+                    model.AddBoolAnd([x_touch_l, y_overlap]).OnlyEnforceIf(touch_left)
+                    model.AddBoolOr([x_touch_l.Not(), y_overlap.Not()]).OnlyEnforceIf(touch_left.Not())
+
+                    touch_top = model.NewBoolVar(f"touch_t_{pair_id}")
+                    model.AddBoolAnd([y_touch_t, x_overlap]).OnlyEnforceIf(touch_top)
+                    model.AddBoolOr([y_touch_t.Not(), x_overlap.Not()]).OnlyEnforceIf(touch_top.Not())
+
+                    touch_bot = model.NewBoolVar(f"touch_b_{pair_id}")
+                    model.AddBoolAnd([y_touch_b, x_overlap]).OnlyEnforceIf(touch_bot)
+                    model.AddBoolOr([y_touch_b.Not(), x_overlap.Not()]).OnlyEnforceIf(touch_bot.Not())
+
+                    are_touching = model.NewBoolVar(f"adj_{pair_id}")
                     model.AddBoolOr([touch_right, touch_left, touch_top, touch_bot]).OnlyEnforceIf(are_touching)
                     model.AddBoolAnd([touch_right.Not(), touch_left.Not(), touch_top.Not(), touch_bot.Not()]).OnlyEnforceIf(are_touching.Not())
 
@@ -391,7 +445,7 @@ class CPSATLayoutSolver:
 
         # Solve configuration
         solver = cp_model.CpSolver()
-        solver.parameters.max_time_in_seconds = self.time_limit_seconds
+        solver.parameters.max_deterministic_time = float(self.time_limit_seconds)
         solver.parameters.random_seed = self.random_seed + (candidate_index * 13)
         solver.parameters.num_workers = 1  # Guaranteed deterministic single-thread search
 

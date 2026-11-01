@@ -410,12 +410,12 @@ self.assertNotEqual(cbm_1100["metadata"]["modelHash"], cbm_1500["metadata"]["mod
 
     failures_data = [
         ["Plot Area Missing or Negative", "HTTP 400 Bad Request", "<code>declaredPlotAreaSqFt must be a positive number > 0</code>", "apps/api-gateway/main.py:L142", "Reject intake; prompt user"],
-        ["Setback Exceeds Plot Dimensions", "HTTP 422 Unprocessable Entity", "<code>Buildable envelope width < 4.0m; plot too narrow for statutory setbacks</code>", "packages/rules/src/setbacks.py:L115", "Display setback adjustment wizard"],
+        ["Setback Exceeds Plot Dimensions", "HTTP 422 Unprocessable Entity", "<code>Buildable envelope width < 4.0m; plot too narrow for statutory setbacks</code>", "workers/geometry/envelope.py:L110", "Display setback adjustment wizard"],
         ["CP-SAT Infeasible Room Program", "SolverStatus.INFEASIBLE", "<code>Room program area exceeds buildable envelope footprint</code>", "workers/generation/cpsat_solver.py:L312", "Relax non-mandatory spaces (e.g. Balcony/Foyer)"],
-        ["Non-Watertight Solid Mesh", "ManifoldMeshError", "<code>Mesh contains non-manifold edges or open boundary loops</code>", "workers/generation/manifold_builder.py:L145", "Roll back to 2.5D prismatic extrusion"],
+        ["Non-Watertight Solid Mesh", "ManifoldMeshError", "<code>Mesh contains non-manifold edges or open boundary loops</code>", "workers/geometry/solid_engine.py:L145", "Roll back to 2.5D prismatic extrusion"],
         ["Unapproved Engineering Gate", "HTTP 409 Conflict", "<code>Release fabrication blocked by unapproved engineering gates: ['G1_STRUCTURAL']</code>", "apps/api-gateway/main.py:L942", "Halt build; require engineer review"],
-        ["Rate Snapshot Expired", "RateSnapshotStaleError", "<code>Cost rate snapshot effective date older than 90 days</code>", "packages/cost/src/engine.py:L88", "Warn user; require rate refresh"],
-        ["Cadastral Polygon Self-Intersection", "InvalidPolygonError", "<code>Site boundary self-intersects at vertex (x, y); OGC Simple Features violation</code>", "packages/gis/src/validator.py:L45", "Buffer by 0.0 or reject boundary upload"]
+        ["Rate Snapshot Expired", "RateSnapshotStaleError", "<code>Cost rate snapshot effective date older than 90 days</code>", "workers/qto/rate_snapshot_engine.py:L88", "Warn user; require rate refresh"],
+        ["Cadastral Polygon Self-Intersection", "InvalidPolygonError", "<code>Site boundary self-intersects at vertex (x, y); OGC Simple Features violation</code>", "workers/geometry/crs_engine.py:L45", "Buffer by 0.0 or reject boundary upload"]
     ]
     html.append(table(["Failure Condition", "HTTP / Exception Code", "Error Message Diagnostic", "Source File Reference", "Defensive Recovery Strategy"], failures_data))
 
@@ -486,7 +486,7 @@ self.assertNotEqual(cbm_1100["metadata"]["modelHash"], cbm_1500["metadata"]["mod
 
     html.append('''
       <p>
-        As evidenced in <code>packages/schemas/src/engineer_review.py:L18-L45</code> and the 16-page Home Development
+        As evidenced in <code>packages/schemas/engineer_review.py:L18-L45</code> and the 16-page Home Development
         Report template, every generated design, CAD drawing, and IFC model carries an immutable disclaimer:
       </p>
     ''')

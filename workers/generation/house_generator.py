@@ -350,24 +350,14 @@ def generate_m2_house_options(
     program = build_room_program_from_brief(brief)
     graph = build_default_residential_adjacency_graph()
 
-    # Calculate minimum footprint needed for program vs envelope
-    min_program_area = sum(r.minAreaSqm for r in program.rooms)
-    envelope_footprint = site_width_m * site_length_m
-    effective_floors = brief.floors
-    effective_brief = brief
-    if (envelope_footprint >= 45.0 and site_width_m >= 5.0 and site_length_m >= 5.0) and min_program_area > (envelope_footprint * 0.90) and effective_floors < 2:
-        effective_floors = 2
-        effective_brief = brief.model_copy(update={"floors": 2}) if hasattr(brief, "model_copy") else brief.copy(update={"floors": 2})
-        program = build_room_program_from_brief(effective_brief)
-
     # 3. Solve spatial layouts via OR-Tools CP-SAT
     solver = CPSATLayoutSolver(
         program=program,
         adjacency_graph=graph,
-        brief=effective_brief,
+        brief=brief,
         envelope_width_m=site_width_m,
         envelope_length_m=site_length_m,
-        max_floors=effective_floors,
+        max_floors=brief.floors,
         time_limit_seconds=1.2
     )
     candidates = solver.solve_candidates(target_candidates=3)

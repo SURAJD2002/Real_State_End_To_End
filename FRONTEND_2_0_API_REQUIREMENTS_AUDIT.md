@@ -154,9 +154,9 @@ The Planwise backend operates as a monolithic FastAPI service hosting worker mod
   ```
 - **In-Process Workers:**
   - Geometry Engine (`workers/geometry/solid_engine.py`)
-  - CP-SAT Generation Engine (`workers/generation/engine.py`)
-  - Cost & BOQ Engine (`workers/cost/estimator.py`)
-  - Drawing Compiler (`workers/drawings/m2_compiler.py`)
+  - CP-SAT Generation Engine (`workers/generation/house_generator.py`)
+  - Cost & BOQ Engine (`workers/qto/cost_engine.py`)
+  - Drawing Compiler (`workers/generation/drawing_compiler.py`)
   - Release Ledger & Hasher (`apps/api-gateway/ledger_repository.py`)
 - **Background Task Workers:** No external Redis or Celery broker is strictly required for the single-node API Gateway; tasks execute synchronously or via FastAPI `BackgroundTasks`.
 
@@ -296,8 +296,8 @@ To run the complete application locally:
 ## 15. MISSING DEPENDENCIES & CODE OBSERVATIONS
 
 1. **Hardcoded Localhost URLs in 2 Components:**
-   - `apps/web/src/components/floorplan/HouseOptionsCarousel.tsx:66`: Calls `http://127.0.0.1:5001/api/v1/...`
-   - `apps/web/src/components/floorplan/FloorPlanViewer.tsx:158`: Calls `http://localhost:5001/api/v1/...`
+   - `apps/web/src/components/HouseOptionsCarousel.tsx:66`: Calls `http://127.0.0.1:5001/api/v1/...`
+   - `apps/web/src/components/FloorPlanViewer.tsx:158`: Calls `http://localhost:5001/api/v1/...`
    - *Assessment:* In local development, this works seamlessly because the backend runs on port 5001. In a production static deployment, these two endpoints should use relative paths (`/api/v1/...`) to honor reverse proxy routing.
 2. **Zero Missing Dependencies:** All npm packages declared in `package.json` resolve cleanly, `npm run build` succeeds, and all 20 test suites pass.
 

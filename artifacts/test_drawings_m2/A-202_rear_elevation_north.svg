@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1190.55 841.89" width="1190.55" height="841.89" data-drawing-id="A-202" data-scale="1:100">
 <!-- Planwise Enterprise Professional Architectural Drawing Sheet -->
-<!-- Generated deterministically from Canonical Building Model: sha256:ec57846e2168f7f042040e4a95bfa2db6d5a327f4be5b054c2a5ec31de5983ba -->
+<!-- Generated deterministically from Canonical Building Model: sha256:a158788dff404db024573b699636d3db84f8b47735b89bbb217f5f7f635ef42a -->
 <defs>
   <style>
     text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
@@ -33,8 +33,8 @@
   </g>
   <g id="openings">
     <rect data-cbm-id="DOOR-001" data-element-type="IfcOpening" x="400.44" y="458.58" width="29.76" height="59.53" fill="#E2E8F0" stroke="#1E293B" stroke-width="0.71"/>
-    <rect data-cbm-id="WIN-001" data-element-type="IfcOpening" x="508.16" y="458.58" width="42.52" height="34.02" fill="#E0F2FE" stroke="#0284C7" stroke-width="0.71"/>
-    <rect data-cbm-id="WIN-007" data-element-type="IfcOpening" x="418.87" y="458.58" width="42.52" height="34.02" fill="#E0F2FE" stroke="#0284C7" stroke-width="0.71"/>
+    <rect data-cbm-id="WIN-002" data-element-type="IfcOpening" x="528.00" y="458.58" width="17.01" height="17.01" fill="#E0F2FE" stroke="#0284C7" stroke-width="0.71"/>
+    <rect data-cbm-id="WIN-003" data-element-type="IfcOpening" x="461.39" y="458.58" width="17.00" height="17.01" fill="#E0F2FE" stroke="#0284C7" stroke-width="0.71"/>
   </g>
   <g id="level-markers">
     <line x1="329.57" y1="518.11" x2="510.43" y2="518.11" stroke="#DC2626" stroke-width="0.6" stroke-dasharray="4,2"/>

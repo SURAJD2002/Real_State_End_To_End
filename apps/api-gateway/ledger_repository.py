@@ -117,7 +117,7 @@ def save_release(release_data: Dict[str, Any], enforce_immutability: bool = True
     if not rel_id:
         raise DatabaseLedgerError("Cannot save release without releaseId")
 
-    proj_id = release_data.get("projectId", "proj-mumbai-real-1100")
+    proj_id = release_data.get("projectId", "PROJ-UNKNOWN")
     design_version_id = release_data.get("designVersionId", "DV-DEFAULT")
     fingerprint = release_data.get("fingerprint", "")
     lifecycle_state = release_data.get("lifecycleState", "SUBMITTED_FOR_REVIEW")

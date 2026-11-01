@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 155" width="100%" height="155px" class="svg-diagram" style="max-height:155px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#2563eb" />
+  </marker>
+  <marker id="arr-gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#64748b" />
+  </marker>
+</defs>
+
+<text x="350" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">DIAGRAM 5: MANIFOLD3D WATERTIGHT SOLID CSG PIPELINE</text>
+<rect x="30" y="45" width="140" height="90" rx="3" fill="#ffffff" stroke="#3b82f6"/>
+<text x="100" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#1e40af">1. 2D Polygons</text>
+<text x="40" y="82" font-size="7.8" fill="#334155">Shapely 2.1.2</text>
+<text x="40" y="96" font-size="7.8" fill="#334155">Room Boundaries</text>
+<text x="40" y="110" font-size="7.8" fill="#334155">Wall Footprints</text>
+<text x="40" y="124" font-size="7.8" fill="#059669">No Self-Intersection</text>
+
+<line x1="170" y1="90" x2="195" y2="90" stroke="#2563eb" stroke-width="1.2" marker-end="url(#arr)"/>
+
+<rect x="195" y="45" width="145" height="90" rx="3" fill="#ffffff" stroke="#8b5cf6"/>
+<text x="267" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#6d28d9">2. Linear Extrusion</text>
+<text x="205" y="82" font-size="7.8" fill="#334155">Manifold.cube(L, T, H)</text>
+<text x="205" y="96" font-size="7.8" fill="#334155">translate & rotate</text>
+<text x="205" y="110" font-size="7.8" fill="#334155">Base Wall Solid</text>
+<text x="205" y="124" font-size="7.8" fill="#059669">2-Manifold Primitives</text>
+
+<line x1="340" y1="90" x2="365" y2="90" stroke="#2563eb" stroke-width="1.2" marker-end="url(#arr)"/>
+
+<rect x="365" y="45" width="150" height="90" rx="3" fill="#ffffff" stroke="#f59e0b"/>
+<text x="440" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#b45309">3. CSG Difference</text>
+<text x="375" y="82" font-size="7.8" fill="#334155">Cutters: Door/Window</text>
+<text x="375" y="96" font-size="7.8" fill="#334155">cutter_thk = 1.5 * wall</text>
+<text x="375" y="110" font-size="7.8" fill="#334155">solid_wall - cutters</text>
+<text x="375" y="124" font-size="7.8" fill="#059669">Clean Void Subtraction</text>
+
+<line x1="515" y1="90" x2="540" y2="90" stroke="#2563eb" stroke-width="1.2" marker-end="url(#arr)"/>
+
+<rect x="540" y="45" width="130" height="90" rx="3" fill="#ffffff" stroke="#10b981"/>
+<text x="605" y="65" text-anchor="middle" font-size="9" font-weight="bold" fill="#047857">4. Validation</text>
+<text x="550" y="82" font-size="7.8" fill="#334155">is_manifold() == True</text>
+<text x="550" y="96" font-size="7.8" fill="#334155">genus = num_openings</text>
+<text x="550" y="110" font-size="7.8" fill="#334155">volume > 0.0</text>
+<text x="550" y="124" font-size="7.8" fill="#059669">Watertight Mesh Export</text>
+
+</svg>

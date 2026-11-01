@@ -285,7 +285,7 @@ def compile_handoff_package(
     boq: Dict[str, Any],
     schedule: Dict[str, Any],
     release_fingerprint: str,
-    project_id: str = "proj-mumbai-real-1100",
+    project_id: str = "PROJ-DEFAULT",
     design_version_id: Optional[str] = None,
     declared_plot_area_sqft: float = 1100.0,
     disclaimers: Optional[Dict[str, str]] = None,

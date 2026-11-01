@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 245" width="100%" height="245px" class="svg-diagram" style="max-height:245px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#2563eb" />
+  </marker>
+  <marker id="arr-gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#64748b" />
+  </marker>
+</defs>
+
+<text x="350" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">DIAGRAM 3: CANONICAL BUILDING MODEL (CBM) SCHEMA HIERARCHY</text>
+<rect x="260" y="45" width="180" height="45" rx="3" fill="#1e293b" stroke="#0f172a"/>
+<text x="350" y="64" text-anchor="middle" font-size="10" font-weight="bold" fill="#ffffff">CanonicalBuildingModel</text>
+<text x="350" y="78" text-anchor="middle" font-size="8" fill="#94a3b8">modelId • schemaVersion 1.0.0</text>
+
+<!-- Child Objects -->
+<line x1="350" y1="90" x2="350" y2="115" stroke="#64748b" stroke-width="1.2"/>
+<line x1="80" y1="115" x2="620" y2="115" stroke="#64748b" stroke-width="1.2"/>
+
+<!-- Levels -->
+<line x1="80" y1="115" x2="80" y2="135" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+<rect x="20" y="135" width="120" height="90" rx="3" fill="#ffffff" stroke="#3b82f6"/>
+<text x="80" y="152" text-anchor="middle" font-size="9" font-weight="bold" fill="#1e40af">BuildingLevel</text>
+<text x="28" y="168" font-size="7.5" fill="#334155">• levelId (LVL-000)</text>
+<text x="28" y="180" font-size="7.5" fill="#334155">• levelIndex (0, 1)</text>
+<text x="28" y="192" font-size="7.5" fill="#334155">• elevationM (0.0)</text>
+<text x="28" y="204" font-size="7.5" fill="#334155">• floorHeight (3.15)</text>
+<text x="28" y="216" font-size="7.5" fill="#334155">• usage (RESIDENTIAL)</text>
+
+<!-- Spaces -->
+<line x1="210" y1="115" x2="210" y2="135" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+<rect x="150" y="135" width="120" height="90" rx="3" fill="#ffffff" stroke="#10b981"/>
+<text x="210" y="152" text-anchor="middle" font-size="9" font-weight="bold" fill="#047857">Space (Room)</text>
+<text x="158" y="168" font-size="7.5" fill="#334155">• spaceId (SPACE-01)</text>
+<text x="158" y="180" font-size="7.5" fill="#334155">• spaceType (BED...)</text>
+<text x="158" y="192" font-size="7.5" fill="#334155">• bounds (x,y,w,h)</text>
+<text x="158" y="204" font-size="7.5" fill="#334155">• areaSqm, polygon</text>
+<text x="158" y="216" font-size="7.5" fill="#334155">• floor (L0, L1)</text>
+
+<!-- Elements -->
+<line x1="350" y1="115" x2="350" y2="135" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+<rect x="285" y="135" width="130" height="90" rx="3" fill="#ffffff" stroke="#8b5cf6"/>
+<text x="350" y="152" text-anchor="middle" font-size="9" font-weight="bold" fill="#6d28d9">CanonicalElement</text>
+<text x="293" y="168" font-size="7.5" fill="#334155">• WALL (EXT, INT)</text>
+<text x="293" y="180" font-size="7.5" fill="#334155">• COLUMN (RCC)</text>
+<text x="293" y="192" font-size="7.5" fill="#334155">• SLAB (FLOOR)</text>
+<text x="293" y="204" font-size="7.5" fill="#334155">• STAIR (Parametric)</text>
+<text x="293" y="216" font-size="7.5" fill="#334155">• geometry (footprint)</text>
+
+<!-- Openings -->
+<line x1="485" y1="115" x2="485" y2="135" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+<rect x="425" y="135" width="120" height="90" rx="3" fill="#ffffff" stroke="#f59e0b"/>
+<text x="485" y="152" text-anchor="middle" font-size="9" font-weight="bold" fill="#b45309">CanonicalOpening</text>
+<text x="433" y="168" font-size="7.5" fill="#334155">• openingId</text>
+<text x="433" y="180" font-size="7.5" fill="#334155">• openingType (DOOR/WIN)</text>
+<text x="433" y="192" font-size="7.5" fill="#334155">• hostElementId (WALL)</text>
+<text x="433" y="204" font-size="7.5" fill="#334155">• positionM, widthM</text>
+<text x="433" y="216" font-size="7.5" fill="#334155">• heightM, sillHeight</text>
+
+<!-- Envelope & Metadata -->
+<line x1="620" y1="115" x2="620" y2="135" stroke="#64748b" stroke-width="1.2" marker-end="url(#arr-gray)"/>
+<rect x="555" y="135" width="130" height="90" rx="3" fill="#ffffff" stroke="#ef4444"/>
+<text x="620" y="152" text-anchor="middle" font-size="9" font-weight="bold" fill="#b91c1c">Envelope & Meta</text>
+<text x="563" y="168" font-size="7.5" fill="#334155">• buildingEnvelope</text>
+<text x="563" y="180" font-size="7.5" fill="#334155">• widthM, lengthM</text>
+<text x="563" y="192" font-size="7.5" fill="#334155">• declaredPlotAreaSqFt</text>
+<text x="563" y="204" font-size="7.5" fill="#334155">• validationSummary</text>
+<text x="563" y="216" font-size="7.5" fill="#334155">• modelHash (SHA256)</text>
+
+</svg>

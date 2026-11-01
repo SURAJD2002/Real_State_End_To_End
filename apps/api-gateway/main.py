@@ -118,10 +118,16 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# Enable CORS for local Vite dev server
+# Enable CORS with explicit origins (RFC 6454 / Fetch Spec: credentials require explicit origins)
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -903,12 +909,10 @@ def create_or_get_engineer_review(build_request_id: str):
         declared_sqft = opt["buildingModel"].get("declaredPlotAreaSqFt")
     if not declared_sqft and proj_id and proj_id in PROJECTS_DB:
         declared_sqft = PROJECTS_DB[proj_id].get("declaredPlotAreaSqFt")
-    if not declared_sqft and proj_id == "proj-mumbai-real-1100":
-        declared_sqft = 1100.0
 
     review = EngineerReview(
         id=review_id,
-        projectId=rel.get("projectId", "proj-mumbai-real-1100"),
+        projectId=rel.get("projectId", "PROJ-UNKNOWN"),
         buildRequestId=build_request_id,
         releaseId=release_id,
         designVersionId=rel.get("designVersionId", opt.get("designVersionId", "DV-DEFAULT")),
@@ -994,20 +998,22 @@ def verify_review_gate(
 
     # Anti-bypass: G5/G6 cannot be verified without prerequisites (§8, §14)
     if target_gate.gateCode in [GateCode.G5, GateCode.G6] and payload.status in [GateStatus.VERIFIED, GateStatus.REVIEWED]:
-        # Check prerequisite gates G0, G1, G2, G3, G4
-        prereq_satisfied = all(
-            g.status in [GateStatus.VERIFIED, GateStatus.SYSTEM_VERIFIED, GateStatus.REVIEWED]
-            for g in review.gates
+        # Check prerequisite gates G0, G1, G2, G3, G4:
+        # All must have human sign-off (GateStatus.VERIFIED with reviewedBy).
+        # SYSTEM_VERIFIED and REVIEWED do NOT count as human sign-off!
+        unverified_prereqs = [
+            g.gateCode.value for g in review.gates
             if g.gateCode in [GateCode.G0, GateCode.G1, GateCode.G2, GateCode.G3, GateCode.G4]
-        )
+            and (g.status != GateStatus.VERIFIED or not g.reviewedBy)
+        ]
         has_open_blockers = any(
             i.severity == IssueSeverity.BLOCKER and i.status == IssueStatus.OPEN
             for i in review.issues
         )
-        if not prereq_satisfied or has_open_blockers:
+        if unverified_prereqs or has_open_blockers:
             raise HTTPException(
                 status_code=400,
-                detail="G5/G6 cannot be verified until prerequisite gates G0, G1, G2, G3, G4 are verified and all blocker issues are resolved."
+                detail=f"G5/G6 cannot be verified until prerequisite gates G0, G1, G2, G3, G4 are verified with human engineering sign-off (SYSTEM_VERIFIED and REVIEWED do not count as human sign-off) and all blocker issues are resolved. Unverified: {unverified_prereqs}"
             )
 
     # Independent gate transition: ONLY update the targeted gate (§11)
@@ -2197,7 +2203,7 @@ def execute_real_plot_pipeline_endpoint(payload: dict):
         )
     runner = RealPlotPipelineRunner()
     res = runner.run_e2e_pipeline(validated_payload)
-    if res.get("status") in ["USER_INPUT_REQUIRED", "JURISDICTION_REQUIRED"]:
+    if res.get("status") in ["USER_INPUT_REQUIRED", "JURISDICTION_REQUIRED", "PROGRAM_DOES_NOT_FIT"]:
         return Response(
             content=json.dumps(res),
             status_code=422,
@@ -2231,14 +2237,17 @@ def _resolve_report_context(design_version_id: str, project_id: Optional[str] = 
         REPORTS_STORAGE_DIR, compute_file_sha256, compute_manifest_hash
     )
 
-    target_pid = project_id or "proj-mumbai-real-1100"
-    project_data = PROJECTS_DB.get(target_pid) or get_or_create_default_project()
+    target_pid = project_id or (list(PROJECTS_DB.keys())[0] if PROJECTS_DB else None)
+    project_data = PROJECTS_DB.get(target_pid) if target_pid else None
+    if not project_data:
+        project_data = get_or_create_default_project()
+        target_pid = project_data["id"]
     cbm = _resolve_canonical_model(design_version_id)
 
     parcel = project_data.get("parcel", {})
     declared_sqft = getattr(cbm, "declaredPlotAreaSqFt", None) or project_data.get("declaredPlotAreaSqFt")
-    if not declared_sqft and target_pid == "proj-mumbai-real-1100":
-        declared_sqft = 1100.0
+    if not declared_sqft and target_pid == project_data.get("id"):
+        declared_sqft = project_data.get("declaredPlotAreaSqFt", 1100.0)
     declared_sqm = declared_sqft * 0.0929 if declared_sqft else 102.193
     pw, pl = (round(math.sqrt(declared_sqm * (16 / 9)), 2), round(declared_sqm / math.sqrt(declared_sqm * (16 / 9)), 2)) if declared_sqm else (8.38, 12.19)
 
@@ -2341,7 +2350,7 @@ def generate_customer_home_report_endpoint(design_version_id: str, project_id: O
     # Persist in DB
     record = save_generated_report_record(
         report_id=report_id,
-        project_id=project_data.get("id", "proj-mumbai-real-1100"),
+        project_id=project_data["id"],
         site_id="site-mumbai-real-1100",
         design_version_id=design_version_id,
         report_type="HOME_REPORT",
@@ -2365,7 +2374,7 @@ def generate_customer_home_report_endpoint(design_version_id: str, project_id: O
         "reportId": report_id,
         "reportType": "HOME_REPORT",
         "designVersionId": design_version_id,
-        "projectId": project_data.get("id", "proj-mumbai-real-1100"),
+        "projectId": project_data["id"],
         "downloadUrl": f"/api/v1/design-versions/{design_version_id}/reports/home/{report_id}/download",
         "fileSizeBytes": file_size,
         "inputManifestHash": input_manifest_hash,
@@ -2459,7 +2468,7 @@ def generate_complete_package_endpoint(design_version_id: str, project_id: Optio
     # Persist record in PostgreSQL
     save_generated_report_record(
         report_id=report_id,
-        project_id=project_data.get("id", "proj-mumbai-real-1100"),
+        project_id=project_data["id"],
         site_id="site-mumbai-real-1100",
         design_version_id=design_version_id,
         report_type="COMPLETE_PACKAGE",
@@ -2484,7 +2493,7 @@ def generate_complete_package_endpoint(design_version_id: str, project_id: Optio
         "reportId": report_id,
         "reportType": "COMPLETE_PACKAGE",
         "designVersionId": design_version_id,
-        "projectId": project_data.get("id", "proj-mumbai-real-1100"),
+        "projectId": project_data["id"],
         "masterPdfDownloadUrl": f"/api/v1/design-versions/{design_version_id}/reports/{report_id}/download?format=pdf",
         "zipArchiveDownloadUrl": f"/api/v1/design-versions/{design_version_id}/reports/{report_id}/download?format=zip",
         "filesCount": len(file_list),
@@ -2563,7 +2572,7 @@ def generate_technical_report_endpoint(design_version_id: str, project_id: Optio
 
     save_generated_report_record(
         report_id=report_id,
-        project_id=project_data.get("id", "proj-mumbai-real-1100"),
+        project_id=project_data["id"],
         site_id="site-mumbai-real-1100",
         design_version_id=design_version_id,
         report_type="TECHNICAL_REPORT",
@@ -2598,7 +2607,7 @@ def generate_cost_boq_report_endpoint(design_version_id: str, project_id: Option
 
     save_generated_report_record(
         report_id=report_id,
-        project_id=project_data.get("id", "proj-mumbai-real-1100"),
+        project_id=project_data["id"],
         site_id="site-mumbai-real-1100",
         design_version_id=design_version_id,
         report_type="COST_BOQ_REPORT",
@@ -2633,7 +2642,7 @@ def generate_professional_report_endpoint(design_version_id: str, project_id: Op
 
     save_generated_report_record(
         report_id=report_id,
-        project_id=project_data.get("id", "proj-mumbai-real-1100"),
+        project_id=project_data["id"],
         site_id="site-mumbai-real-1100",
         design_version_id=design_version_id,
         report_type="PROFESSIONAL_REPORT",

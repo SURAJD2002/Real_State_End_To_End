@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 220" width="100%" height="220px" class="svg-diagram" style="max-height:220px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;">
+<defs>
+  <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#2563eb" />
+  </marker>
+  <marker id="arr-gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+    <path d="M0,0 L6,3 L0,6 Z" fill="#64748b" />
+  </marker>
+</defs>
+
+<text x="350" y="24" text-anchor="middle" font-size="13" font-weight="bold" fill="#0f172a">DIAGRAM 2: END-TO-END CUSTOMER DATA LINEAGE & STATE TRANSITIONS</text>
+<rect x="25" y="45" width="95" height="60" rx="3" fill="#ffffff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="72" y="65" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1e40af">1. LAND</text>
+<text x="72" y="80" text-anchor="middle" font-size="7.5" fill="#334155">Declared Area</text>
+<text x="72" y="93" text-anchor="middle" font-size="7.5" fill="#059669">e.g. 1500 sq ft</text>
+
+<line x1="120" y1="75" x2="140" y2="75" stroke="#2563eb" stroke-width="1.2" marker-end="url(#arr)"/>
+
+<rect x="140" y="45" width="105" height="60" rx="3" fill="#ffffff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="192" y="65" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1e40af">2. FEASIBILITY</text>
+<text x="192" y="80" text-anchor="middle" font-size="7.5" fill="#334155">M1 Rule Engine</text>
+<text x="192" y="93" text-anchor="middle" font-size="7.5" fill="#059669">Setbacks & FSI</text>
+
+<line x1="245" y1="75" x2="265" y2="75" stroke="#2563eb" stroke-width="1.2" marker-end="url(#arr)"/>
+
+<rect x="265" y="45" width="105" height="60" rx="3" fill="#ffffff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="317" y="65" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1e40af">3. INTAKE</text>
+<text x="317" y="80" text-anchor="middle" font-size="7.5" fill="#334155">Customer Brief</text>
+<text x="317" y="93" text-anchor="middle" font-size="7.5" fill="#059669">BHK, Bath, Floors</text>
+
+<line x1="370" y1="75" x2="390" y2="75" stroke="#2563eb" stroke-width="1.2" marker-end="url(#arr)"/>
+
+<rect x="390" y="45" width="105" height="60" rx="3" fill="#ffffff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="442" y="65" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1e40af">4. GENERATION</text>
+<text x="442" y="80" text-anchor="middle" font-size="7.5" fill="#334155">CP-SAT Solver</text>
+<text x="442" y="93" text-anchor="middle" font-size="7.5" fill="#059669">Pareto Options</text>
+
+<line x1="495" y1="75" x2="515" y2="75" stroke="#2563eb" stroke-width="1.2" marker-end="url(#arr)"/>
+
+<rect x="515" y="45" width="80" height="60" rx="3" fill="#ffffff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="555" y="65" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1e40af">5. COST</text>
+<text x="555" y="80" text-anchor="middle" font-size="7.5" fill="#334155">BOQ & QTO</text>
+<text x="555" y="93" text-anchor="middle" font-size="7.5" fill="#059669">IS 1200 Engine</text>
+
+<line x1="595" y1="75" x2="615" y2="75" stroke="#2563eb" stroke-width="1.2" marker-end="url(#arr)"/>
+
+<rect x="615" y="45" width="65" height="60" rx="3" fill="#ffffff" stroke="#2563eb" stroke-width="1.2"/>
+<text x="647" y="65" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1e40af">6. LOCK</text>
+<text x="647" y="80" text-anchor="middle" font-size="7.5" fill="#334155">Release</text>
+<text x="647" y="93" text-anchor="middle" font-size="7.5" fill="#059669">SHA-256</text>
+
+<!-- Bottom Detail Boxes -->
+<rect x="25" y="130" width="655" height="75" rx="3" fill="#f1f5f9" stroke="#cbd5e1"/>
+<text x="35" y="148" font-size="8.5" font-weight="bold" fill="#0f172a">State Persistence & Provenance Trail:</text>
+<text x="35" y="165" font-size="8" fill="#334155">• Project ID: proj-cust-[random] (generated dynamically, never hardcoded reference project)</text>
+<text x="35" y="180" font-size="8" fill="#334155">• Geometries PUT: PUT /api/v1/projects/{id}/geometries stores declaredPlotAreaSqFt and increments parcel.version</text>
+<text x="35" y="195" font-size="8" fill="#334155">• CBM Envelope: derived dynamically as sqrt(plotSqM * coverage * aspect_ratio) with zero silent fallbacks</text>
+
+</svg>
